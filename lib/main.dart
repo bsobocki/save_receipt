@@ -2,11 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
-import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:save_receipt/screen/receipt_data_page.dart';
 import 'package:save_receipt/source/document_operations/data/connect_data.dart';
-import 'package:save_receipt/source/document_operations/image/image_operations.dart';
 import 'package:save_receipt/source/document_operations/scan_text_from_image.dart';
 
 void main() {
@@ -40,7 +38,8 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      // home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const ReceiptDataPage(),
     );
   }
 }
