@@ -1,11 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:save_receipt/source/image_processing/image_operations.dart';
-import 'package:save_receipt/source/image_processing/scan_text_from_image.dart';
+import 'package:save_receipt/source/document_operations/data/connect_data.dart';
+import 'package:save_receipt/source/document_operations/image/image_operations.dart';
+import 'package:save_receipt/source/document_operations/scan_text_from_image.dart';
 
 void main() {
   runApp(const MyApp());
@@ -63,14 +65,37 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final ImagePicker picker = ImagePicker();
-  String imageText = "Please select an image to start.";
+  String imageScannerText = "Please select an image to scan.";
+  String imageProcessingText = "Please select an image to process.";
+  String imgPath = "";
+
+  Widget getImg() {
+    if (imgPath.isEmpty) {
+      return Image.asset('assets/no_image.jpg');
+    } else {
+      return Image.file(File(imgPath));
+    }
+  }
 
   void _readImage() async {
     final XFile? file = await picker.pickImage(source: ImageSource.gallery);
-    String filePath = file!.path;
-    String text = await processImage(filePath);
+    if (file != null) {
+      String filePath = file.path;
+      var textLines = await processImage(filePath);
+    List<ConnectedTextLines> connectedLines = getConnectedTextLines(textLines);
+      setState(() {
+        imageProcessingText = connectedLines.toString();
+      });
+    }
+  }
+
+  Future<void> _scanAndExtractRecipe() async {
+    String tmpPath = await scanRecipe();
+    List<TextLine> textLines = await processImage(tmpPath);
+    List<ConnectedTextLines> connectedLines = getConnectedTextLines(textLines);
     setState(() {
-      imageText = text;
+      imageScannerText = connectedLines.toString();
+      imgPath = tmpPath;
     });
   }
 
@@ -111,7 +136,12 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(imageText),
+            Text(imageProcessingText,
+                style: const TextStyle(color: Colors.blueGrey)),
+            Text(imageScannerText),
+            ElevatedButton(
+                onPressed: _scanAndExtractRecipe, child: const Text("try me!")),
+            getImg(),
           ],
         ),
       ),
