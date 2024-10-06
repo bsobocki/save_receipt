@@ -5,22 +5,13 @@ import 'package:save_receipt/source/document_operations/math/coordinates.dart';
 
 class ConnectedTextLines {
   final TextLine start;
-  List<TextLine> connectedLines = [];
+  final TextLine? connectedLine;
 
-  ConnectedTextLines({required this.start});
-
-  String getTextLinesStr() {
-    String output = '';
-    for (TextLine line in connectedLines) {
-      output += line.text;
-      output += ',';
-    }
-    return output;
-  }
+  ConnectedTextLines({required this.start, required this.connectedLine});
 
   @override
   String toString() =>
-      '{start: ${start.text}|${start.boundingBox.bottomLeft} => [${getTextLinesStr()}]}\n';
+      '{start: ${start.text} => [${connectedLine?.text ?? ''}]}\n';
 }
 
 // O (n^2)
@@ -31,17 +22,23 @@ List<ConnectedTextLines> getConnectedTextLines(List<TextLine> lines) {
   for (int i = 0; i < textLines.length; i++) {
     if (textLines[i] != null) {
       TextLine startLine = textLines[i]!;
-      var connectedToStart = ConnectedTextLines(start: startLine);
+      TextLine? connectedLine;
       for (int j = i + 1; j < textLines.length; j++) {
         if (textLines[j] != null) {
           TextLine currentLine = textLines[j]!;
           if (areInTheSameLine(startLine, currentLine)) {
-            connectedToStart.connectedLines.add(currentLine);
+            connectedLine = currentLine;
             textLines[j] = null;
+            break;
           }
         }
       }
-      connectedLines.add(connectedToStart);
+      connectedLines.add(
+        ConnectedTextLines(
+          start: startLine,
+          connectedLine: connectedLine,
+        ),
+      );
     }
   }
 
@@ -52,9 +49,12 @@ List<ConnectedTextLines> getConnectedTextLines(List<TextLine> lines) {
 // binary search for the textLine
 
 bool areInTheSameLine(TextLine a, TextLine b) {
-  Offset aCoords = a.boundingBox.center;
-  Offset bCoords = b.boundingBox.center;
-  VerticalMargin margin =
-      VerticalMargin.calc(a.angle ?? 0.0, aCoords, bCoords.dx);
-  return margin.inMargin(bCoords.dy);
+  bool result = false;
+  Offset aBottomCoords = a.boundingBox.center;
+  Offset bBottomCoords = b.boundingBox.center;
+  VerticalMargin marginBottomLeft =
+      VerticalMargin.calc(a.angle ?? 0.0, aBottomCoords, bBottomCoords.dx);
+  result = result || marginBottomLeft.inMargin(bBottomCoords.dy);
+
+  return result;
 }
