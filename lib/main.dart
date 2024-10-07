@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:save_receipt/screen/receipt_data_page.dart';
+import 'package:save_receipt/color/scheme/main_sheme.dart';
 import 'package:save_receipt/source/document_operations/data/connect_data.dart';
 import 'package:save_receipt/source/document_operations/scan_text_from_image.dart';
 
@@ -35,11 +36,10 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: mainColorScheme,
         useMaterial3: true,
       ),
-      // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      home: const ReceiptDataPage(),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -63,6 +63,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final _expandableFabKey = GlobalKey<ExpandableFabState>();
   final ImagePicker picker = ImagePicker();
   String imageScannerText = "Please select an image to scan.";
   String imageProcessingText = "Please select an image to process.";
@@ -81,7 +82,8 @@ class _MyHomePageState extends State<MyHomePage> {
     if (file != null) {
       String filePath = file.path;
       var textLines = await processImage(filePath);
-    List<ConnectedTextLines> connectedLines = getConnectedTextLines(textLines);
+      List<ConnectedTextLines> connectedLines =
+          getConnectedTextLines(textLines);
       setState(() {
         imageProcessingText = connectedLines.toString();
       });
@@ -108,47 +110,78 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(imageProcessingText,
                 style: const TextStyle(color: Colors.blueGrey)),
             Text(imageScannerText),
-            ElevatedButton(
-                onPressed: _scanAndExtractRecipe, child: const Text("try me!")),
             getImg(),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _readImage,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+              icon: Icon(Icons.adb_outlined), label: 'label'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.adobe_rounded), label: 'label'),
+        ],
+      ),
+      floatingActionButtonLocation: ExpandableFab.location,
+      floatingActionButton: ExpandableFab(
+        key:_expandableFabKey,
+        type: ExpandableFabType.fan,
+        pos: ExpandableFabPos.center,
+        overlayStyle: const ExpandableFabOverlayStyle(
+          blur: 1.0,
+          color: Color.fromARGB(100, 100, 100, 100),
+        ),
+        openButtonBuilder: RotateFloatingActionButtonBuilder(
+          child: const Icon(Icons.receipt_sharp),
+          fabSize: ExpandableFabSize.regular,
+          shape: const CircleBorder(),
+        ),
+        closeButtonBuilder: RotateFloatingActionButtonBuilder(
+          child: const Icon(Icons.close),
+          fabSize: ExpandableFabSize.regular,
+          backgroundColor: Theme.of(context).colorScheme.onPrimaryFixed,
+          foregroundColor: Theme.of(context).colorScheme.primaryFixed,
+          shape: const CircleBorder(),
+        ),
+        children: [
+          FloatingActionButton(
+            heroTag: null,
+            onPressed: () {
+              if (_expandableFabKey.currentState != null) {
+                debugPrint('isOpen:${_expandableFabKey.currentState!.isOpen}');
+                _expandableFabKey.currentState!.toggle();
+              } else { 
+                debugPrint('notOpen!!!');
+              }
+              _scanAndExtractRecipe();
+            },
+            child: const Icon(Icons.camera_alt_outlined),
+          ),
+          FloatingActionButton(
+            heroTag: null,
+            onPressed: () {
+              if (_expandableFabKey.currentState != null) {
+                debugPrint('isOpen:${_expandableFabKey.currentState!.isOpen}');
+                _expandableFabKey.currentState!.toggle();
+              } else {
+                debugPrint('notOpen!!!');
+              }
+              _readImage();
+            },
+            child: const Icon(Icons.drive_folder_upload),
+          ),
+        ],
+      ),
     );
   }
 }
