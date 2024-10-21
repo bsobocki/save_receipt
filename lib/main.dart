@@ -5,8 +5,12 @@ import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:save_receipt/color/scheme/main_sheme.dart';
-import 'package:save_receipt/source/document_operations/data/connect_data.dart';
-import 'package:save_receipt/source/document_operations/scan_text_from_image.dart';
+import 'package:save_receipt/source/data/connect_data.dart';
+import 'package:save_receipt/source/data/parse_data.dart';
+import 'package:save_receipt/source/data/structures/connected_data.dart';
+import 'package:save_receipt/source/data/structures/receipt.dart';
+import 'package:save_receipt/source/document_operations/scan/google_read_text_from_image.dart';
+import 'package:save_receipt/source/document_operations/scan/google_scan.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,7 +43,7 @@ class MyApp extends StatelessWidget {
         colorScheme: mainColorScheme,
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Receipt Save'),
     );
   }
 }
@@ -84,18 +88,22 @@ class _MyHomePageState extends State<MyHomePage> {
       var textLines = await processImage(filePath);
       List<ConnectedTextLines> connectedLines =
           getConnectedTextLines(textLines);
+      List<ReceiptObject> parsed = parseData(connectedLines);
       setState(() {
         imageProcessingText = connectedLines.toString();
+        imageScannerText = parsed.toString();
       });
     }
   }
 
-  Future<void> _scanAndExtractRecipe() async {
+  Future<void> _googleScanAndExtractRecipe() async {
     String tmpPath = await scanRecipe();
     List<TextLine> textLines = await processImage(tmpPath);
     List<ConnectedTextLines> connectedLines = getConnectedTextLines(textLines);
+    List<ReceiptObject> parsed = parseData(connectedLines);
     setState(() {
-      imageScannerText = connectedLines.toString();
+      imageProcessingText = connectedLines.toString();
+      imageScannerText = parsed.toString();
       imgPath = tmpPath;
     });
   }
@@ -110,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         title: Text(widget.title),
       ),
       body: Center(
@@ -119,8 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Text(imageProcessingText,
                 style: const TextStyle(color: Colors.blueGrey)),
-            Text(imageScannerText),
-            getImg(),
+            Text(imageScannerText, style: const TextStyle(color: Colors.red)),
           ],
         ),
       ),
@@ -134,9 +141,11 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButtonLocation: ExpandableFab.location,
       floatingActionButton: ExpandableFab(
-        key:_expandableFabKey,
-        type: ExpandableFabType.fan,
+        key: _expandableFabKey,
+        // type: ExpandableFabType.fan,
         pos: ExpandableFabPos.center,
+        distance: 90,
+        fanAngle: 130,
         overlayStyle: const ExpandableFabOverlayStyle(
           blur: 1.0,
           color: Color.fromARGB(100, 100, 100, 100),
@@ -154,31 +163,39 @@ class _MyHomePageState extends State<MyHomePage> {
           shape: const CircleBorder(),
         ),
         children: [
-          FloatingActionButton(
-            heroTag: null,
-            onPressed: () {
-              if (_expandableFabKey.currentState != null) {
-                debugPrint('isOpen:${_expandableFabKey.currentState!.isOpen}');
-                _expandableFabKey.currentState!.toggle();
-              } else { 
-                debugPrint('notOpen!!!');
-              }
-              _scanAndExtractRecipe();
-            },
-            child: const Icon(Icons.camera_alt_outlined),
+          Column(
+            children: [
+              FloatingActionButton(
+                heroTag: null,
+                onPressed: () {
+                  if (_expandableFabKey.currentState != null) {
+                    _expandableFabKey.currentState!.toggle();
+                  }
+                  _googleScanAndExtractRecipe();
+                },
+                child: Image.asset(
+                  'assets/googleScannerIcon.png',
+                  height: 24,
+                  width: 24,
+                ),
+              ),
+              const Text("scan"),
+            ],
           ),
-          FloatingActionButton(
-            heroTag: null,
-            onPressed: () {
-              if (_expandableFabKey.currentState != null) {
-                debugPrint('isOpen:${_expandableFabKey.currentState!.isOpen}');
-                _expandableFabKey.currentState!.toggle();
-              } else {
-                debugPrint('notOpen!!!');
-              }
-              _readImage();
-            },
-            child: const Icon(Icons.drive_folder_upload),
+          Column(
+            children: [
+              FloatingActionButton(
+                heroTag: null,
+                onPressed: () {
+                  if (_expandableFabKey.currentState != null) {
+                    _expandableFabKey.currentState!.toggle();
+                  }
+                  _readImage();
+                },
+                child: const Icon(Icons.drive_folder_upload),
+              ),
+              const Text("import"),
+            ],
           ),
         ],
       ),

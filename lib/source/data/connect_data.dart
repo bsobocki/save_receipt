@@ -1,18 +1,8 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
+import 'package:save_receipt/source/data/structures/connected_data.dart';
 import 'package:save_receipt/source/document_operations/math/coordinates.dart';
-
-class ConnectedTextLines {
-  final TextLine start;
-  final TextLine? connectedLine;
-
-  ConnectedTextLines({required this.start, required this.connectedLine});
-
-  @override
-  String toString() =>
-      '{start: ${start.text} => [${connectedLine?.text ?? ''}]}\n';
-}
 
 // O (n^2)
 List<ConnectedTextLines> getConnectedTextLines(List<TextLine> lines) {
