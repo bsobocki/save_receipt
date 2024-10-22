@@ -17,7 +17,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
 
   void initDataFields() {
     for (ReceiptObject obj in receipt.objects) {
-      if (obj.isProduct) {
+      if (obj.type == ReceiptObjectType.product) {
         Product product = obj as Product;
         dataFields.add(
           DataField(
