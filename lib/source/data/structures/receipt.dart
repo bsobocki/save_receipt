@@ -1,8 +1,8 @@
 class Receipt {
-  final String imgPath;
+  final String? imgPath;
   final List<ReceiptObject> objects;
 
-  const Receipt({required this.imgPath, required this.objects});
+  const Receipt({this.imgPath, required this.objects});
 
   getObjects(ReceiptObjectType type) {
     List<Product> objs = [];

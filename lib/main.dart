@@ -5,6 +5,7 @@ import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:save_receipt/color/scheme/main_sheme.dart';
+import 'package:save_receipt/screen/receipt_data/receipt_data_page.dart';
 import 'package:save_receipt/source/data/connect_data.dart';
 import 'package:save_receipt/source/data/parse_data.dart';
 import 'package:save_receipt/source/data/structures/connected_data.dart';
@@ -81,31 +82,56 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void _readImage() async {
+  Future<Receipt?> _readImage() async {
     final XFile? file = await picker.pickImage(source: ImageSource.gallery);
     if (file != null) {
       String filePath = file.path;
       var textLines = await processImage(filePath);
       List<ConnectedTextLines> connectedLines =
           getConnectedTextLines(textLines);
-      List<ReceiptObject> parsed = parseData(connectedLines);
-      setState(() {
-        imageProcessingText = connectedLines.toString();
-        imageScannerText = parsed.toString();
-      });
+      List<ReceiptObject> parsedObjects = parseData(connectedLines);
+      return Receipt(
+        imgPath: filePath,
+        objects: parsedObjects,
+      );
+    }
+    return null;
+  }
+
+  Future<Receipt?> _googleScanAndExtractRecipe() async {
+    try {
+      String tmpPath = await scanRecipe();
+      List<TextLine> textLines = await processImage(tmpPath);
+      List<ConnectedTextLines> connectedLines =
+          getConnectedTextLines(textLines);
+      List<ReceiptObject> parsedObjects = parseData(connectedLines);
+      return Receipt(
+        imgPath: tmpPath,
+        objects: parsedObjects,
+      );
+    } catch (e) {
+      print('Cannot receive receipt object: $e');
+    }
+    return null;
+  }
+
+  void toggleFloatingActionButton() {
+    if (_expandableFabKey.currentState != null) {
+      _expandableFabKey.currentState!.toggle();
     }
   }
 
-  Future<void> _googleScanAndExtractRecipe() async {
-    String tmpPath = await scanRecipe();
-    List<TextLine> textLines = await processImage(tmpPath);
-    List<ConnectedTextLines> connectedLines = getConnectedTextLines(textLines);
-    List<ReceiptObject> parsed = parseData(connectedLines);
-    setState(() {
-      imageProcessingText = connectedLines.toString();
-      imageScannerText = parsed.toString();
-      imgPath = tmpPath;
-    });
+  void openReceiptPage(Receipt? receipt) {
+    if (receipt != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ReceiptDataPage(
+            initialReceipt: receipt,
+          ),
+        ),
+      );
+    }
   }
 
   @override
@@ -167,11 +193,9 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               FloatingActionButton(
                 heroTag: null,
-                onPressed: () {
-                  if (_expandableFabKey.currentState != null) {
-                    _expandableFabKey.currentState!.toggle();
-                  }
-                  _googleScanAndExtractRecipe();
+                onPressed: () async {
+                  toggleFloatingActionButton();
+                  openReceiptPage(await _googleScanAndExtractRecipe());
                 },
                 child: Image.asset(
                   'assets/googleScannerIcon.png',
@@ -186,11 +210,9 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               FloatingActionButton(
                 heroTag: null,
-                onPressed: () {
-                  if (_expandableFabKey.currentState != null) {
-                    _expandableFabKey.currentState!.toggle();
-                  }
-                  _readImage();
+                onPressed: () async {
+                  toggleFloatingActionButton();
+                  openReceiptPage(await _readImage());
                 },
                 child: const Icon(Icons.drive_folder_upload),
               ),

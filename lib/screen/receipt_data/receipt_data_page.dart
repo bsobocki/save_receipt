@@ -76,17 +76,14 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         title: Text(widget.title),
         actions: [
           IconButton(
-              onPressed: () => print('saved'), icon: const Icon(Icons.save))
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(Icons.save),
+          ),
         ],
       ),
-      body: Center(
-        child: ListView.builder(
-          itemBuilder: (context, index) {
-            return Container(
-              child: getDataFieldsList(),
-            );
-          },
-        ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: getDataFieldsList(),
       ),
     );
   }

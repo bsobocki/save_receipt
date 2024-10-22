@@ -21,6 +21,7 @@ class DataField {
     valueField = TextField(
       autocorrect: false,
       controller: valueController,
+      style: const TextStyle(color: Colors.red),
     );
   }
 
@@ -29,12 +30,15 @@ class DataField {
     valueController?.dispose();
   }
 
-  get widget => Row(
-        children: [
-          textField,
-          valueField,
-        ],
-      );
+  get widget => Container(
+    color: Colors.grey[800],
+    child: Row(
+          children: [
+            Expanded(child: textField),
+            Expanded(child: valueField),
+          ],
+        ),
+  );
 
   String getText() => textController.text;
   String getValue() => valueController?.text ?? '';
