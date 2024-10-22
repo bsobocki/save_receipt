@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:save_receipt/screen/receipt_data/data_field.dart';
 import 'package:save_receipt/source/data/structures/receipt.dart';
 
 class ReceiptDataPage extends StatefulWidget {
@@ -17,15 +18,29 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
 
   void initDataFields() {
     for (ReceiptObject obj in receipt.objects) {
-      if (obj.type == ReceiptObjectType.product) {
-        Product product = obj as Product;
-        dataFields.add(
-          DataField(
-            text: product.text,
-            value: product.price.toString(),
-          ),
-        );
+      String text = obj.text;
+      String? value;
+
+      switch (obj.type) {
+        case ReceiptObjectType.product:
+          value = (obj as Product).price.toString();
+          break;
+
+        case ReceiptObjectType.date:
+          value = (obj as Date).date;
+          break;
+
+        case ReceiptObjectType.info:
+          value = (obj as TwoPartInfo).info;
+          break;
       }
+
+      dataFields.add(
+        DataField(
+          text: text,
+          value: value,
+        ),
+      );
     }
   }
 
@@ -33,6 +48,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   void initState() {
     super.initState();
     receipt = widget.initialReceipt;
+    initDataFields();
   }
 
   @override
@@ -47,9 +63,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     return ListView.builder(
       itemCount: dataFields.length,
       itemBuilder: (context, index) {
-        return TextField(
-          autocorrect: false,
-        );
+        return dataFields[index].widget;
       },
     );
   }
@@ -68,43 +82,12 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
       body: Center(
         child: ListView.builder(
           itemBuilder: (context, index) {
-            return Container();
+            return Container(
+              child: getDataFieldsList(),
+            );
           },
         ),
       ),
     );
   }
-}
-
-class DataField {
-  TextEditingController textController = TextEditingController();
-  TextEditingController? valueController;
-  late TextField textField;
-  late TextField valueField;
-
-  DataField({String? text, String? value}) {
-    if (text != null) {
-      textController.text = text;
-    }
-    if (value != null) {
-      valueController = TextEditingController();
-      valueController!.text = value;
-    }
-    textField = TextField(
-      autocorrect: false,
-      controller: textController,
-    );
-    valueField = TextField(
-      autocorrect: false,
-      controller: valueController,
-    );
-  }
-
-  void dispose() {
-    textController.dispose();
-    valueController?.dispose();
-  }
-
-  String getText() => textController.text;
-  String getValue() => valueController?.text ?? '';
 }
