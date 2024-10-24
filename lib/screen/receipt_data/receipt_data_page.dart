@@ -72,7 +72,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.primary,
         title: Text(widget.title),
         actions: [
           IconButton(
@@ -83,7 +83,10 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: getDataFieldsList(),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: getDataFieldsList(),
+        ),
       ),
     );
   }

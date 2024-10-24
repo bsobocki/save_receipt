@@ -15,13 +15,30 @@ class DataField {
       valueController!.text = value;
     }
     textField = TextField(
-      autocorrect: false,
       controller: textController,
+      style: const TextStyle(color: Colors.black26),
+      decoration: const InputDecoration(
+        fillColor: Colors.white,
+        filled: true,
+        contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(90.0)),
+          borderSide: BorderSide(color: Colors.black26),
+        ),
+      ),
     );
     valueField = TextField(
-      autocorrect: false,
       controller: valueController,
       style: const TextStyle(color: Colors.red),
+      decoration: const InputDecoration(
+        fillColor: Colors.white,
+        filled: true,
+        contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(90.0)),
+          borderSide: BorderSide(color: Colors.black26),
+        ),
+      ),
     );
   }
 
@@ -30,14 +47,15 @@ class DataField {
     valueController?.dispose();
   }
 
-  get widget => Container(
-    color: Colors.grey[800],
+  get widget => Padding(
+    padding: const EdgeInsets.all(8.0),
     child: Row(
-          children: [
-            Expanded(child: textField),
-            Expanded(child: valueField),
-          ],
-        ),
+      children: [
+        Expanded(child: textField),
+        const SizedBox(width: 40),
+        SizedBox(width:100, child: valueField),
+      ],
+    ),
   );
 
   String getText() => textController.text;

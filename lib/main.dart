@@ -151,9 +151,14 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(imageProcessingText,
-                style: const TextStyle(color: Colors.blueGrey)),
-            Text(imageScannerText, style: const TextStyle(color: Colors.red)),
+            Text(
+              imageProcessingText,
+              style: const TextStyle(color: Colors.blueGrey),
+            ),
+            Text(
+              imageScannerText,
+              style: const TextStyle(color: Colors.red),
+            ),
           ],
         ),
       ),
