@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:save_receipt/screen/receipt_data/data_field.dart';
+import 'package:save_receipt/color/background/gradient.dart';
+import 'package:save_receipt/screen/receipt_data/data_field/data_field.dart';
 import 'package:save_receipt/source/data/structures/receipt.dart';
 
 class ReceiptDataPage extends StatefulWidget {
@@ -15,6 +18,8 @@ class ReceiptDataPage extends StatefulWidget {
 class _ReceiptDataPageState extends State<ReceiptDataPage> {
   late Receipt receipt;
   List<DataField> dataFields = [];
+
+  get topBarHeight => 200.0;
 
   void initDataFields() {
     for (ReceiptObject obj in receipt.objects) {
@@ -63,30 +68,106 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     return ListView.builder(
       itemCount: dataFields.length,
       itemBuilder: (context, index) {
-        return dataFields[index].widget;
+        return dataFields[index].widget(index % 2 == 0);
       },
+    );
+  }
+
+  Widget getBackground() {
+    return Column(
+      children: [
+        Container(
+          height: 300,
+          decoration: const BoxDecoration(
+            gradient: mainGradient,
+          ),
+        ),
+        Expanded(child: Container()),
+      ],
+    );
+  }
+
+  Widget getReceiptImage() {
+    if (receipt.imgPath != null) {
+      return Image.file(File(receipt.imgPath!));
+    }
+    return Image.asset("assets/no_image.jpg");
+  }
+
+  get receiptEditor => Expanded(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(15.0)),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: const Offset(0, 3), // changes position of shadow
+                ),
+              ],
+            ),
+            child: getDataFieldsList(),
+          ),
+        ),
+      );
+
+  get topBar => SizedBox(
+        height: 200,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            IconButton(
+              onPressed: () => print('pressed'),
+              icon: getReceiptImage(),
+            ),
+            const SizedBox(width: 20),
+            Column(
+              children: [
+                IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(Icons.chevron_left_outlined),
+                ),
+                IconButton(
+                  onPressed: () => print('pressed save'),
+                  icon: const Icon(Icons.save),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+
+  Widget getWidgets() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.only(
+          top: 32.0,
+          left: 16.0,
+          right: 16.0,
+          bottom: 16.0,
+        ),
+        child: Column(
+          children: [
+            topBar,
+            receiptEditor,
+          ],
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        title: Text(widget.title),
-        actions: [
-          IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.save),
-          ),
+      body: Stack(
+        children: [
+          getBackground(),
+          getWidgets(),
         ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: getDataFieldsList(),
-        ),
       ),
     );
   }
