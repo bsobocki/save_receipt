@@ -14,6 +14,25 @@ class ReceiptImageViewer extends StatefulWidget {
 }
 
 class _ReceiptImageViewerState extends State<ReceiptImageViewer> {
+  final TransformationController _controller = TransformationController();
+  late TapDownDetails _doubleTapDetails;
+
+  void _handleDoubleTapDown(TapDownDetails details) {
+    _doubleTapDetails = details;
+  }
+
+  void _handleDoubleTap() {
+    if (_controller.value != Matrix4.identity()) {
+      _controller.value = Matrix4.identity();
+    } else {
+      final position = _doubleTapDetails.localPosition;
+      // Zoom to 2x on double tap
+      _controller.value = Matrix4.identity()
+        ..translate(-position.dx, -position.dy)
+        ..scale(2.0);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedOpacity(
@@ -31,9 +50,14 @@ class _ReceiptImageViewerState extends State<ReceiptImageViewer> {
                 child: InteractiveViewer(
                   minScale: 0.5,
                   maxScale: 4.0,
-                  child: Image.file(
-                    File(widget.imagePath),
-                    fit: BoxFit.contain,
+                  transformationController: _controller,
+                  child: GestureDetector(
+                    onDoubleTapDown: _handleDoubleTapDown,
+                    onDoubleTap: _handleDoubleTap,
+                    child: Image.file(
+                      File(widget.imagePath),
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
               ),
