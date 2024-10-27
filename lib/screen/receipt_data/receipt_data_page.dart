@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:save_receipt/color/background/gradient.dart';
+import 'package:save_receipt/components/receipt_image.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/data_field.dart';
 import 'package:save_receipt/source/data/structures/receipt.dart';
 
@@ -18,6 +19,7 @@ class ReceiptDataPage extends StatefulWidget {
 class _ReceiptDataPageState extends State<ReceiptDataPage> {
   late Receipt receipt;
   List<DataField> dataFields = [];
+  bool showFullScreenReceiptImage = false;
 
   get topBarHeight => 200.0;
 
@@ -120,11 +122,6 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            IconButton(
-              onPressed: () => print('pressed'),
-              icon: getReceiptImage(),
-            ),
-            const SizedBox(width: 20),
             Column(
               children: [
                 IconButton(
@@ -136,6 +133,19 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
                   icon: const Icon(Icons.save),
                 ),
               ],
+            ),
+            const SizedBox(width: 20),
+            IconButton(
+              onPressed: () {
+                if (receipt.imgPath != null) {
+                  setState(() {
+                    showFullScreenReceiptImage = true;
+                  });
+                } else {
+                  print("no - image");
+                }
+              },
+              icon: getReceiptImage(),
             ),
           ],
         ),
@@ -162,12 +172,26 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> screenElements = [
+      getBackground(),
+      getWidgets(),
+    ];
+
+    if (showFullScreenReceiptImage) {
+      screenElements.add(
+        ReceiptImageViewer(
+          imagePath: receipt.imgPath!,
+          onExit: () {
+            setState(() {
+              showFullScreenReceiptImage = false;
+            });
+          },
+        ),
+      );
+    }
     return Scaffold(
       body: Stack(
-        children: [
-          getBackground(),
-          getWidgets(),
-        ],
+        children: screenElements,
       ),
     );
   }
