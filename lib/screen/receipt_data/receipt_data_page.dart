@@ -21,8 +21,6 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   List<DataField> dataFields = [];
   bool showFullScreenReceiptImage = false;
 
-  get topBarHeight => 200.0;
-
   void initDataFields() {
     for (ReceiptObject obj in receipt.objects) {
       String text = obj.text;
@@ -66,7 +64,9 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     super.dispose();
   }
 
-  Widget getDataFieldsList() {
+  get topBarHeight => 200.0;
+
+  get dataFieldsList {
     return ListView.builder(
       itemCount: dataFields.length,
       itemBuilder: (context, index) {
@@ -75,7 +75,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     );
   }
 
-  Widget getBackground() {
+  get background {
     return Column(
       children: [
         Container(
@@ -89,9 +89,9 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     );
   }
 
-  Widget getReceiptImage() {
+  get receiptIcon {
     if (receipt.imgPath != null) {
-      return Image.file(File(receipt.imgPath!));
+      return Image.file(File(receipt.imgPath!), fit: BoxFit.cover);
     }
     return Image.asset("assets/no_image.jpg");
   }
@@ -112,21 +112,24 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
                 ),
               ],
             ),
-            child: getDataFieldsList(),
+            child: dataFieldsList,
           ),
         ),
       );
 
-  get topBar => SizedBox(
-        height: 200,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Column(
+  get topBar => Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 20,
+            child: Row(
               children: [
                 IconButton(
                   onPressed: () => Navigator.pop(context),
                   icon: const Icon(Icons.chevron_left_outlined),
+                ),
+                Expanded(
+                  child: Container(),
                 ),
                 IconButton(
                   onPressed: () => print('pressed save'),
@@ -134,8 +137,11 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
                 ),
               ],
             ),
-            const SizedBox(width: 20),
-            IconButton(
+          ),
+          const SizedBox(height: 20),
+          SizedBox(
+            height: 160,
+            child: IconButton(
               onPressed: () {
                 if (receipt.imgPath != null) {
                   setState(() {
@@ -145,13 +151,16 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
                   print("no - image");
                 }
               },
-              icon: getReceiptImage(),
+              icon: ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: receiptIcon,
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       );
 
-  Widget getWidgets() {
+  get widgets {
     return Center(
       child: Padding(
         padding: const EdgeInsets.only(
@@ -173,8 +182,8 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   @override
   Widget build(BuildContext context) {
     List<Widget> screenElements = [
-      getBackground(),
-      getWidgets(),
+      background,
+      widgets,
     ];
 
     if (showFullScreenReceiptImage) {

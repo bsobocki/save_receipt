@@ -47,16 +47,19 @@ class _ReceiptImageViewerState extends State<ReceiptImageViewer> {
             child: Center(
               child: GestureDetector(
                 onTap: () {},
-                child: InteractiveViewer(
-                  minScale: 0.5,
-                  maxScale: 4.0,
-                  transformationController: _controller,
-                  child: GestureDetector(
-                    onDoubleTapDown: _handleDoubleTapDown,
-                    onDoubleTap: _handleDoubleTap,
-                    child: Image.file(
-                      File(widget.imagePath),
-                      fit: BoxFit.contain,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: InteractiveViewer(
+                    minScale: 0.5,
+                    maxScale: 4.0,
+                    transformationController: _controller,
+                    child: GestureDetector(
+                      onDoubleTapDown: _handleDoubleTapDown,
+                      onDoubleTap: _handleDoubleTap,
+                      child: Image.file(
+                        File(widget.imagePath),
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                 ),
