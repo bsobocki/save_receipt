@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:save_receipt/color/background/gradient.dart';
 import 'package:save_receipt/components/receipt_image.dart';
+import 'package:save_receipt/screen/receipt_data/components/top_bar.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/data_field.dart';
 import 'package:save_receipt/source/data/structures/receipt.dart';
 
@@ -79,7 +80,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     return Column(
       children: [
         Container(
-          height: 300,
+          height: 320,
           decoration: const BoxDecoration(
             gradient: mainGradient,
           ),
@@ -87,13 +88,6 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         Expanded(child: Container()),
       ],
     );
-  }
-
-  get receiptIcon {
-    if (receipt.imgPath != null) {
-      return Image.file(File(receipt.imgPath!), fit: BoxFit.cover);
-    }
-    return Image.asset("assets/no_image.jpg");
   }
 
   get receiptEditor => Expanded(
@@ -117,50 +111,17 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         ),
       );
 
-  get topBar => Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: 20,
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.chevron_left_outlined),
-                ),
-                Expanded(
-                  child: Container(),
-                ),
-                IconButton(
-                  onPressed: () => print('pressed save'),
-                  icon: const Icon(Icons.save),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          SizedBox(
-            height: 160,
-            child: IconButton(
-              onPressed: () {
-                if (receipt.imgPath != null) {
-                  setState(() {
-                    showFullScreenReceiptImage = true;
-                  });
-                } else {
-                  print("no - image");
-                }
-              },
-              icon: ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: receiptIcon,
-              ),
-            ),
-          ),
-        ],
-      );
+  void openFullImageMode() {
+    if (receipt.imgPath != null) {
+      setState(() {
+        showFullScreenReceiptImage = true;
+      });
+    } else {
+      print("no - image");
+    }
+  }
 
-  get widgets {
+  get content {
     return Center(
       child: Padding(
         padding: const EdgeInsets.only(
@@ -171,7 +132,10 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         ),
         child: Column(
           children: [
-            topBar,
+            ReceiptPageTopBar(
+              onImageIconPress: openFullImageMode,
+              receiptImgPath: receipt.imgPath,
+            ),
             receiptEditor,
           ],
         ),
@@ -183,7 +147,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   Widget build(BuildContext context) {
     List<Widget> screenElements = [
       background,
-      widgets,
+      content,
     ];
 
     if (showFullScreenReceiptImage) {

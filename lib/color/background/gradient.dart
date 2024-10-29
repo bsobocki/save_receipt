@@ -5,8 +5,9 @@ const LinearGradient mainGradient = LinearGradient(
   end: Alignment.bottomRight,
   colors: [
     Colors.black,
-    Colors.black87,
+    Color.fromARGB(202, 0, 0, 0),
     Colors.black54,
     Colors.black45,
+    Colors.black38,
   ],
 );
