@@ -26,25 +26,38 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     for (ReceiptObject obj in receipt.objects) {
       String text = obj.text;
       String? value;
+      List<String> values = [];
+
 
       switch (obj.type) {
         case ReceiptObjectType.product:
-          value = (obj as Product).price.toString();
+          value = (obj as ReceiptProduct).price.toString();
+          for (ReceiptProduct product in receipt.products) {
+            values.add(product.price.toString());
+          }
           break;
 
         case ReceiptObjectType.date:
-          value = (obj as Date).date;
+          value = (obj as ReceiptDate).date;
+          for (ReceiptDate date in receipt.dates) {
+            values.add(date.date);
+          }
           break;
 
         case ReceiptObjectType.info:
-          value = (obj as TwoPartInfo).info;
+          value = (obj as ReceiptInfo).info;
+          for (ReceiptInfo info in receipt.info) {
+            values.add(info.info);
+          }
           break;
       }
 
+      print('values: $values');
       dataFields.add(
         DataField(
           text: text,
           value: value,
+          values: values,
         ),
       );
     }
@@ -128,7 +141,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
           top: 32.0,
           left: 16.0,
           right: 16.0,
-          bottom: 16.0,
+          bottom: 32.0,
         ),
         child: Column(
           children: [

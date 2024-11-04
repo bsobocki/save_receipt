@@ -15,17 +15,15 @@ List<ReceiptObject> parseData(List<ConnectedTextLines> lines) {
         String priceStr = getPriceStr(connectedStr);
         double price = double.tryParse(priceStr) ?? -1.0;
         if (price != -1.0) {
-          data.add(Product(text: text, price: price));
+          data.add(ReceiptProduct(text: text, price: price));
         } else {
           text += connectedStr;
           isTwoPart = false;
         }
-      } 
-      else if (isDate(connectedStr)) {
-        data.add(Date(text: text, date: connectedStr));
-      }
-      else {
-        data.add(TwoPartInfo(text: text, info: connectedStr));
+      } else if (isDate(connectedStr)) {
+        data.add(ReceiptDate(text: text, date: connectedStr));
+      } else {
+        data.add(ReceiptInfo(text: text, info: connectedStr));
       }
     }
 
@@ -51,7 +49,8 @@ String getPriceStr(String data) {
 }
 
 bool isDate(String data) {
-  RegExp regex = RegExp(r'([0-9]+:[0-9]+)+|[ \t]*([0-9]+[\-\\/][0-9]+[\-\\/][0-9]+)');
+  RegExp regex =
+      RegExp(r'([0-9]+:[0-9]+)+|[ \t]*([0-9]+[\-\\/][0-9]+[\-\\/][0-9]+)');
   return regex.hasMatch(data);
 }
 

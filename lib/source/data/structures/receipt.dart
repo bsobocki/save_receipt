@@ -5,10 +5,10 @@ class Receipt {
   const Receipt({this.imgPath, required this.objects});
 
   getObjects(ReceiptObjectType type) {
-    List<Product> objs = [];
+    List<ReceiptObject> objs = [];
     for (ReceiptObject obj in objects) {
       if (obj.type == type) {
-        objs.add(obj as Product);
+        objs.add(obj);
       }
     }
     return objs;
@@ -35,10 +35,10 @@ class ReceiptObject {
   String toString() => '\n text: $text';
 }
 
-class Product extends ReceiptObject {
+class ReceiptProduct extends ReceiptObject {
   final double price;
 
-  const Product({required super.text, required this.price});
+  const ReceiptProduct({required super.text, required this.price});
 
   @override
   get type => ReceiptObjectType.product;
@@ -49,10 +49,10 @@ class Product extends ReceiptObject {
   }
 }
 
-class TwoPartInfo extends ReceiptObject {
+class ReceiptInfo extends ReceiptObject {
   final String info;
 
-  const TwoPartInfo({required super.text, required this.info});
+  const ReceiptInfo({required super.text, required this.info});
 
   @override
   get type => ReceiptObjectType.info;
@@ -63,10 +63,10 @@ class TwoPartInfo extends ReceiptObject {
   }
 }
 
-class Date extends ReceiptObject {
+class ReceiptDate extends ReceiptObject {
   final String date;
 
-  const Date({required super.text, required this.date});
+  const ReceiptDate({required super.text, required this.date});
 
   @override
   get type => ReceiptObjectType.date;

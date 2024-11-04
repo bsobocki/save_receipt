@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/text_field.dart';
+import 'package:save_receipt/screen/receipt_data/data_field/value_field.dart';
 
 class DataField {
+  String text;
+  String? value;
+  List<String>? values;
   TextEditingController textController = TextEditingController();
-  TextEditingController? valueController;
-  DataField({String? text, String? value}) {
-    if (text != null) {
-      textController.text = text;
-    }
+  TextEditingController valueController = TextEditingController();
+
+  DataField({required this.text, this.values, this.value}) {
+    textController.text = text;
     if (value != null) {
-      valueController = TextEditingController();
-      valueController!.text = value;
+      valueController.text = value!;
     }
   }
 
   void dispose() {
     textController.dispose();
-    valueController?.dispose();
   }
 
   Widget widget(bool isDarker) => Container(
@@ -29,11 +30,17 @@ class DataField {
             DataTextField(
               textController: textController,
             ),
-            valueController != null
-                ? DataTextField(
-                    textController: valueController!,
-                    textColor: Colors.grey[600],
-                    textAlign: TextAlign.right,
+            value != null
+                ? ValueField(
+                    defaultValue: value!,
+                    values: values ?? [],
+                    onSelected: (value) {
+                      if (value != null) {
+                        this.value = value;
+                      }
+                      print("selected: $value");
+                    },
+                    controller: valueController,
                   )
                 : Container(),
           ]),
@@ -41,5 +48,5 @@ class DataField {
       );
 
   String getText() => textController.text;
-  String getValue() => valueController?.text ?? '';
+  String getValue() => value ?? '';
 }
