@@ -66,7 +66,7 @@ class _ValueFieldState extends State<ValueField> {
           ),
         ),
         textStyle: const TextStyle(color: Colors.white),
-        menuStyle: const MenuStyle(maximumSize: WidgetStatePropertyAll(Size(10, 60)),
+        menuStyle: const MenuStyle(
           backgroundColor: WidgetStatePropertyAll(Colors.black),
           shadowColor: WidgetStatePropertyAll(
             Color.fromARGB(193, 0, 0, 0),
@@ -89,11 +89,7 @@ class _ValueFieldState extends State<ValueField> {
         }).toList(),
       );
 
-  get valueEditorView => showMenu ? dropdownMenu : textFieldView;
-
-  get menuButton => showMenu
-      ? Container()
-      : IconButton(
+  get menuButton => IconButton(
           onPressed: () {
             menuController.text = textFieldController.text;
             switchView();
@@ -106,14 +102,16 @@ class _ValueFieldState extends State<ValueField> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> elements = [Expanded(child: Container())];
+
+    if (showMenu) {
+      elements.add(dropdownMenu);
+    } else {
+      elements.add(textFieldView);
+      elements.add(menuButton);
+    }
     return Row(
-      children: [
-        Expanded(
-          child: Container(),
-        ),
-        valueEditorView,
-        menuButton,
-      ],
+      children: elements,
     );
     ;
   }
