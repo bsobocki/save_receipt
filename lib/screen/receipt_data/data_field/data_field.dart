@@ -7,13 +7,9 @@ class DataField {
   String? value;
   List<String>? values;
   TextEditingController textController = TextEditingController();
-  TextEditingController valueController = TextEditingController();
 
   DataField({required this.text, this.values, this.value}) {
     textController.text = text;
-    if (value != null) {
-      valueController.text = value!;
-    }
   }
 
   void dispose() {
@@ -32,7 +28,7 @@ class DataField {
             ),
             value != null
                 ? ValueField(
-                    defaultValue: value!,
+                    initValue: value!,
                     values: values ?? [],
                     onSelected: (value) {
                       if (value != null) {
@@ -40,7 +36,6 @@ class DataField {
                       }
                       print("selected: $value");
                     },
-                    controller: valueController,
                   )
                 : Container(),
           ]),
