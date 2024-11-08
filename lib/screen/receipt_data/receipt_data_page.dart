@@ -20,6 +20,41 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   List<DataField> dataFields = [];
   bool showFullScreenReceiptImage = false;
 
+  void handleItemSwipe(
+      BuildContext context, DismissDirection direction, int index) {
+    final DataField dataField = dataFields[index];
+
+    if (direction == DismissDirection.endToStart) {
+      setState(() {
+        dataField.setEditingMode();
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('edit: ${dataField.getText()}'),
+          backgroundColor: const Color.fromARGB(73, 0, 0, 0),
+          dismissDirection: direction,
+        ),
+      );
+    }
+  }
+
+  void handleItemDismiss(
+      BuildContext context, DismissDirection direction, int index) {
+    final DataField dataField = dataFields[index];
+
+    setState(() {
+      dataFields.removeAt(index);
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('remove: ${dataField.getText()}'),
+        backgroundColor: const Color.fromARGB(73, 0, 0, 0),
+        dismissDirection: direction,
+      ),
+    );
+  }
+
   void initDataFields() {
     for (ReceiptObject obj in receipt.objects) {
       String text = obj.text;
@@ -81,21 +116,17 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     return ListView.builder(
       itemCount: dataFields.length,
       itemBuilder: (context, index) {
-        final dataField = dataFields[index];
         return Dismissible(
           key: UniqueKey(),
-          onDismissed: (direction) {
-            setState(() {
-              dataFields.removeAt(index);
-            });
-
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('${dataField.getText()} removed'),
-                backgroundColor: const Color.fromARGB(73, 0, 0, 0),
-                dismissDirection: direction,
-              ),
-            );
+          onDismissed: (direction) =>
+              handleItemDismiss(context, direction, index),
+          confirmDismiss: (direction) async {
+            if (direction == DismissDirection.startToEnd) {
+              return true;
+            } else if (direction == DismissDirection.endToStart) {
+              handleItemSwipe(context, direction, index);
+            }
+            return false;
           },
           background: Container(
             decoration: const BoxDecoration(
@@ -107,7 +138,17 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
               child: Icon(Icons.highlight_remove_outlined),
             ),
           ),
-          child: dataField.widget(index % 2 == 0),
+          secondaryBackground: Container(
+            decoration: const BoxDecoration(
+              gradient: transparentYellowGradient,
+            ),
+            alignment: Alignment.centerRight,
+            child: const Padding(
+              padding: EdgeInsets.only(right: 16.0, top: 8.0, bottom: 8.0),
+              child: Icon(Icons.edit),
+            ),
+          ),
+          child: dataFields[index].widget(index % 2 == 0),
         );
       },
     );

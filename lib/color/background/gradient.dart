@@ -23,6 +23,7 @@ const LinearGradient redTransparentGradient = LinearGradient(
   ],
 );
 
+
 const LinearGradient transparentYellowGradient = LinearGradient(
   begin: Alignment.topLeft,
   end: Alignment.bottomRight,

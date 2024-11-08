@@ -6,14 +6,21 @@ class DataField {
   String text;
   String? value;
   List<String>? values;
+  bool editing;
   TextEditingController textController = TextEditingController();
 
-  DataField({required this.text, this.values, this.value}) {
+  DataField(
+      {required this.text, this.values, this.value, this.editing = false}) {
     textController.text = text;
   }
 
   void dispose() {
     textController.dispose();
+  }
+
+  void setEditingMode() {
+    editing = true;
+    print('DataField: $text : editingMode set');
   }
 
   Widget widget(bool isDarker) => Container(
