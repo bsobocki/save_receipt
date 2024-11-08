@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 class DataTextField extends StatefulWidget {
   final TextEditingController textController;
   final Color? textColor;
-  final TextAlign textAlign;
 
   const DataTextField({
     required this.textController,
     Color? textColor,
-    this.textAlign = TextAlign.left,
     super.key,
   }) : textColor = textColor ?? Colors.black;
 
@@ -22,7 +20,7 @@ class _DataTextFieldState extends State<DataTextField> {
     return TextField(
       controller: widget.textController,
       style: TextStyle(color: widget.textColor),
-      textAlign: widget.textAlign,
+      textAlign: TextAlign.left,
       decoration: const InputDecoration(
         contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
         isDense: true,

@@ -25,7 +25,7 @@ class DataField {
 
   Widget widget(bool isDarker) => Container(
         decoration: BoxDecoration(
-          color: isDarker ? Colors.black.withOpacity(0.02) : null,
+          color: isDarker ? Colors.black.withOpacity(0.03) : null,
         ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+const dropdownmenuHeight = 300.0;
+
 class ValueField extends StatefulWidget {
   const ValueField({
     super.key,
@@ -39,12 +41,16 @@ class _ValueFieldState extends State<ValueField> {
           style: const TextStyle(
             color: Colors.black,
           ),
+          decoration: const InputDecoration(
+            border: InputBorder.none,
+          ),
         ),
       );
 
   get dropdownMenu => DropdownMenu<String>(
         // todo: filtering without error when nothjing found - custon filtering
         // enableFilter: true,
+        menuHeight: dropdownmenuHeight,
         enableSearch: true,
         requestFocusOnTap: true,
         controller: menuController,
@@ -90,15 +96,15 @@ class _ValueFieldState extends State<ValueField> {
       );
 
   get menuButton => IconButton(
-          onPressed: () {
-            menuController.text = textFieldController.text;
-            switchView();
-          },
-          icon: const Icon(
-            Icons.arrow_drop_down_circle,
-            color: Colors.black,
-          ),
-        );
+        onPressed: () {
+          menuController.text = textFieldController.text;
+          switchView();
+        },
+        icon: const Icon(
+          Icons.arrow_drop_down_circle,
+          color: Colors.black,
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
