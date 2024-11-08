@@ -113,6 +113,5 @@ class _ValueFieldState extends State<ValueField> {
     return Row(
       children: elements,
     );
-    ;
   }
 }

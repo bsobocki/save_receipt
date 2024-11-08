@@ -11,3 +11,25 @@ const LinearGradient mainGradient = LinearGradient(
     Colors.black38,
   ],
 );
+
+const LinearGradient redTransparentGradient = LinearGradient(
+  begin: Alignment.topLeft,
+  end: Alignment.bottomRight,
+  colors: [
+    Color.fromARGB(190, 126, 1, 1),
+    Color.fromARGB(150, 126, 1, 1),
+    Color.fromARGB(97, 126, 1, 1),
+    Colors.transparent,
+  ],
+);
+
+const LinearGradient transparentYellowGradient = LinearGradient(
+  begin: Alignment.topLeft,
+  end: Alignment.bottomRight,
+  colors: [
+    Colors.transparent,
+    Color.fromARGB(85, 207, 186, 1),
+    Color.fromARGB(143, 207, 186, 1),
+    Color.fromARGB(227, 207, 187, 1),
+  ],
+);

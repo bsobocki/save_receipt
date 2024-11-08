@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:save_receipt/color/background/gradient.dart';
 import 'package:save_receipt/components/receipt_image.dart';
@@ -27,7 +25,6 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
       String text = obj.text;
       String? value;
       List<String> values = [];
-
 
       switch (obj.type) {
         case ReceiptObjectType.product:
@@ -84,7 +81,34 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     return ListView.builder(
       itemCount: dataFields.length,
       itemBuilder: (context, index) {
-        return dataFields[index].widget(index % 2 == 0);
+        final dataField = dataFields[index];
+        return Dismissible(
+          key: UniqueKey(),
+          onDismissed: (direction) {
+            setState(() {
+              dataFields.removeAt(index);
+            });
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('${dataField.getText()} removed'),
+                backgroundColor: const Color.fromARGB(73, 0, 0, 0),
+                dismissDirection: direction,
+              ),
+            );
+          },
+          background: Container(
+            decoration: const BoxDecoration(
+              gradient: redTransparentGradient,
+            ),
+            alignment: Alignment.centerLeft,
+            child: const Padding(
+              padding: EdgeInsets.only(left: 16.0, top: 8.0, bottom: 8.0),
+              child: Icon(Icons.highlight_remove_outlined),
+            ),
+          ),
+          child: dataField.widget(index % 2 == 0),
+        );
       },
     );
   }

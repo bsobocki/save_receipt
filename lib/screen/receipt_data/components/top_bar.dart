@@ -50,6 +50,5 @@ class ReceiptPageTopBar extends StatelessWidget {
         ),
       ],
     );
-    ;
   }
 }
