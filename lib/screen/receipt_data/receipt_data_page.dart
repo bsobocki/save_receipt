@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:save_receipt/color/colors.dart';
 import 'package:save_receipt/color/gradient.dart';
 import 'package:save_receipt/components/receipt_image.dart';
 import 'package:save_receipt/screen/receipt_data/components/top_bar.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/data_field.dart';
 import 'package:save_receipt/source/data/structures/data_field.dart';
 import 'package:save_receipt/source/data/structures/receipt.dart';
+import 'package:save_receipt/source/data/values.dart';
 
 class ReceiptDataPage extends StatefulWidget {
   final String title = 'Fill Receipt Data';
@@ -21,6 +23,13 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   late Receipt receipt;
   late AllValuesModel allValues;
   List<DataFieldModel> dataFields = [];
+
+  void changeItemToValue(int index) {
+    setState(() {
+      insertValue(dataFields[index].text, allValues);
+      dataFields.removeAt(index);
+    });
+  }
 
   void handleItemSwipe(
       BuildContext context, DismissDirection direction, int index) {
@@ -44,7 +53,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   void handleItemDismiss(
       BuildContext context, DismissDirection direction, int index) {
     final DataFieldModel dataField = dataFields[index];
-
+    
     setState(() {
       dataFields.removeAt(index);
     });
@@ -102,6 +111,25 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
 
   get topBarHeight => 200.0;
 
+  Widget changeItemToValueButton(int index) => IconButton(
+        onPressed: () => changeItemToValue(index),
+        icon: const Icon(Icons.transform, color: green),
+      );
+
+  Widget dataFieldWidget(int index) {
+    Widget widget = DataField(
+        model: dataFields[index],
+        allValues: allValues,
+        isDarker: (index % 2 == 0));
+
+    if (dataFields[index].isEditing) {
+      widget = Row(
+        children: [changeItemToValueButton(index), Expanded(child: widget)],
+      );
+    }
+    return widget;
+  }
+
   get dataFieldsList {
     return ListView.builder(
       itemCount: dataFields.length,
@@ -138,10 +166,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
               child: Icon(Icons.edit),
             ),
           ),
-          child: DataField(
-              model: dataFields[index],
-              allValues: allValues,
-              isDarker: (index % 2 == 0)),
+          child: dataFieldWidget(index),
         );
       },
     );
