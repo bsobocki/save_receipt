@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:save_receipt/color/background/gradient.dart';
+import 'package:save_receipt/color/gradient.dart';
 import 'package:save_receipt/components/receipt_image.dart';
 import 'package:save_receipt/screen/receipt_data/components/top_bar.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/data_field.dart';
@@ -32,7 +32,8 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('set edit mode: ${dataField.text} to ${dataField.isEditing}'),
+          content: Text(
+              'set edit mode: ${dataField.text} to ${dataField.isEditing}'),
           backgroundColor: const Color.fromARGB(73, 0, 0, 0),
           dismissDirection: direction,
         ),
@@ -118,7 +119,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             return false;
           },
           background: Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: redTransparentGradient,
             ),
             alignment: Alignment.centerLeft,
@@ -128,8 +129,8 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             ),
           ),
           secondaryBackground: Container(
-            decoration: const BoxDecoration(
-              gradient: transparentYellowGradient,
+            decoration: BoxDecoration(
+              gradient: transparentGoldGradient,
             ),
             alignment: Alignment.centerRight,
             child: const Padding(

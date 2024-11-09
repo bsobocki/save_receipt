@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:save_receipt/color/colors.dart';
 
 const LinearGradient mainGradient = LinearGradient(
   begin: Alignment.topLeft,
@@ -12,25 +13,24 @@ const LinearGradient mainGradient = LinearGradient(
   ],
 );
 
-const LinearGradient redTransparentGradient = LinearGradient(
+LinearGradient redTransparentGradient = LinearGradient(
   begin: Alignment.topLeft,
   end: Alignment.bottomRight,
   colors: [
-    Color.fromARGB(190, 126, 1, 1),
-    Color.fromARGB(150, 126, 1, 1),
-    Color.fromARGB(97, 126, 1, 1),
+    red,
+    red.withOpacity(0.6),
+    red.withOpacity(0.2),
     Colors.transparent,
   ],
 );
 
-
-const LinearGradient transparentYellowGradient = LinearGradient(
+LinearGradient transparentGoldGradient = LinearGradient(
   begin: Alignment.topLeft,
   end: Alignment.bottomRight,
   colors: [
     Colors.transparent,
-    Color.fromARGB(85, 207, 186, 1),
-    Color.fromARGB(143, 207, 186, 1),
-    Color.fromARGB(227, 207, 187, 1),
+    gold.withOpacity(0.2),
+    gold.withOpacity(0.6),
+    gold,
   ],
 );

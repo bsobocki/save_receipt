@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:save_receipt/color/colors.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/text_field.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/value_field.dart';
 import 'package:save_receipt/source/data/structures/data_field.dart';
@@ -48,36 +49,9 @@ class _DataFieldState extends State<DataField> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    List<Widget> columnContent = [
-      DataTextField(textController: textController)
-    ];
-
-    if (widget.model.value != null) {
-      Widget valueField = ValueField(
-        initValue: widget.model.value!,
-        values: allValuesForType(widget.model.type),
-        onSelected: (value) {
-          setState(() {
-            if (value != null) {
-              widget.model.value = value;
-            }
-          });
-          print("selected: $value");
-        },
-      );
-
-      if (widget.model.isEditing) {
-        Widget valueRemoveButton = IconButton(
-          onPressed: () => setState(() => widget.model.value = null),
-          icon: const Icon(
-            Icons.cancel,
-            color: Color.fromARGB(163, 138, 2, 2),
-          ),
-        );
-
-        Widget valueTypeMenu = PopupMenuButton<String>(
+  get valueTypeMenu => Padding(
+        padding: const EdgeInsets.only(right: 12.0),
+        child: PopupMenuButton<String>(
           onSelected: (String value) {
             ReceiptObjectType type = ReceiptObjectType.object;
             switch (value) {
@@ -101,14 +75,51 @@ class _DataFieldState extends State<DataField> {
             const PopupMenuItem(value: 'date', child: Text('date')),
             const PopupMenuItem(value: 'info', child: Text('info')),
           ],
-          child: const Icon(Icons.type_specimen, color: Color.fromARGB(183, 255, 193, 7),),
-        );
+          color: gold,
+          child: const Icon(
+            Icons.type_specimen,
+            color: gold,
+          ),
+        ),
+      );
 
-        columnContent.add(
-            Row(children: [Expanded(child: valueField), valueRemoveButton, valueTypeMenu]));
-      } else {
-        columnContent.add(valueField);
-      }
+  get valueRemoveButton => IconButton(
+        onPressed: () => setState(() => widget.model.value = null),
+        icon: const Icon(
+          Icons.cancel,
+          color: Color.fromARGB(162, 119, 7, 7),
+        ),
+      );
+  
+  get valueField => ValueField(
+            initValue: widget.model.value!,
+            values: allValuesForType(widget.model.type),
+            onSelected: (value) {
+              setState(() {
+                if (value != null) {
+                  widget.model.value = value;
+                }
+              });
+              print("selected: $value");
+            },
+          );
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> columnContent = [];
+    Widget dataTextField = DataTextField(textController: textController);
+
+    if (widget.model.isEditing) {
+      columnContent = [
+        Row(children: [Expanded(child: dataTextField), valueTypeMenu]),
+        if (widget.model.value != null)
+          Row(children: [Expanded(child: valueField), valueRemoveButton]),
+      ];
+    } else {
+      columnContent = [
+        dataTextField,
+        if (widget.model.value != null) valueField,
+      ];
     }
 
     return Container(
