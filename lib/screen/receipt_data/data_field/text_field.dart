@@ -19,7 +19,7 @@ class _DataTextFieldState extends State<DataTextField> {
   Widget build(BuildContext context) {
     return TextField(
       controller: widget.textController,
-      style: TextStyle(color: widget.textColor),
+      style: TextStyle(color: widget.textColor, fontWeight: FontWeight.w600),
       textAlign: TextAlign.left,
       decoration: const InputDecoration(
         contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
