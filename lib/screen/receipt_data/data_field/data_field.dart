@@ -90,19 +90,27 @@ class _DataFieldState extends State<DataField> {
           color: Color.fromARGB(162, 119, 7, 7),
         ),
       );
-  
+
+  get valueAddButton => IconButton(
+        onPressed: () => setState(() => widget.model.value = ''),
+        icon: const Icon(
+          Icons.add_box,
+          color: green,
+        ),
+      );
+
   get valueField => ValueField(
-            initValue: widget.model.value!,
-            values: allValuesForType(widget.model.type),
-            onSelected: (value) {
-              setState(() {
-                if (value != null) {
-                  widget.model.value = value;
-                }
-              });
-              print("selected: $value");
-            },
-          );
+        initValue: widget.model.value!,
+        values: allValuesForType(widget.model.type),
+        onSelected: (value) {
+          setState(() {
+            if (value != null) {
+              widget.model.value = value;
+            }
+          });
+          print("selected: $value");
+        },
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +121,9 @@ class _DataFieldState extends State<DataField> {
       columnContent = [
         Row(children: [Expanded(child: dataTextField), valueTypeMenu]),
         if (widget.model.value != null)
-          Row(children: [Expanded(child: valueField), valueRemoveButton]),
+          Row(children: [Expanded(child: valueField), valueRemoveButton])
+        else
+        Row(children: [Expanded(child: Container()), valueAddButton]),
       ];
     } else {
       columnContent = [
