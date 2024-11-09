@@ -3,6 +3,7 @@ import 'package:save_receipt/color/background/gradient.dart';
 import 'package:save_receipt/components/receipt_image.dart';
 import 'package:save_receipt/screen/receipt_data/components/top_bar.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/data_field.dart';
+import 'package:save_receipt/source/data/structures/data_field.dart';
 import 'package:save_receipt/source/data/structures/receipt.dart';
 
 class ReceiptDataPage extends StatefulWidget {
@@ -16,21 +17,22 @@ class ReceiptDataPage extends StatefulWidget {
 }
 
 class _ReceiptDataPageState extends State<ReceiptDataPage> {
-  late Receipt receipt;
-  List<DataField> dataFields = [];
   bool showFullScreenReceiptImage = false;
+  late Receipt receipt;
+  late AllValuesModel allValues;
+  List<DataFieldModel> dataFields = [];
 
   void handleItemSwipe(
       BuildContext context, DismissDirection direction, int index) {
-    final DataField dataField = dataFields[index];
+    final DataFieldModel dataField = dataFields[index];
 
     if (direction == DismissDirection.endToStart) {
       setState(() {
-        dataField.setEditingMode();
+        dataField.isEditing = !dataField.isEditing;
       });
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('edit: ${dataField.getText()}'),
+          content: Text('set edit mode: ${dataField.text} to ${dataField.isEditing}'),
           backgroundColor: const Color.fromARGB(73, 0, 0, 0),
           dismissDirection: direction,
         ),
@@ -40,7 +42,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
 
   void handleItemDismiss(
       BuildContext context, DismissDirection direction, int index) {
-    final DataField dataField = dataFields[index];
+    final DataFieldModel dataField = dataFields[index];
 
     setState(() {
       dataFields.removeAt(index);
@@ -48,48 +50,43 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('remove: ${dataField.getText()}'),
+        content: Text('remove: ${dataField.text}'),
         backgroundColor: const Color.fromARGB(73, 0, 0, 0),
         dismissDirection: direction,
       ),
     );
   }
 
-  void initDataFields() {
+  void initData() {
+    allValues = AllValuesModel(
+      prices: receipt.pricesStr,
+      dates: receipt.datesStr,
+      info: receipt.infoStr,
+    );
+
     for (ReceiptObject obj in receipt.objects) {
       String text = obj.text;
       String? value;
-      List<String> values = [];
 
       switch (obj.type) {
         case ReceiptObjectType.product:
           value = (obj as ReceiptProduct).price.toString();
-          for (ReceiptProduct product in receipt.products) {
-            values.add(product.price.toString());
-          }
           break;
 
         case ReceiptObjectType.date:
           value = (obj as ReceiptDate).date;
-          for (ReceiptDate date in receipt.dates) {
-            values.add(date.date);
-          }
           break;
 
         case ReceiptObjectType.info:
           value = (obj as ReceiptInfo).info;
-          for (ReceiptInfo info in receipt.info) {
-            values.add(info.info);
-          }
           break;
       }
 
-      print('values: $values');
       dataFields.add(
-        DataField(
+        DataFieldModel(
+          type: obj.type,
           text: text,
           value: value,
-          values: values,
         ),
       );
     }
@@ -99,15 +96,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   void initState() {
     super.initState();
     receipt = widget.initialReceipt;
-    initDataFields();
-  }
-
-  @override
-  void dispose() {
-    for (DataField field in dataFields) {
-      field.dispose();
-    }
-    super.dispose();
+    initData();
   }
 
   get topBarHeight => 200.0;
@@ -148,7 +137,10 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
               child: Icon(Icons.edit),
             ),
           ),
-          child: dataFields[index].widget(index % 2 == 0),
+          child: DataField(
+              model: dataFields[index],
+              allValues: allValues,
+              isDarker: (index % 2 == 0)),
         );
       },
     );
