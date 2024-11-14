@@ -35,8 +35,12 @@ List<ConnectedTextLines> getConnectedTextLines(List<TextLine> lines) {
   return connectedLines;
 }
 
-// O(n log n)  => sort by (bottomLeft).y
-// binary search for the textLine
+// Todo:
+/* 
+** O(n log n)  => sort by (bottomLeft).y
+** binary search for the textLine
+*/ 
+// List<ConnectedTextLines> getConnectedTextLines(List<TextLine> lines) {}
 
 bool areInTheSameLine(TextLine a, TextLine b) {
   bool result = false;

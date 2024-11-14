@@ -7,12 +7,12 @@ import 'package:save_receipt/source/data/structures/receipt.dart';
 
 class DataField extends StatefulWidget {
   final DataFieldModel model;
-  final AllValuesModel allValues;
+  final AllValuesModel allValuesData;
   final bool isDarker;
   const DataField(
       {super.key,
       required this.model,
-      required this.allValues,
+      required this.allValuesData,
       required this.isDarker});
 
   get text => null;
@@ -27,11 +27,11 @@ class _DataFieldState extends State<DataField> {
   List<String> allValuesForType(ReceiptObjectType type) {
     switch (type) {
       case ReceiptObjectType.product:
-        return widget.allValues.prices;
+        return widget.allValuesData.prices;
       case ReceiptObjectType.date:
-        return widget.allValues.dates;
+        return widget.allValuesData.dates;
       case ReceiptObjectType.info:
-        return widget.allValues.info;
+        return widget.allValuesData.info;
       default:
         return [];
     }
@@ -123,7 +123,7 @@ class _DataFieldState extends State<DataField> {
         if (widget.model.value != null)
           Row(children: [Expanded(child: valueField), valueRemoveButton])
         else
-        Row(children: [Expanded(child: Container()), valueAddButton]),
+          Row(children: [Expanded(child: Container()), valueAddButton]),
       ];
     } else {
       columnContent = [

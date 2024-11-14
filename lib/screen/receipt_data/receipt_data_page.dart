@@ -21,12 +21,12 @@ class ReceiptDataPage extends StatefulWidget {
 class _ReceiptDataPageState extends State<ReceiptDataPage> {
   bool showFullScreenReceiptImage = false;
   late Receipt receipt;
-  late AllValuesModel allValues;
+  late AllReceiptValues allValues;
   List<DataFieldModel> dataFields = [];
 
   void changeItemToValue(int index) {
     setState(() {
-      insertValue(dataFields[index].text, allValues);
+      allValues.insertValue(dataFields[index].text);
       dataFields.removeAt(index);
     });
   }
@@ -53,7 +53,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   void handleItemDismiss(
       BuildContext context, DismissDirection direction, int index) {
     final DataFieldModel dataField = dataFields[index];
-    
+
     setState(() {
       dataFields.removeAt(index);
     });
@@ -68,11 +68,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   }
 
   void initData() {
-    allValues = AllValuesModel(
-      prices: receipt.pricesStr,
-      dates: receipt.datesStr,
-      info: receipt.infoStr,
-    );
+    allValues = AllReceiptValues.fromReceipt(receipt);
 
     for (ReceiptObject obj in receipt.objects) {
       String text = obj.text;
@@ -119,7 +115,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   Widget dataFieldWidget(int index) {
     Widget widget = DataField(
         model: dataFields[index],
-        allValues: allValues,
+        allValuesData: allValues.model,
         isDarker: (index % 2 == 0));
 
     if (dataFields[index].isEditing) {

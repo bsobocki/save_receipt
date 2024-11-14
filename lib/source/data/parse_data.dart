@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'package:save_receipt/source/data/structures/connected_data.dart';
 import 'package:save_receipt/source/data/structures/receipt.dart';
+import 'package:save_receipt/source/data/values.dart';
 
 List<ReceiptObject> parseData(List<ConnectedTextLines> lines) {
   List<ReceiptObject> data = [];
@@ -32,28 +33,4 @@ List<ReceiptObject> parseData(List<ConnectedTextLines> lines) {
     }
   }
   return data;
-}
-
-bool isNumeric(String data) {
-  return false;
-}
-
-bool isPrice(String data) {
-  RegExp regex = RegExp(r'[0-9]+[,\.][0-9]+[a-zA-Z]*');
-  return regex.hasMatch(data);
-}
-
-String getPriceStr(String data) {
-  RegExp regex = RegExp(r'([0-9]+[,\.]*[0-9]+)');
-  return regex.firstMatch(data)?[0]?.replaceAll(RegExp(','), '.') ?? '';
-}
-
-bool isDate(String data) {
-  RegExp regex =
-      RegExp(r'([0-9]+:[0-9]+)+|[ \t]*([0-9]+[\-\\/][0-9]+[\-\\/][0-9]+)');
-  return regex.hasMatch(data);
-}
-
-double parsePrice(String data) {
-  return 0.0;
 }
