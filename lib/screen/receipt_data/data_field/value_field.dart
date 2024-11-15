@@ -47,53 +47,56 @@ class _ValueFieldState extends State<ValueField> {
         ),
       );
 
-  get dropdownMenu => DropdownMenu<String>(
-        // todo: filtering without error when nothjing found - custon filtering
-        // enableFilter: true,
-        menuHeight: dropdownmenuHeight,
-        enableSearch: true,
-        requestFocusOnTap: true,
-        controller: menuController,
-        inputDecorationTheme: const InputDecorationTheme(
-          filled: true,
-          fillColor: Colors.black,
-          suffixIconColor: Colors.white,
-          border: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black),
-            borderRadius: BorderRadius.all(
-              Radius.circular(15.0),
+  get dropdownMenu => ConstrainedBox(
+    constraints: const BoxConstraints(maxWidth: 300),
+    child: DropdownMenu<String>(
+          // todo: filtering without error when nothjing found - custon filtering
+          // enableFilter: true,
+          menuHeight: dropdownmenuHeight,
+          enableSearch: true,
+          requestFocusOnTap: true,
+          controller: menuController,
+          inputDecorationTheme: const InputDecorationTheme(
+            filled: true,
+            fillColor: Colors.black,
+            suffixIconColor: Colors.white,
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black),
+              borderRadius: BorderRadius.all(
+                Radius.circular(15.0),
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black),
+              borderRadius: BorderRadius.all(
+                Radius.circular(15.0),
+              ),
             ),
           ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black),
-            borderRadius: BorderRadius.all(
-              Radius.circular(15.0),
+          textStyle: const TextStyle(color: Colors.white),
+          menuStyle: const MenuStyle(
+            backgroundColor: WidgetStatePropertyAll(Colors.black),
+            shadowColor: WidgetStatePropertyAll(
+              Color.fromARGB(193, 0, 0, 0),
             ),
+            surfaceTintColor: WidgetStatePropertyAll(Colors.white),
           ),
+          // initialSelection: widget.values.first,
+          onSelected: (value) {
+            String newValue = menuController.text;
+            if (value != null) {
+              newValue = value;
+            }
+            widget.onSelected(newValue);
+            textFieldController.text = newValue;
+            switchView();
+          },
+          dropdownMenuEntries:
+              widget.values.map<DropdownMenuEntry<String>>((String value) {
+            return DropdownMenuEntry<String>(value: value, label: value);
+          }).toList(),
         ),
-        textStyle: const TextStyle(color: Colors.white),
-        menuStyle: const MenuStyle(
-          backgroundColor: WidgetStatePropertyAll(Colors.black),
-          shadowColor: WidgetStatePropertyAll(
-            Color.fromARGB(193, 0, 0, 0),
-          ),
-          surfaceTintColor: WidgetStatePropertyAll(Colors.white),
-        ),
-        // initialSelection: widget.values.first,
-        onSelected: (value) {
-          String newValue = menuController.text;
-          if (value != null) {
-            newValue = value;
-          }
-          widget.onSelected(newValue);
-          textFieldController.text = newValue;
-          switchView();
-        },
-        dropdownMenuEntries:
-            widget.values.map<DropdownMenuEntry<String>>((String value) {
-          return DropdownMenuEntry<String>(value: value, label: value);
-        }).toList(),
-      );
+  );
 
   get menuButton => IconButton(
         onPressed: () {
