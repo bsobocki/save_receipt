@@ -29,27 +29,21 @@ class _ValueFieldState extends State<ValueField> {
     super.initState();
   }
 
-  void switchView() => setState(() {
-        showMenu = !showMenu;
-      });
+  void switchView() => setState(() => showMenu = !showMenu);
 
   get textFieldView => Expanded(
         child: TextField(
           controller: textFieldController,
           onSubmitted: widget.onSelected,
           textAlign: TextAlign.right,
-          style: const TextStyle(
-            color: Colors.black,
-          ),
-          decoration: const InputDecoration(
-            border: InputBorder.none,
-          ),
+          style: const TextStyle(color: Colors.black),
+          decoration: const InputDecoration(border: InputBorder.none),
         ),
       );
 
   get dropdownMenu => ConstrainedBox(
-    constraints: const BoxConstraints(maxWidth: 300),
-    child: DropdownMenu<String>(
+        constraints: const BoxConstraints(maxWidth: 300),
+        child: DropdownMenu<String>(
           // todo: filtering without error when nothjing found - custon filtering
           // enableFilter: true,
           menuHeight: dropdownmenuHeight,
@@ -61,42 +55,36 @@ class _ValueFieldState extends State<ValueField> {
             fillColor: Colors.black,
             suffixIconColor: Colors.white,
             border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.black),
-              borderRadius: BorderRadius.all(
-                Radius.circular(15.0),
-              ),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.black),
-              borderRadius: BorderRadius.all(
-                Radius.circular(15.0),
-              ),
+              borderSide: BorderSide(color: Colors.red),
+              borderRadius: BorderRadius.all(Radius.circular(15.0)),
             ),
           ),
-          textStyle: const TextStyle(color: Colors.white),
-          menuStyle: const MenuStyle(
-            backgroundColor: WidgetStatePropertyAll(Colors.black),
-            shadowColor: WidgetStatePropertyAll(
-              Color.fromARGB(193, 0, 0, 0),
-            ),
-            surfaceTintColor: WidgetStatePropertyAll(Colors.white),
-          ),
-          // initialSelection: widget.values.first,
+          textStyle: menuTextStyle,
+          menuStyle: menuStyle,
           onSelected: (value) {
-            String newValue = menuController.text;
-            if (value != null) {
-              newValue = value;
-            }
-            widget.onSelected(newValue);
+            String newValue = value ?? menuController.text;
             textFieldController.text = newValue;
             switchView();
+            widget.onSelected(newValue);
           },
-          dropdownMenuEntries:
-              widget.values.map<DropdownMenuEntry<String>>((String value) {
-            return DropdownMenuEntry<String>(value: value, label: value);
-          }).toList(),
+          dropdownMenuEntries: menuEntries,
         ),
-  );
+      );
+
+  get menuStyle => const MenuStyle(
+        backgroundColor: WidgetStatePropertyAll(Colors.black),
+        shadowColor: WidgetStatePropertyAll(
+          Color.fromARGB(193, 0, 0, 0),
+        ),
+        surfaceTintColor: WidgetStatePropertyAll(Colors.white),
+      );
+
+  get menuTextStyle => const TextStyle(color: Colors.white);
+
+  get menuEntries =>
+      widget.values.map<DropdownMenuEntry<String>>((String value) {
+        return DropdownMenuEntry<String>(value: value, label: value);
+      }).toList();
 
   get menuButton => IconButton(
         onPressed: () {
