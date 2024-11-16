@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:save_receipt/color/colors.dart';
 import 'package:save_receipt/color/gradient.dart';
 import 'package:save_receipt/components/receipt_image.dart';
 import 'package:save_receipt/screen/receipt_data/components/top_bar.dart';
@@ -19,58 +18,71 @@ class ReceiptDataPage extends StatefulWidget {
 }
 
 class _ReceiptDataPageState extends State<ReceiptDataPage> {
-  bool showFullScreenReceiptImage = false;
-  late Receipt receipt;
-  late AllReceiptValues allValues;
-  List<DataFieldModel> dataFields = [];
+  bool _showFullScreenReceiptImage = false;
+  late Receipt _receipt;
+  late AllReceiptValues _allValues;
+  List<DataFieldModel> _dataFields = [];
+  final ScrollController _scrollController = ScrollController();
+
+  void setPageState(Function() setValues) {
+    //final double currentPosition = _scrollController.position.pixels;
+    setState(() {
+      setValues();
+      //_scrollController.jumpTo(currentPosition);
+    });
+  }
 
   void changeItemToValue(int index) {
-    setState(() {
-      allValues.insertValue(dataFields[index].text);
-      dataFields.removeAt(index);
+    setPageState(() {
+      _allValues.insertValue(_dataFields[index].text);
+      _dataFields.removeAt(index);
     });
   }
 
   void handleItemSwipe(
       BuildContext context, DismissDirection direction, int index) {
-    final DataFieldModel dataField = dataFields[index];
-
     if (direction == DismissDirection.endToStart) {
-      setState(() {
-        dataField.isEditing = !dataField.isEditing;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-              'set edit mode: ${dataField.text} to ${dataField.isEditing}'),
-          backgroundColor: const Color.fromARGB(73, 0, 0, 0),
-          dismissDirection: direction,
-        ),
-      );
+      handleItemEditMode(context, index);
+    } else if (direction == DismissDirection.startToEnd) {
+      handleItemDismiss(context, index);
     }
   }
 
-  void handleItemDismiss(
-      BuildContext context, DismissDirection direction, int index) {
-    final DataFieldModel dataField = dataFields[index];
+  void handleItemEditMode(BuildContext context, int index) {
+    final DataFieldModel dataField = _dataFields[index];
 
-    setState(() {
-      dataFields.removeAt(index);
+    setPageState(() {
+      dataField.isEditing = !dataField.isEditing;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content:
+            Text('set edit mode: ${dataField.text} to ${dataField.isEditing}'),
+        backgroundColor: const Color.fromARGB(73, 0, 0, 0),
+      ),
+    );
+  }
+
+  void handleItemDismiss(BuildContext context, int index) {
+    final String dataFieldText = _dataFields[index].text;
+
+    setPageState(() {
+      _dataFields.removeAt(index);
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('remove: ${dataField.text}'),
+        content: Text('remove: ${dataFieldText}'),
         backgroundColor: const Color.fromARGB(73, 0, 0, 0),
-        dismissDirection: direction,
       ),
     );
   }
 
   void initData() {
-    allValues = AllReceiptValues.fromReceipt(receipt);
+    _dataFields = [];
+    _allValues = AllReceiptValues.fromReceipt(_receipt);
 
-    for (ReceiptObject obj in receipt.objects) {
+    for (ReceiptObject obj in _receipt.objects) {
       String text = obj.text;
       String? value;
 
@@ -88,7 +100,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
           break;
       }
 
-      dataFields.add(
+      _dataFields.add(
         DataFieldModel(
           type: obj.type,
           text: text,
@@ -101,68 +113,27 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   @override
   void initState() {
     super.initState();
-    receipt = widget.initialReceipt;
+    _receipt = widget.initialReceipt;
     initData();
   }
 
   get topBarHeight => 200.0;
 
-  Widget changeItemToValueButton(int index) => IconButton(
-        onPressed: () => changeItemToValue(index),
-        icon: const Icon(Icons.transform, color: green),
-      );
-
-  Widget dataFieldWidget(int index) {
-    Widget widget = DataField(
-        model: dataFields[index],
-        allValuesData: allValues.model,
-        isDarker: (index % 2 == 0));
-
-    if (dataFields[index].isEditing) {
-      widget = Row(
-        children: [changeItemToValueButton(index), Expanded(child: widget)],
-      );
-    }
-    return widget;
-  }
-
   get dataFieldsList {
     return ListView.builder(
-      itemCount: dataFields.length,
+      itemCount: _dataFields.length,
+      controller: _scrollController,
       itemBuilder: (context, index) {
-        return Dismissible(
+        return DataField(
           key: UniqueKey(),
-          onDismissed: (direction) =>
-              handleItemDismiss(context, direction, index),
-          confirmDismiss: (direction) async {
-            if (direction == DismissDirection.startToEnd) {
-              return true;
-            } else if (direction == DismissDirection.endToStart) {
-              handleItemSwipe(context, direction, index);
-            }
-            return false;
-          },
-          background: Container(
-            decoration: BoxDecoration(
-              gradient: redTransparentGradient,
-            ),
-            alignment: Alignment.centerLeft,
-            child: const Padding(
-              padding: EdgeInsets.only(left: 16.0, top: 8.0, bottom: 8.0),
-              child: Icon(Icons.highlight_remove_outlined),
-            ),
-          ),
-          secondaryBackground: Container(
-            decoration: BoxDecoration(
-              gradient: transparentGoldGradient,
-            ),
-            alignment: Alignment.centerRight,
-            child: const Padding(
-              padding: EdgeInsets.only(right: 16.0, top: 8.0, bottom: 8.0),
-              child: Icon(Icons.edit),
-            ),
-          ),
-          child: dataFieldWidget(index),
+          model: _dataFields[index],
+          allValuesData: _allValues.model,
+          isDarker: (index % 2 == 0),
+          onItemDismissSwipe: () =>
+              handleItemSwipe(context, DismissDirection.startToEnd, index),
+          onItemEditModeSwipe: () =>
+              handleItemSwipe(context, DismissDirection.endToStart, index),
+          onChangeToValue: () => changeItemToValue(index),
         );
       },
     );
@@ -204,9 +175,9 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
       );
 
   void openFullImageMode() {
-    if (receipt.imgPath != null) {
+    if (_receipt.imgPath != null) {
       setState(() {
-        showFullScreenReceiptImage = true;
+        _showFullScreenReceiptImage = true;
       });
     } else {
       print("no - image");
@@ -226,7 +197,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
           children: [
             ReceiptPageTopBar(
               onImageIconPress: openFullImageMode,
-              receiptImgPath: receipt.imgPath,
+              receiptImgPath: _receipt.imgPath,
             ),
             receiptEditor,
           ],
@@ -242,13 +213,13 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
       content,
     ];
 
-    if (showFullScreenReceiptImage) {
+    if (_showFullScreenReceiptImage) {
       screenElements.add(
         ReceiptImageViewer(
-          imagePath: receipt.imgPath!,
+          imagePath: _receipt.imgPath!,
           onExit: () {
             setState(() {
-              showFullScreenReceiptImage = false;
+              _showFullScreenReceiptImage = false;
             });
           },
         ),
