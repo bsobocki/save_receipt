@@ -24,16 +24,8 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   List<DataFieldModel> _dataFields = [];
   final ScrollController _scrollController = ScrollController();
 
-  void setPageState(Function() setValues) {
-    //final double currentPosition = _scrollController.position.pixels;
-    setState(() {
-      setValues();
-      //_scrollController.jumpTo(currentPosition);
-    });
-  }
-
   void changeItemToValue(int index) {
-    setPageState(() {
+    setState(() {
       _allValues.insertValue(_dataFields[index].text);
       _dataFields.removeAt(index);
     });
@@ -51,7 +43,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   void handleItemEditMode(BuildContext context, int index) {
     final DataFieldModel dataField = _dataFields[index];
 
-    setPageState(() {
+    setState(() {
       dataField.isEditing = !dataField.isEditing;
     });
     ScaffoldMessenger.of(context).showSnackBar(
@@ -66,7 +58,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   void handleItemDismiss(BuildContext context, int index) {
     final String dataFieldText = _dataFields[index].text;
 
-    setPageState(() {
+    setState(() {
       _dataFields.removeAt(index);
     });
 
