@@ -13,7 +13,7 @@ const LinearGradient mainGradient = LinearGradient(
   ],
 );
 
-LinearGradient redTransparentGradient = LinearGradient(
+LinearGradient redToTransparentGradient = LinearGradient(
   begin: Alignment.topLeft,
   end: Alignment.bottomRight,
   colors: [
@@ -24,7 +24,7 @@ LinearGradient redTransparentGradient = LinearGradient(
   ],
 );
 
-LinearGradient transparentGoldGradient = LinearGradient(
+LinearGradient transparentToGoldGradient = LinearGradient(
   begin: Alignment.topLeft,
   end: Alignment.bottomRight,
   colors: [

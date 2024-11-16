@@ -165,7 +165,10 @@ class _DataFieldState extends State<DataField> {
     );
 
     if (widget.model.isEditing) {
-      return Row(children: [changeItemToValueButton, Expanded(child: dataFieldWidget)]);
+      return Row(children: [
+        changeItemToValueButton,
+        Expanded(child: dataFieldWidget)
+      ]);
     }
 
     return dataFieldWidget;
@@ -176,21 +179,21 @@ class _DataFieldState extends State<DataField> {
         onDismissed: (direction) => widget.onItemDismissSwipe(),
         confirmDismiss: handleSwipe,
         background: getSwipeBackground(
-            Icons.highlight_remove_outlined, redTransparentGradient),
+            Icons.close, redToTransparentGradient, Alignment.centerLeft),
         secondaryBackground:
-            getSwipeBackground(Icons.edit, transparentGoldGradient),
+            getSwipeBackground(Icons.edit, transparentToGoldGradient, Alignment.centerRight),
         child: dataFieldContent,
       );
 
   Widget getSwipeBackground(
-          final IconData iconData, final LinearGradient gradient) =>
+          final IconData iconData, final LinearGradient gradient, Alignment alignment) =>
       Container(
         decoration: BoxDecoration(
           gradient: gradient,
         ),
-        alignment: Alignment.centerRight,
+        alignment: alignment,
         child: Padding(
-          padding: const EdgeInsets.only(right: 16.0, top: 8.0, bottom: 8.0),
+          padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0, bottom: 8.0),
           child: Icon(iconData),
         ),
       );
