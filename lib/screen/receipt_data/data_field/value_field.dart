@@ -107,8 +107,13 @@ class _ValueFieldState extends State<ValueField> {
         Expanded(child: Container()),
         dropdownMenu,
       ]);
-    } else {
-      return Row(children: [Expanded(child: textFieldView), if(!widget.editMode)menuButton,]);
+    } else if (!widget.editMode) {
+      return Row(children: [
+        Expanded(child: textFieldView),
+        menuButton,
+      ]);
     }
+    return Text(textFieldController.text,
+        style: TextStyle(color: widget.textColor));
   }
 }

@@ -74,7 +74,7 @@ class _DataFieldState extends State<DataField> {
   get valueField => ValueField(
         textColor: colorScheme.textColor,
         editMode: widget.model.isEditing,
-        initValue: widget.model.value!,
+        initValue: widget.model.value ?? '',
         values: allValuesForType(widget.model.type),
         onSelected: (value) {
           setState(() {
@@ -90,17 +90,17 @@ class _DataFieldState extends State<DataField> {
         icon: const Icon(Icons.transform, color: darkGreen),
       );
 
-  Widget expandableOptionsButtons(BoxConstraints constraints) => ExpandableOptionsButtons(
+  Widget expandableOptionsButtons(BoxConstraints constraints) =>
+      ExpandableOptionsButtons(
         constraints: constraints,
         model: widget.model,
         colors: colorScheme,
         onRemoveValue: () => setState(() => widget.model.value = null),
         onAddValue: () => setState(() => widget.model.value = '<no value>'),
         onValueTypeChange: (ReceiptObjectType value) {
-          setState(() {
-            widget.model.type = value;
-          });
+          widget.model.type = value;
         },
+        onCollapse: () => setState(() {}),
       );
 
   get dataFieldContent {
@@ -113,11 +113,15 @@ class _DataFieldState extends State<DataField> {
 
     if (widget.model.isEditing) {
       columnContent.add(
-        Row(
-          children: [
-            Expanded(child: LayoutBuilder(builder: (context, constraints) => expandableOptionsButtons(constraints))),
-          ],
-        ),
+        Row(children: [
+          valueField,
+          Expanded(
+            child: LayoutBuilder(
+              builder: (context, constraints) =>
+                  expandableOptionsButtons(constraints),
+            ),
+          ),
+        ]),
       );
     } else if (widget.model.value != null) {
       columnContent.add(valueField);

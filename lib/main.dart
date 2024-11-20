@@ -5,7 +5,6 @@ import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:save_receipt/color/gradient.dart';
-import 'package:save_receipt/color/scheme/main_sheme.dart';
 import 'package:save_receipt/screen/receipt_data/receipt_data_page.dart';
 import 'package:save_receipt/source/data/connect_data.dart';
 import 'package:save_receipt/source/data/parse_data.dart';

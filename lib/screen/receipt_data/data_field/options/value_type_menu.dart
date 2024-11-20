@@ -62,6 +62,5 @@ class _DataFieldValueTypeMenuState extends State<DataFieldValueTypeMenu> {
         ),
       ),
     );
-    ;
   }
 }

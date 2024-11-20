@@ -13,6 +13,7 @@ class ExpandableOptionsButtons extends StatefulWidget {
     required this.colors,
     required this.onRemoveValue,
     required this.onAddValue,
+    required this.onCollapse,
     required this.model,
     required this.onValueTypeChange,
     required this.constraints,
@@ -21,6 +22,7 @@ class ExpandableOptionsButtons extends StatefulWidget {
   final DataFieldColorScheme colors;
   final Function() onRemoveValue;
   final Function() onAddValue;
+  final Function() onCollapse;
   final Function(ReceiptObjectType) onValueTypeChange;
   final DataFieldModel model;
   final BoxConstraints constraints;
@@ -38,19 +40,12 @@ class _ExpandableOptionsButtonsState extends State<ExpandableOptionsButtons> {
     return SizedBox(width: 16);
   }
 
-  get valueTypeMenuButton => DataFieldValueTypeMenu(
-        color: widget.colors.goldButtonColor,
-        type: widget.model.type,
-        onSelected: widget.onValueTypeChange,
-      );
-
   @override
   Widget build(BuildContext context) {
     final double width =
         isExpanded ? widget.constraints.maxWidth - iconButtonSize : 0.0;
 
-    return SizedBox(
-      width: width,
+    return Expanded(
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.end,
@@ -90,7 +85,11 @@ class _ExpandableOptionsButtonsState extends State<ExpandableOptionsButtons> {
                     onAddValue: widget.onAddValue,
                   ),
                   separator,
-                  valueTypeMenuButton,
+                  DataFieldValueTypeMenu(
+                    color: widget.colors.goldButtonColor,
+                    type: widget.model.type,
+                    onSelected: (value) => setState(() => widget.onValueTypeChange(value)),
+                  ),
                   separator,
                   CircleAvatar(
                     backgroundColor: Colors.blueGrey,
