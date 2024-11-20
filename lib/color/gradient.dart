@@ -17,9 +17,9 @@ LinearGradient redToTransparentGradient = LinearGradient(
   begin: Alignment.topLeft,
   end: Alignment.bottomRight,
   colors: [
-    red,
-    red.withOpacity(0.6),
-    red.withOpacity(0.2),
+    darkRed,
+    darkRed.withOpacity(0.6),
+    darkRed.withOpacity(0.2),
     Colors.transparent,
   ],
 );

@@ -8,11 +8,15 @@ class ValueField extends StatefulWidget {
     required this.initValue,
     required this.values,
     required this.onSelected,
+    required this.editMode,
+    required this.textColor,
   });
 
   final String initValue;
   final List<String> values;
   final Function(String? value) onSelected;
+  final Color textColor;
+  final bool editMode;
 
   @override
   State<ValueField> createState() => _ValueFieldState();
@@ -31,14 +35,13 @@ class _ValueFieldState extends State<ValueField> {
 
   void switchView() => setState(() => showMenu = !showMenu);
 
-  get textFieldView => Expanded(
-        child: TextField(
-          controller: textFieldController,
-          onSubmitted: widget.onSelected,
-          textAlign: TextAlign.right,
-          style: const TextStyle(color: Colors.black),
-          decoration: const InputDecoration(border: InputBorder.none),
-        ),
+  get textFieldView => TextField(
+        controller: textFieldController,
+        onSubmitted: widget.onSelected,
+        enabled: !widget.editMode,
+        textAlign: TextAlign.right,
+        style: TextStyle(color: widget.textColor),
+        decoration: const InputDecoration(border: InputBorder.none),
       );
 
   get dropdownMenu => ConstrainedBox(
@@ -99,16 +102,13 @@ class _ValueFieldState extends State<ValueField> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> elements = [Expanded(child: Container())];
-
     if (showMenu) {
-      elements.add(dropdownMenu);
+      return Row(children: [
+        Expanded(child: Container()),
+        dropdownMenu,
+      ]);
     } else {
-      elements.add(textFieldView);
-      elements.add(menuButton);
+      return Row(children: [Expanded(child: textFieldView), if(!widget.editMode)menuButton,]);
     }
-    return Row(
-      children: elements,
-    );
   }
 }

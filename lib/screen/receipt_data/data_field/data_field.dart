@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:save_receipt/color/colors.dart';
 import 'package:save_receipt/color/gradient.dart';
+import 'package:save_receipt/color/scheme/data_field_scheme.dart';
+import 'package:save_receipt/screen/receipt_data/data_field/options/options_buttons.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/text_field.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/value_field.dart';
 import 'package:save_receipt/source/data/structures/data_field.dart';
@@ -32,6 +34,7 @@ class DataField extends StatefulWidget {
 
 class _DataFieldState extends State<DataField> {
   TextEditingController textController = TextEditingController();
+  late final DataFieldColorScheme colorScheme;
 
   List<String> allValuesForType(ReceiptObjectType type) {
     switch (type) {
@@ -59,6 +62,7 @@ class _DataFieldState extends State<DataField> {
   void initState() {
     super.initState();
     textController.text = widget.model.text;
+    colorScheme = DataFieldColorScheme(widget.isDarker, widget.model.isEditing);
   }
 
   @override
@@ -67,57 +71,9 @@ class _DataFieldState extends State<DataField> {
     super.dispose();
   }
 
-  get valueTypeMenu => Padding(
-        padding: const EdgeInsets.only(right: 12.0),
-        child: PopupMenuButton<String>(
-          onSelected: (String value) {
-            ReceiptObjectType type = ReceiptObjectType.object;
-            switch (value) {
-              case 'price':
-                type = ReceiptObjectType.product;
-                break;
-
-              case 'info':
-                type = ReceiptObjectType.info;
-                break;
-
-              case 'date':
-                type = ReceiptObjectType.date;
-            }
-            setState(() {
-              widget.model.type = type;
-            });
-          },
-          itemBuilder: (context) => [
-            const PopupMenuItem(value: 'price', child: Text('price')),
-            const PopupMenuItem(value: 'date', child: Text('date')),
-            const PopupMenuItem(value: 'info', child: Text('info')),
-          ],
-          color: gold,
-          child: const Icon(
-            Icons.type_specimen,
-            color: gold,
-          ),
-        ),
-      );
-
-  get valueRemoveButton => IconButton(
-        onPressed: () => setState(() => widget.model.value = null),
-        icon: const Icon(
-          Icons.cancel,
-          color: Color.fromARGB(162, 119, 7, 7),
-        ),
-      );
-
-  get valueAddButton => IconButton(
-        onPressed: () => setState(() => widget.model.value = ''),
-        icon: const Icon(
-          Icons.add_box,
-          color: green,
-        ),
-      );
-
   get valueField => ValueField(
+        textColor: colorScheme.textColor,
+        editMode: widget.model.isEditing,
         initValue: widget.model.value!,
         values: allValuesForType(widget.model.type),
         onSelected: (value) {
@@ -126,38 +82,49 @@ class _DataFieldState extends State<DataField> {
               widget.model.value = value;
             }
           });
-          print("selected: $value");
         },
       );
 
   get changeItemToValueButton => IconButton(
         onPressed: widget.onChangeToValue,
-        icon: const Icon(Icons.transform, color: green),
+        icon: const Icon(Icons.transform, color: darkGreen),
+      );
+
+  Widget expandableOptionsButtons(BoxConstraints constraints) => ExpandableOptionsButtons(
+        constraints: constraints,
+        model: widget.model,
+        colors: colorScheme,
+        onRemoveValue: () => setState(() => widget.model.value = null),
+        onAddValue: () => setState(() => widget.model.value = '<no value>'),
+        onValueTypeChange: (ReceiptObjectType value) {
+          setState(() {
+            widget.model.type = value;
+          });
+        },
       );
 
   get dataFieldContent {
-    List<Widget> columnContent = [];
-    Widget dataTextField = DataTextField(textController: textController);
+    Widget dataTextField = DataTextField(
+      editMode: widget.model.isEditing,
+      textColor: colorScheme.textColor,
+      textController: textController,
+    );
+    List<Widget> columnContent = [dataTextField];
 
     if (widget.model.isEditing) {
-      columnContent = [
-        Row(children: [Expanded(child: dataTextField), valueTypeMenu]),
-        if (widget.model.value != null)
-          Row(children: [Expanded(child: valueField), valueRemoveButton])
-        else
-          Row(children: [Expanded(child: Container()), valueAddButton]),
-      ];
-    } else {
-      columnContent = [
-        dataTextField,
-        if (widget.model.value != null) valueField,
-      ];
+      columnContent.add(
+        Row(
+          children: [
+            Expanded(child: LayoutBuilder(builder: (context, constraints) => expandableOptionsButtons(constraints))),
+          ],
+        ),
+      );
+    } else if (widget.model.value != null) {
+      columnContent.add(valueField);
     }
 
     Widget dataFieldWidget = Container(
-      decoration: BoxDecoration(
-        color: widget.isDarker ? Colors.black.withOpacity(0.03) : null,
-      ),
+      color: colorScheme.backgroundColor,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(children: columnContent),
@@ -165,10 +132,14 @@ class _DataFieldState extends State<DataField> {
     );
 
     if (widget.model.isEditing) {
-      return Row(children: [
-        changeItemToValueButton,
-        Expanded(child: dataFieldWidget)
-      ]);
+      return Row(
+        children: [
+          changeItemToValueButton,
+          Expanded(
+            child: dataFieldWidget,
+          )
+        ],
+      );
     }
 
     return dataFieldWidget;
@@ -178,22 +149,29 @@ class _DataFieldState extends State<DataField> {
         key: UniqueKey(),
         onDismissed: (direction) => widget.onItemDismissSwipe(),
         confirmDismiss: handleSwipe,
-        background: getSwipeBackground(
+        background: getFieldSwipeBackground(
             Icons.close, redToTransparentGradient, Alignment.centerLeft),
-        secondaryBackground:
-            getSwipeBackground(Icons.edit, transparentToGoldGradient, Alignment.centerRight),
+        secondaryBackground: getFieldSwipeBackground(
+            widget.model.isEditing ? Icons.edit_off : Icons.edit,
+            transparentToGoldGradient,
+            Alignment.centerRight),
         child: dataFieldContent,
       );
 
-  Widget getSwipeBackground(
-          final IconData iconData, final LinearGradient gradient, Alignment alignment) =>
+  Widget getFieldSwipeBackground(final IconData iconData,
+          final LinearGradient gradient, Alignment alignment) =>
       Container(
         decoration: BoxDecoration(
           gradient: gradient,
         ),
         alignment: alignment,
         child: Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 8.0, bottom: 8.0),
+          padding: const EdgeInsets.only(
+            left: 16.0,
+            right: 16.0,
+            top: 8.0,
+            bottom: 8.0,
+          ),
           child: Icon(iconData),
         ),
       );
