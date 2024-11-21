@@ -27,6 +27,16 @@ class AllReceiptValues {
       model.info.add(value);
     }
   }
+  
+  void removeValue(String value) {
+    if (isPrice(value)) {
+      model.prices.remove(value);
+    } else if (isDate(value)) {
+      model.dates.remove(value);
+    } else {
+      model.info.remove(value);
+    }
+  }
 }
 
 bool isNumeric(String data) {

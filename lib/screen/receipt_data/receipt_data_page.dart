@@ -31,6 +31,22 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     });
   }
 
+  void changeValueToItem(int index) {
+    if (_dataFields[index].value != null) {
+      setState(() {
+        _allValues.removeValue(_dataFields[index].value!);
+        _dataFields.add(
+          DataFieldModel(
+            type: ReceiptObjectType.object,
+            text: _dataFields[index].value!,
+            value: null,
+          ),
+        );
+        _dataFields[index].value = null;
+      });
+    }
+  }
+
   void handleItemSwipe(
       BuildContext context, DismissDirection direction, int index) {
     if (direction == DismissDirection.endToStart) {
@@ -126,6 +142,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
           onItemEditModeSwipe: () =>
               handleItemSwipe(context, DismissDirection.endToStart, index),
           onChangeToValue: () => changeItemToValue(index),
+          onValueToFieldChange: () => changeValueToItem(index),
         );
       },
     );

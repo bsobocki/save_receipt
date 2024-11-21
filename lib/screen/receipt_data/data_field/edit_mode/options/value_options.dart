@@ -6,8 +6,8 @@ import 'package:save_receipt/source/data/structures/receipt.dart';
 
 const double iconButtonSize = 48;
 
-class ExpandableOptionsButtons extends StatefulWidget {
-  const ExpandableOptionsButtons({
+class ExpandableValueOptions extends StatefulWidget {
+  const ExpandableValueOptions({
     super.key,
     required this.colors,
     required this.onRemoveValue,
@@ -17,23 +17,24 @@ class ExpandableOptionsButtons extends StatefulWidget {
     required this.onValueTypeChange,
     required this.constraints,
     required this.initType,
+    required this.onValueToFieldChange,
   });
 
   final DataFieldColorScheme colors;
   final Function() onRemoveValue;
   final Function() onAddValue;
   final Function() onCollapse;
+  final Function() onValueToFieldChange;
   final Function(ReceiptObjectType) onValueTypeChange;
   final ReceiptObjectType initType;
   final BoxConstraints constraints;
   final bool valueExists;
 
   @override
-  State<ExpandableOptionsButtons> createState() =>
-      _ExpandableOptionsButtonsState();
+  State<ExpandableValueOptions> createState() => _ExpandableValueOptionsState();
 }
 
-class _ExpandableOptionsButtonsState extends State<ExpandableOptionsButtons> {
+class _ExpandableValueOptionsState extends State<ExpandableValueOptions> {
   bool isExpanded = false;
 
   get separator {
@@ -97,8 +98,9 @@ class _ExpandableOptionsButtonsState extends State<ExpandableOptionsButtons> {
                   CircleAvatar(
                     backgroundColor: Colors.blueGrey,
                     child: IconButton(
-                      icon: const Icon(Icons.edit, color: Colors.white),
-                      onPressed: () {},
+                      icon: const Icon(Icons.swap_horiz_outlined,
+                          color: Colors.white),
+                      onPressed: widget.onValueToFieldChange,
                     ),
                   ),
                   separator,

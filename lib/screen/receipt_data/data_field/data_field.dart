@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:save_receipt/color/colors.dart';
 import 'package:save_receipt/color/gradient.dart';
 import 'package:save_receipt/color/scheme/data_field_scheme.dart';
-import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/options/options_buttons.dart';
+import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/options/value_options.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/text/field_text.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/text/value_text.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/main_view/text_field.dart';
@@ -18,6 +18,7 @@ class DataField extends StatefulWidget {
   final Function() onItemEditModeSwipe;
   final Function(DismissDirection direction)? onItemSwipe;
   final Function() onChangeToValue;
+  final Function() onValueToFieldChange;
   const DataField(
       {super.key,
       required this.model,
@@ -26,7 +27,7 @@ class DataField extends StatefulWidget {
       required this.onItemDismissSwipe,
       required this.onItemEditModeSwipe,
       required this.onChangeToValue,
-      this.onItemSwipe});
+      this.onItemSwipe, required this.onValueToFieldChange});
 
   get text => null;
 
@@ -92,7 +93,7 @@ class _DataFieldState extends State<DataField> {
       );
 
   Widget expandableOptionsButtons(BoxConstraints constraints) =>
-      ExpandableOptionsButtons(
+      ExpandableValueOptions(
         constraints: constraints,
         colors: colorScheme,
         onRemoveValue: () => setState(() => widget.model.value = null),
@@ -102,6 +103,7 @@ class _DataFieldState extends State<DataField> {
         onCollapse: () => setState(() {}),
         valueExists: widget.model.value != null,
         initType: widget.model.type,
+        onValueToFieldChange: widget.onValueToFieldChange,
       );
 
   get dataFieldContent {
