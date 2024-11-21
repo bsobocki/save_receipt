@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:save_receipt/screen/receipt_data/components/expandable_button.dart';
 
 class DataFieldAddRemoveValueButton extends StatefulWidget {
   const DataFieldAddRemoveValueButton({
@@ -23,22 +24,23 @@ class DataFieldAddRemoveValueButton extends StatefulWidget {
 
 class _DataFeildAddRemoveValueButtonState
     extends State<DataFieldAddRemoveValueButton> {
-  get valueRemoveButton => CircleAvatar(
-        backgroundColor: widget.removeButtonColor,
-        child: IconButton(
-          onPressed: widget.onRemoveValue,
-          icon: const Icon(Icons.delete_forever_sharp),
-          color: Colors.white,
-        ),
-      );
 
-  get valueAddButton => CircleAvatar(
-        backgroundColor: widget.addButtonColor,
-        child: IconButton(
-          onPressed: widget.onAddValue,
-          icon: const Icon(Icons.add),
-          color: Colors.white,
-        ),
+  get valueRemoveButton => ExpandableButton(
+        label: "Remove Value",
+        onPressed: widget.onRemoveValue,
+        buttonColor: widget.removeButtonColor,
+        iconData: Icons.delete_forever_sharp,
+        iconColor: Colors.white,
+        textColor: Colors.white,
+      );
+  
+  get valueAddButton => ExpandableButton(
+        label: "Add Value",
+        onPressed: widget.onAddValue,
+        buttonColor: widget.addButtonColor,
+        iconData: Icons.add,
+        iconColor: Colors.white,
+        textColor: Colors.white,
       );
 
   @override

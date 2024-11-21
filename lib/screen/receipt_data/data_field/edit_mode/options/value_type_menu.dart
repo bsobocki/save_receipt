@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:save_receipt/screen/receipt_data/components/expandable_button.dart';
 import 'package:save_receipt/source/data/structures/receipt.dart';
 
 class DataFieldValueTypeMenu extends StatefulWidget {
@@ -54,7 +55,10 @@ class _DataFieldValueTypeMenuState extends State<DataFieldValueTypeMenu> {
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey buttonKey = GlobalKey();
+
     return PopupMenuButton<ReceiptObjectType>(
+      key: buttonKey,
       onSelected: (ReceiptObjectType value) => setState(() {
         widget.onSelected(value);
         type = value;
@@ -65,12 +69,19 @@ class _DataFieldValueTypeMenuState extends State<DataFieldValueTypeMenu> {
         getPopupMenuItem('date', ReceiptObjectType.date),
       ],
       color: widget.color,
-      child: CircleAvatar(
-        backgroundColor: widget.color,
-        child: Icon(
-          getTypeIcon(type),
-          color: Colors.white,
-        ),
+      // custom button
+      // need to open menu using key
+      child: ExpandableButton(
+        label: "Select Type",
+        onPressed: () {
+          // This will trigger the PopupMenuButton
+          dynamic state = buttonKey.currentState;
+          state?.showButtonMenu();
+        },
+        buttonColor: widget.color,
+        iconData: getTypeIcon(type),
+        iconColor: Colors.white,
+        textColor: Colors.white,
       ),
     );
   }

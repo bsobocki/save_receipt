@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:save_receipt/color/scheme/data_field_scheme.dart';
+import 'package:save_receipt/screen/receipt_data/components/expandable_button.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/options/add_remove_value_button.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/options/value_type_menu.dart';
 import 'package:save_receipt/source/data/structures/receipt.dart';
@@ -95,13 +96,13 @@ class _ExpandableValueOptionsState extends State<ExpandableValueOptions> {
                     onSelected: widget.onValueTypeChange,
                   ),
                   separator,
-                  CircleAvatar(
-                    backgroundColor: Colors.blueGrey,
-                    child: IconButton(
-                      icon: const Icon(Icons.swap_horiz_outlined,
-                          color: Colors.white),
-                      onPressed: widget.onValueToFieldChange,
-                    ),
+                  ExpandableButton(
+                    label: 'Value As New Item',
+                    buttonColor: Colors.blueGrey,
+                    iconData: Icons.swap_horiz_outlined,
+                    iconColor: Colors.white,
+                    textColor: Colors.white,
+                    onPressed: widget.onValueToFieldChange,
                   ),
                   separator,
                 ],
