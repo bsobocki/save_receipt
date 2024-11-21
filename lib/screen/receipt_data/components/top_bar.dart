@@ -41,6 +41,7 @@ class ReceiptPageTopBar extends StatelessWidget {
   }
 
   get popupMenu => PopupMenuButton<String>(
+    color: Colors.black,
         onSelected: (String value){
           print("chosen: $value");
         },
