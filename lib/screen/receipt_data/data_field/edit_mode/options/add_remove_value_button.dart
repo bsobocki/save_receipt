@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 class DataFieldAddRemoveValueButton extends StatefulWidget {
   const DataFieldAddRemoveValueButton({
     super.key,
-    required this.value,
+    required this.valueExists,
     required this.removeButtonColor,
     required this.addButtonColor,
     required this.onRemoveValue,
     required this.onAddValue,
   });
 
-  final String? value;
+  final bool valueExists;
   final Color removeButtonColor;
   final Color addButtonColor;
   final Function() onRemoveValue;
@@ -43,6 +43,6 @@ class _DataFeildAddRemoveValueButtonState
 
   @override
   Widget build(BuildContext context) {
-    return widget.value == null ? valueAddButton : valueRemoveButton;
+    return widget.valueExists ? valueRemoveButton : valueAddButton;
   }
 }

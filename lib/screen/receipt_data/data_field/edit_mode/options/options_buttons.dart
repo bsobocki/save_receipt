@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:save_receipt/color/scheme/data_field_scheme.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/options/add_remove_value_button.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/options/value_type_menu.dart';
-import 'package:save_receipt/source/data/structures/data_field.dart';
 import 'package:save_receipt/source/data/structures/receipt.dart';
 
 const double iconButtonSize = 48;
@@ -14,9 +13,10 @@ class ExpandableOptionsButtons extends StatefulWidget {
     required this.onRemoveValue,
     required this.onAddValue,
     required this.onCollapse,
-    required this.model,
+    required this.valueExists,
     required this.onValueTypeChange,
     required this.constraints,
+    required this.initType,
   });
 
   final DataFieldColorScheme colors;
@@ -24,8 +24,9 @@ class ExpandableOptionsButtons extends StatefulWidget {
   final Function() onAddValue;
   final Function() onCollapse;
   final Function(ReceiptObjectType) onValueTypeChange;
-  final DataFieldModel model;
+  final ReceiptObjectType initType;
   final BoxConstraints constraints;
+  final bool valueExists;
 
   @override
   State<ExpandableOptionsButtons> createState() =>
@@ -36,8 +37,7 @@ class _ExpandableOptionsButtonsState extends State<ExpandableOptionsButtons> {
   bool isExpanded = false;
 
   get separator {
-    //return Expanded(child: Container());
-    return SizedBox(width: 16);
+    return const SizedBox(width: 16);
   }
 
   @override
@@ -81,7 +81,7 @@ class _ExpandableOptionsButtonsState extends State<ExpandableOptionsButtons> {
                 children: [
                   separator,
                   DataFieldAddRemoveValueButton(
-                    value: widget.model.value,
+                    valueExists: widget.valueExists,
                     removeButtonColor: widget.colors.redButtonColor,
                     addButtonColor: widget.colors.greenButtonColor,
                     onRemoveValue: widget.onRemoveValue,
@@ -90,7 +90,7 @@ class _ExpandableOptionsButtonsState extends State<ExpandableOptionsButtons> {
                   separator,
                   DataFieldValueTypeMenu(
                     color: widget.colors.goldButtonColor,
-                    type: widget.model.type,
+                    type: widget.initType,
                     onSelected: (value) =>
                         setState(() => widget.onValueTypeChange(value)),
                   ),

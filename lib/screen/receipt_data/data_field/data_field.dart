@@ -94,14 +94,14 @@ class _DataFieldState extends State<DataField> {
   Widget expandableOptionsButtons(BoxConstraints constraints) =>
       ExpandableOptionsButtons(
         constraints: constraints,
-        model: widget.model,
         colors: colorScheme,
         onRemoveValue: () => setState(() => widget.model.value = null),
         onAddValue: () => setState(() => widget.model.value = '<no value>'),
-        onValueTypeChange: (ReceiptObjectType value) {
-          widget.model.type = value;
-        },
+        onValueTypeChange: (ReceiptObjectType value) =>
+            widget.model.type = value,
         onCollapse: () => setState(() {}),
+        valueExists: widget.model.value != null,
+        initType: widget.model.type,
       );
 
   get dataFieldContent {
