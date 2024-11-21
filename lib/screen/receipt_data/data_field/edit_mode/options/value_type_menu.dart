@@ -18,6 +18,14 @@ class DataFieldValueTypeMenu extends StatefulWidget {
 }
 
 class _DataFieldValueTypeMenuState extends State<DataFieldValueTypeMenu> {
+  late ReceiptObjectType type;
+
+  @override
+  void initState() {
+    super.initState();
+    type = widget.type;
+  }
+
   PopupMenuItem<ReceiptObjectType> getPopupMenuItem(
       String text, ReceiptObjectType type) {
     return PopupMenuItem<ReceiptObjectType>(
@@ -47,7 +55,10 @@ class _DataFieldValueTypeMenuState extends State<DataFieldValueTypeMenu> {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<ReceiptObjectType>(
-      onSelected: widget.onSelected,
+      onSelected: (ReceiptObjectType value) => setState(() {
+        widget.onSelected(value);
+        type = value;
+      }),
       itemBuilder: (context) => [
         getPopupMenuItem('price', ReceiptObjectType.product),
         getPopupMenuItem('info', ReceiptObjectType.info),
@@ -57,7 +68,7 @@ class _DataFieldValueTypeMenuState extends State<DataFieldValueTypeMenu> {
       child: CircleAvatar(
         backgroundColor: widget.color,
         child: Icon(
-          getTypeIcon(widget.type),
+          getTypeIcon(type),
           color: Colors.white,
         ),
       ),

@@ -91,8 +91,7 @@ class _ExpandableOptionsButtonsState extends State<ExpandableOptionsButtons> {
                   DataFieldValueTypeMenu(
                     color: widget.colors.goldButtonColor,
                     type: widget.initType,
-                    onSelected: (value) =>
-                        setState(() => widget.onValueTypeChange(value)),
+                    onSelected: widget.onValueTypeChange,
                   ),
                   separator,
                   CircleAvatar(
