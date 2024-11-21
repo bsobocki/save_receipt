@@ -19,6 +19,7 @@ class DataTextField extends StatefulWidget {
 class _DataTextFieldState extends State<DataTextField> {
   @override
   Widget build(BuildContext context) {
+
     return TextField(
       enabled: !widget.editMode,
       controller: widget.textController,

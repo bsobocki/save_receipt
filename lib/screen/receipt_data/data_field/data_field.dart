@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:save_receipt/color/colors.dart';
 import 'package:save_receipt/color/gradient.dart';
 import 'package:save_receipt/color/scheme/data_field_scheme.dart';
-import 'package:save_receipt/screen/receipt_data/data_field/options/options_buttons.dart';
-import 'package:save_receipt/screen/receipt_data/data_field/text_field.dart';
-import 'package:save_receipt/screen/receipt_data/data_field/value_field.dart';
+import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/options/options_buttons.dart';
+import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/text/field_text.dart';
+import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/text/value_text.dart';
+import 'package:save_receipt/screen/receipt_data/data_field/main_view/text_field.dart';
+import 'package:save_receipt/screen/receipt_data/data_field/main_view/value_field.dart';
 import 'package:save_receipt/source/data/structures/data_field.dart';
 import 'package:save_receipt/source/data/structures/receipt.dart';
 
@@ -73,7 +75,6 @@ class _DataFieldState extends State<DataField> {
 
   get valueField => ValueField(
         textColor: colorScheme.textColor,
-        editMode: widget.model.isEditing,
         initValue: widget.model.value ?? '',
         values: allValuesForType(widget.model.type),
         onSelected: (value) {
@@ -104,17 +105,17 @@ class _DataFieldState extends State<DataField> {
       );
 
   get dataFieldContent {
-    Widget dataTextField = DataTextField(
-      editMode: widget.model.isEditing,
-      textColor: colorScheme.textColor,
-      textController: textController,
-    );
-    List<Widget> columnContent = [dataTextField];
+    List<Widget> columnContent = [];
 
     if (widget.model.isEditing) {
       columnContent.add(
+        DataFieldEditModeText(
+            text: textController.text, textColor: colorScheme.textColor),
+      );
+      columnContent.add(
         Row(children: [
-          valueField,
+          DataFieldValueText(
+              text: widget.model.value ?? '', textColor: colorScheme.textColor),
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) =>
@@ -123,8 +124,17 @@ class _DataFieldState extends State<DataField> {
           ),
         ]),
       );
-    } else if (widget.model.value != null) {
-      columnContent.add(valueField);
+    } else {
+      columnContent.add(
+        DataTextField(
+          editMode: widget.model.isEditing,
+          textColor: colorScheme.textColor,
+          textController: textController,
+        ),
+      );
+      if (widget.model.value != null) {
+        columnContent.add(valueField);
+      }
     }
 
     Widget dataFieldWidget = Container(
@@ -137,12 +147,7 @@ class _DataFieldState extends State<DataField> {
 
     if (widget.model.isEditing) {
       return Row(
-        children: [
-          changeItemToValueButton,
-          Expanded(
-            child: dataFieldWidget,
-          )
-        ],
+        children: [changeItemToValueButton, Expanded(child: dataFieldWidget)],
       );
     }
 

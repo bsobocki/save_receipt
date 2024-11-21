@@ -8,7 +8,6 @@ class ValueField extends StatefulWidget {
     required this.initValue,
     required this.values,
     required this.onSelected,
-    required this.editMode,
     required this.textColor,
   });
 
@@ -16,7 +15,6 @@ class ValueField extends StatefulWidget {
   final List<String> values;
   final Function(String? value) onSelected;
   final Color textColor;
-  final bool editMode;
 
   @override
   State<ValueField> createState() => _ValueFieldState();
@@ -38,7 +36,6 @@ class _ValueFieldState extends State<ValueField> {
   get textFieldView => TextField(
         controller: textFieldController,
         onSubmitted: widget.onSelected,
-        enabled: !widget.editMode,
         textAlign: TextAlign.right,
         style: TextStyle(color: widget.textColor),
         decoration: const InputDecoration(border: InputBorder.none),
@@ -107,13 +104,10 @@ class _ValueFieldState extends State<ValueField> {
         Expanded(child: Container()),
         dropdownMenu,
       ]);
-    } else if (!widget.editMode) {
-      return Row(children: [
-        Expanded(child: textFieldView),
-        menuButton,
-      ]);
     }
-    return Text(textFieldController.text,
-        style: TextStyle(color: widget.textColor));
+    return Row(children: [
+      Expanded(child: textFieldView),
+      menuButton,
+    ]);
   }
 }

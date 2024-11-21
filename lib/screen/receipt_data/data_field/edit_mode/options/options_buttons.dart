@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:save_receipt/color/scheme/data_field_scheme.dart';
-import 'package:save_receipt/screen/receipt_data/data_field/options/add_remove_value_button.dart';
-import 'package:save_receipt/screen/receipt_data/data_field/options/value_type_menu.dart';
+import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/options/add_remove_value_button.dart';
+import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/options/value_type_menu.dart';
 import 'package:save_receipt/source/data/structures/data_field.dart';
 import 'package:save_receipt/source/data/structures/receipt.dart';
 
@@ -42,10 +42,13 @@ class _ExpandableOptionsButtonsState extends State<ExpandableOptionsButtons> {
 
   @override
   Widget build(BuildContext context) {
-    final double width =
+    final double expandedOptionsWidth =
         isExpanded ? widget.constraints.maxWidth - iconButtonSize : 0.0;
+    final double widgetWidth =
+        isExpanded ? widget.constraints.maxWidth : iconButtonSize;
 
-    return Expanded(
+    return SizedBox(
+      width: widgetWidth,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.end,
@@ -69,7 +72,7 @@ class _ExpandableOptionsButtonsState extends State<ExpandableOptionsButtons> {
             },
           ),
           AnimatedContainer(
-            width: width,
+            width: expandedOptionsWidth,
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
             child: SingleChildScrollView(
@@ -88,7 +91,8 @@ class _ExpandableOptionsButtonsState extends State<ExpandableOptionsButtons> {
                   DataFieldValueTypeMenu(
                     color: widget.colors.goldButtonColor,
                     type: widget.model.type,
-                    onSelected: (value) => setState(() => widget.onValueTypeChange(value)),
+                    onSelected: (value) =>
+                        setState(() => widget.onValueTypeChange(value)),
                   ),
                   separator,
                   CircleAvatar(
