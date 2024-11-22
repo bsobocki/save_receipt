@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:save_receipt/color/scheme/data_field_scheme.dart';
 import 'package:save_receipt/screen/receipt_data/components/expandable_button.dart';
-import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/options/value/add_remove_value_button.dart';
-import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/options/value/value_type_menu.dart';
+import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/options/value/buttons/add_remove_value_button.dart';
+import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/options/value/buttons/value_type_menu.dart';
 import 'package:save_receipt/source/data/structures/receipt.dart';
 
 const double iconButtonSize = 48;
@@ -19,6 +19,7 @@ class ExpandableValueOptions extends StatefulWidget {
     required this.constraints,
     required this.initType,
     required this.onValueToFieldChange,
+    this.isExpanded = false,
   });
 
   final DataFieldColorScheme colors;
@@ -30,21 +31,21 @@ class ExpandableValueOptions extends StatefulWidget {
   final ReceiptObjectType initType;
   final BoxConstraints constraints;
   final bool valueExists;
+  final bool isExpanded;
 
   @override
   State<ExpandableValueOptions> createState() => _ExpandableValueOptionsState();
 }
 
 class _ExpandableValueOptionsState extends State<ExpandableValueOptions> {
-  bool isExpanded = false;
-
-  double get expandedOptionsWidth =>
-      isExpanded ? widget.constraints.maxWidth - iconButtonSize : 0.0;
-
-  double get widgetWidth =>
-      isExpanded ? widget.constraints.maxWidth : iconButtonSize;
-
+  late bool isExpanded;
   get separator => const SizedBox(width: 16);
+
+  @override
+  void initState() {
+    super.initState();
+    isExpanded = widget.isExpanded;
+  }
 
   get buttonList {
     List<Widget> buttons = [
@@ -101,7 +102,7 @@ class _ExpandableValueOptionsState extends State<ExpandableValueOptions> {
         },
       );
 
-  get optionPanel => AnimatedContainer(
+  Widget optionPanel(double expandedOptionsWidth) => AnimatedContainer(
         width: expandedOptionsWidth,
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
@@ -115,14 +116,19 @@ class _ExpandableValueOptionsState extends State<ExpandableValueOptions> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: widgetWidth,
+    double expandedOptionPanelWidth =
+        isExpanded ? widget.constraints.maxWidth - iconButtonSize : 0.0;
+    double widgetWidth =
+        isExpanded ? widget.constraints.maxWidth : iconButtonSize;
+
+    return Container(
+      constraints: BoxConstraints(maxWidth: widgetWidth),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           expandingButton,
-          optionPanel,
+          optionPanel(expandedOptionPanelWidth),
         ],
       ),
     );

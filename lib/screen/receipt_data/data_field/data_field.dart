@@ -3,7 +3,6 @@ import 'package:save_receipt/color/colors.dart';
 import 'package:save_receipt/color/gradient.dart';
 import 'package:save_receipt/color/scheme/data_field_scheme.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/edit_mode_value_row.dart';
-import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/options/value/value_options.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/text/field_text.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/main_view/text_field.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/main_view/value_field.dart';
@@ -84,20 +83,6 @@ class _DataFieldState extends State<DataField> {
   get changeItemToValueButton => IconButton(
         onPressed: widget.onChangeToValue,
         icon: const Icon(Icons.transform, color: darkGreen),
-      );
-
-  Widget expandableOptionsButtons(BoxConstraints constraints) =>
-      ExpandableValueOptions(
-        constraints: constraints,
-        colors: colorScheme,
-        onRemoveValue: () => setState(() => widget.model.value = null),
-        onAddValue: () => setState(() => widget.model.value = '<no value>'),
-        onValueTypeChange: (ReceiptObjectType value) =>
-            widget.model.type = value,
-        onCollapse: () => setState(() {}),
-        valueExists: widget.model.value != null,
-        initType: widget.model.type,
-        onValueToFieldChange: widget.onValueToFieldChange,
       );
 
   get dataFieldContent {

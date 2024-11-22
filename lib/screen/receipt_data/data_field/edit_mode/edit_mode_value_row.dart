@@ -23,18 +23,30 @@ class DataFieldEditModeValueRow extends StatefulWidget {
 }
 
 class _DataFieldEditModeValueRowState extends State<DataFieldEditModeValueRow> {
+  bool expandedOptions = false;
+
   Widget expandableOptionsButtons(BoxConstraints constraints) =>
       ExpandableValueOptions(
+        key: UniqueKey(),
         constraints: constraints,
         colors: widget.colorScheme,
-        onRemoveValue: () => setState(() => widget.model.value = null),
-        onAddValue: () => setState(() => widget.model.value = '<no value>'),
+        onRemoveValue: () => setState(() {
+          widget.model.value = null;
+          expandedOptions = true;
+        }),
+        onAddValue: () => setState(() {
+          widget.model.value = '<no value>';
+          expandedOptions = true;
+        }),
         onValueTypeChange: (ReceiptObjectType value) =>
             widget.model.type = value,
-        onCollapse: () => setState(() {}),
+        onCollapse: () => setState(() {
+          expandedOptions = false;
+        }),
         valueExists: widget.model.value != null,
         initType: widget.model.type,
         onValueToFieldChange: widget.onValueToFieldChange,
+        isExpanded: expandedOptions,
       );
 
   @override

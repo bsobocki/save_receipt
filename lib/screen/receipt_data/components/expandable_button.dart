@@ -44,14 +44,16 @@ class _ExpandableButtonState extends State<ExpandableButton> {
       onTapOutside: (event) {
         setState(() => expanded = false);
       },
-      onTapInside: (event) => widget.onPressed(),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           shape: const StadiumBorder(), // This creates the pill shape
           backgroundColor: widget.buttonColor,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         ),
-        onPressed: widget.onPressed,
+        onPressed: () {
+          widget.onPressed();
+          setState(() => expanded = false);
+        },
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
