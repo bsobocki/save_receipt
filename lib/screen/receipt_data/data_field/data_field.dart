@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:save_receipt/color/colors.dart';
 import 'package:save_receipt/color/gradient.dart';
 import 'package:save_receipt/color/scheme/data_field_scheme.dart';
-import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/options/value_options.dart';
+import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/options/value/value_options.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/text/field_text.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/text/value_text.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/main_view/text_field.dart';
