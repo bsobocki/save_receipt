@@ -4,7 +4,7 @@
 
 # BUGS
 
-### [] receipt is not refresh:
+### [x] receipt wasn't updated after text/value changes:
 Steps:
     1. change an entity text
     2. scroll down to hide the entity

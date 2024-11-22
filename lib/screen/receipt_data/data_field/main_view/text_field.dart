@@ -4,12 +4,14 @@ class DataTextField extends StatefulWidget {
   final TextEditingController textController;
   final Color? textColor;
   final bool editMode;
+  final Function(String) onChanged;
 
   const DataTextField({
     required this.textController,
     required this.editMode,
     Color? textColor,
     super.key,
+    required this.onChanged,
   }) : textColor = textColor ?? Colors.black;
 
   @override
@@ -19,10 +21,10 @@ class DataTextField extends StatefulWidget {
 class _DataTextFieldState extends State<DataTextField> {
   @override
   Widget build(BuildContext context) {
-
     return TextField(
       enabled: !widget.editMode,
       controller: widget.textController,
+      onChanged: widget.onChanged,
       style: TextStyle(color: widget.textColor, fontWeight: FontWeight.w600),
       textAlign: TextAlign.left,
       decoration: const InputDecoration(

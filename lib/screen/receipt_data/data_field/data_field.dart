@@ -126,6 +126,7 @@ class _DataFieldState extends State<DataField> {
           editMode: widget.model.isEditing,
           textColor: colorScheme.textColor,
           textController: textController,
+          onChanged: (String value) => widget.model.text = value,
         ),
         if (widget.model.value != null) valueField,
       ];
