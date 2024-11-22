@@ -2,7 +2,7 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:save_receipt/source/data/structures/connected_data.dart';
-import 'package:save_receipt/source/document_operations/math/coordinates.dart';
+import 'package:save_receipt/source/math/coordinates.dart';
 
 // O (n^2)
 List<ConnectedTextLines> getConnectedTextLines(List<TextLine> lines) {
