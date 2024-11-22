@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
 class ExpandableButton extends StatefulWidget {
-  const ExpandableButton(
-      {super.key,
-      required this.buttonColor,
-      required this.iconData,
-      required this.onPressed,
-      this.iconColor,
-      this.textColor,
-      required this.label});
+  const ExpandableButton({
+    super.key,
+    required this.buttonColor,
+    required this.iconData,
+    required this.onPressed,
+    this.iconColor,
+    this.textColor,
+    required this.label,
+  });
 
   final String label;
   final Color buttonColor;

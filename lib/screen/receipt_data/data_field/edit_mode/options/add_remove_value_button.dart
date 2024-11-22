@@ -14,8 +14,8 @@ class DataFieldAddRemoveValueButton extends StatefulWidget {
   final bool valueExists;
   final Color removeButtonColor;
   final Color addButtonColor;
-  final Function() onRemoveValue;
-  final Function() onAddValue;
+  final VoidCallback onRemoveValue;
+  final VoidCallback onAddValue;
 
   @override
   State<DataFieldAddRemoveValueButton> createState() =>
@@ -24,7 +24,6 @@ class DataFieldAddRemoveValueButton extends StatefulWidget {
 
 class _DataFeildAddRemoveValueButtonState
     extends State<DataFieldAddRemoveValueButton> {
-
   get valueRemoveButton => ExpandableButton(
         label: "Remove Value",
         onPressed: widget.onRemoveValue,
@@ -33,7 +32,7 @@ class _DataFeildAddRemoveValueButtonState
         iconColor: Colors.white,
         textColor: Colors.white,
       );
-  
+
   get valueAddButton => ExpandableButton(
         label: "Add Value",
         onPressed: widget.onAddValue,

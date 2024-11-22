@@ -22,10 +22,10 @@ class ExpandableValueOptions extends StatefulWidget {
   });
 
   final DataFieldColorScheme colors;
-  final Function() onRemoveValue;
-  final Function() onAddValue;
-  final Function() onCollapse;
-  final Function() onValueToFieldChange;
+  final VoidCallback onRemoveValue;
+  final VoidCallback onAddValue;
+  final VoidCallback onCollapse;
+  final VoidCallback onValueToFieldChange;
   final Function(ReceiptObjectType) onValueTypeChange;
   final ReceiptObjectType initType;
   final BoxConstraints constraints;
@@ -38,77 +38,91 @@ class ExpandableValueOptions extends StatefulWidget {
 class _ExpandableValueOptionsState extends State<ExpandableValueOptions> {
   bool isExpanded = false;
 
-  get separator {
-    return const SizedBox(width: 16);
+  double get expandedOptionsWidth =>
+      isExpanded ? widget.constraints.maxWidth - iconButtonSize : 0.0;
+
+  double get widgetWidth =>
+      isExpanded ? widget.constraints.maxWidth : iconButtonSize;
+
+  get separator => const SizedBox(width: 16);
+
+  get buttonList {
+    List<Widget> buttons = [
+      separator,
+      DataFieldAddRemoveValueButton(
+        valueExists: widget.valueExists,
+        removeButtonColor: widget.colors.redButtonColor,
+        addButtonColor: widget.colors.greenButtonColor,
+        onRemoveValue: widget.onRemoveValue,
+        onAddValue: widget.onAddValue,
+      ),
+      separator,
+      DataFieldValueTypeMenu(
+        color: widget.colors.goldButtonColor,
+        type: widget.initType,
+        onSelected: widget.onValueTypeChange,
+      ),
+      separator,
+    ];
+
+    if (widget.valueExists) {
+      buttons += [
+        ExpandableButton(
+          label: 'Value As New Item',
+          buttonColor: Colors.blueGrey,
+          iconData: Icons.swap_horiz_outlined,
+          iconColor: Colors.white,
+          textColor: Colors.white,
+          onPressed: widget.onValueToFieldChange,
+        ),
+        separator,
+      ];
+    }
+
+    return buttons;
   }
+
+  get expandingButton => IconButton(
+        icon: Container(
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.black,
+            ),
+            child: Icon(
+              isExpanded
+                  ? Icons.arrow_right_outlined
+                  : Icons.arrow_left_outlined,
+              color: Colors.white,
+            )),
+        onPressed: () {
+          setState(() {
+            isExpanded = !isExpanded;
+          });
+        },
+      );
+
+  get optionPanel => AnimatedContainer(
+        width: expandedOptionsWidth,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: buttonList,
+          ),
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
-    final double expandedOptionsWidth =
-        isExpanded ? widget.constraints.maxWidth - iconButtonSize : 0.0;
-    final double widgetWidth =
-        isExpanded ? widget.constraints.maxWidth : iconButtonSize;
-
     return SizedBox(
       width: widgetWidth,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          IconButton(
-            icon: Container(
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.black,
-                ),
-                child: Icon(
-                  isExpanded
-                      ? Icons.arrow_right_outlined
-                      : Icons.arrow_left_outlined,
-                  color: Colors.white,
-                )),
-            onPressed: () {
-              setState(() {
-                isExpanded = !isExpanded;
-              });
-            },
-          ),
-          AnimatedContainer(
-            width: expandedOptionsWidth,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  separator,
-                  DataFieldAddRemoveValueButton(
-                    valueExists: widget.valueExists,
-                    removeButtonColor: widget.colors.redButtonColor,
-                    addButtonColor: widget.colors.greenButtonColor,
-                    onRemoveValue: widget.onRemoveValue,
-                    onAddValue: widget.onAddValue,
-                  ),
-                  separator,
-                  DataFieldValueTypeMenu(
-                    color: widget.colors.goldButtonColor,
-                    type: widget.initType,
-                    onSelected: widget.onValueTypeChange,
-                  ),
-                  separator,
-                  ExpandableButton(
-                    label: 'Value As New Item',
-                    buttonColor: Colors.blueGrey,
-                    iconData: Icons.swap_horiz_outlined,
-                    iconColor: Colors.white,
-                    textColor: Colors.white,
-                    onPressed: widget.onValueToFieldChange,
-                  ),
-                  separator,
-                ],
-              ),
-            ),
-          ),
+          expandingButton,
+          optionPanel,
         ],
       ),
     );
