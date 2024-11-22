@@ -193,8 +193,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     }
   }
 
-  get content {
-    return Center(
+  get content => Center(
       child: Padding(
         padding: const EdgeInsets.only(
           top: 32.0,
@@ -213,7 +212,6 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         ),
       ),
     );
-  }
 
   @override
   Widget build(BuildContext context) {

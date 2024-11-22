@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:save_receipt/color/colors.dart';
 import 'package:save_receipt/color/gradient.dart';
 import 'package:save_receipt/color/scheme/data_field_scheme.dart';
+import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/edit_mode_value_row.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/options/value/value_options.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/text/field_text.dart';
-import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/text/value_text.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/main_view/text_field.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/main_view/value_field.dart';
 import 'package:save_receipt/source/data/structures/data_field.dart';
@@ -27,7 +27,8 @@ class DataField extends StatefulWidget {
       required this.onItemDismissSwipe,
       required this.onItemEditModeSwipe,
       required this.onChangeToValue,
-      this.onItemSwipe, required this.onValueToFieldChange});
+      this.onItemSwipe,
+      required this.onValueToFieldChange});
 
   get text => null;
 
@@ -110,33 +111,24 @@ class _DataFieldState extends State<DataField> {
     List<Widget> columnContent = [];
 
     if (widget.model.isEditing) {
-      columnContent.add(
+      columnContent = [
         DataFieldEditModeText(
             text: textController.text, textColor: colorScheme.textColor),
-      );
-      columnContent.add(
-        Row(children: [
-          DataFieldValueText(
-              text: widget.model.value ?? '', textColor: colorScheme.textColor),
-          Expanded(
-            child: LayoutBuilder(
-              builder: (context, constraints) =>
-                  expandableOptionsButtons(constraints),
-            ),
-          ),
-        ]),
-      );
+        DataFieldEditModeValueRow(
+          model: widget.model,
+          colorScheme: colorScheme,
+          onValueToFieldChange: widget.onValueToFieldChange,
+        ),
+      ];
     } else {
-      columnContent.add(
+      columnContent = [
         DataTextField(
           editMode: widget.model.isEditing,
           textColor: colorScheme.textColor,
           textController: textController,
         ),
-      );
-      if (widget.model.value != null) {
-        columnContent.add(valueField);
-      }
+        if (widget.model.value != null) valueField,
+      ];
     }
 
     Widget dataFieldWidget = Container(

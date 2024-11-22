@@ -12,6 +12,9 @@ class DataFieldModel {
     this.value,
     this.isEditing = false,
   });
+
+  @override
+  String toString() => '{$text: $value[$type|$isEditing]}';
 }
 
 class AllValuesModel {
