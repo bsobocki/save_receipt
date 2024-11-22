@@ -7,13 +7,13 @@ class ValueField extends StatefulWidget {
     super.key,
     required this.initValue,
     required this.values,
-    required this.onSelected,
+    required this.onValueChanged,
     required this.textColor,
   });
 
   final String initValue;
   final List<String> values;
-  final Function(String? value) onSelected;
+  final Function(String? value) onValueChanged;
   final Color textColor;
 
   @override
@@ -35,7 +35,8 @@ class _ValueFieldState extends State<ValueField> {
 
   get textFieldView => TextField(
         controller: textFieldController,
-        onSubmitted: widget.onSelected,
+        onSubmitted: widget.onValueChanged,
+        onChanged: widget.onValueChanged,
         textAlign: TextAlign.right,
         style: TextStyle(color: widget.textColor),
         decoration: const InputDecoration(border: InputBorder.none),
@@ -65,7 +66,7 @@ class _ValueFieldState extends State<ValueField> {
             String newValue = value ?? menuController.text;
             textFieldController.text = newValue;
             switchView();
-            widget.onSelected(newValue);
+            widget.onValueChanged(newValue);
           },
           dropdownMenuEntries: menuEntries,
         ),

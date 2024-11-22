@@ -76,17 +76,10 @@ class _DataFieldState extends State<DataField> {
   }
 
   get valueField => ValueField(
-        textColor: colorScheme.textColor,
-        initValue: widget.model.value ?? '',
-        values: allValuesForType(widget.model.type),
-        onSelected: (value) {
-          setState(() {
-            if (value != null) {
-              widget.model.value = value;
-            }
-          });
-        },
-      );
+      textColor: colorScheme.textColor,
+      initValue: widget.model.value ?? '',
+      values: allValuesForType(widget.model.type),
+      onValueChanged: (String? value) => widget.model.value = value);
 
   get changeItemToValueButton => IconButton(
         onPressed: widget.onChangeToValue,
