@@ -3,17 +3,85 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:save_receipt/components/expandable_button.dart';
 
+enum ImageState { justImage, justBarcode, bothAvailable, bothUnavailable }
+
+enum ImageType { image, barcode }
+
 class ReceiptPageTopBar extends StatelessWidget {
-  const ReceiptPageTopBar(
-      {super.key, this.receiptImgPath, required this.onImageIconPress});
+  const ReceiptPageTopBar({
+    super.key,
+    required this.onImageIconPress,
+    this.receiptImgPath,
+    this.barcodeImgPaht,
+  });
   final VoidCallback onImageIconPress;
   final String? receiptImgPath;
+  final String? barcodeImgPaht;
 
-  get receiptIcon {
+  get expandedPlaceholder => Expanded(child: Container());
+
+  get imageState {
     if (receiptImgPath != null) {
-      return Image.file(File(receiptImgPath!), fit: BoxFit.cover);
+      if (barcodeImgPaht != null) {
+        return ImageState.bothAvailable;
+      }
+      return ImageState.justImage;
     }
-    return Image.asset("assets/no_image.jpg");
+    if (barcodeImgPaht != null) {
+      return ImageState.justBarcode;
+    }
+    return ImageState.bothUnavailable;
+  }
+
+  double getHeight(ImageType type, BoxConstraints constraints) {
+    final state = imageState;
+    final height = constraints.maxHeight;
+    double divider = 3;
+
+    switch (state) {
+      case ImageState.bothAvailable:
+      case ImageState.bothUnavailable:
+        divider = 2;
+      case ImageState.justBarcode:
+        if (type == ImageType.barcode) {
+          divider = 1.5;
+        } else {
+          divider = 3;
+        }
+      case ImageState.justImage:
+        if (type == ImageType.image) {
+          divider = 1.5;
+        } else {
+          divider = 3;
+        }
+    }
+    return height / divider;
+  }
+
+  Widget receiptIcon(String? path, IconData iconData) {
+    Widget? icon;
+    DecorationImage? image;
+
+    if (path != null) {
+      image = DecorationImage(
+        image: FileImage(File(path)),
+        fit: BoxFit.fitWidth,
+        alignment: Alignment.topCenter,
+      );
+    } else {
+      icon = Center(child: Icon(iconData));
+    }
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.white, style: BorderStyle.solid),
+          borderRadius: BorderRadius.circular(15),
+          image: image,
+        ),
+        child: icon,
+      ),
+    );
   }
 
   IconData getIconByOption(String text) {
@@ -65,9 +133,7 @@ class ReceiptPageTopBar extends StatelessWidget {
                 onPressed: () => Navigator.pop(context),
                 icon: const Icon(Icons.chevron_left_outlined),
               ),
-              Expanded(
-                child: Container(),
-              ),
+              expandedPlaceholder,
               popupMenu,
             ],
           ),
@@ -78,33 +144,52 @@ class ReceiptPageTopBar extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              IconButton(
-                onPressed: onImageIconPress,
-                icon: ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: receiptIcon,
+              Expanded(
+                child: LayoutBuilder(
+                  builder: (context, constraints) => Column(
+                    children: [
+                      SizedBox(
+                        height: getHeight(ImageType.image, constraints),
+                        child: GestureDetector(
+                          onTap: onImageIconPress,
+                          child: receiptIcon(receiptImgPath, Icons.image),
+                        ),
+                      ),
+                      SizedBox(
+                        height: getHeight(ImageType.barcode, constraints),
+                        child: GestureDetector(
+                          onTap: () {},
+                          child: receiptIcon(barcodeImgPaht, Icons.qr_code),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ExpandableButton(
-                        buttonColor: Colors.red,
-                        iconData: Icons.qr_code,
-                        onPressed: () {},
-                        label: 'Add barcode'),
+              Expanded(
+                child: Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ExpandableButton(
+                            buttonColor: Colors.red,
+                            iconData: Icons.qr_code,
+                            onPressed: () {},
+                            label: 'Add barcode'),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ExpandableButton(
+                            buttonColor: Colors.cyan,
+                            iconData: Icons.add,
+                            onPressed: () {},
+                            label: 'Add Item'),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ExpandableButton(
-                        buttonColor: Colors.cyan,
-                        iconData: Icons.add,
-                        onPressed: () {},
-                        label: 'Add Item'),
-                  ),
-                ],
+                ),
               )
             ],
           ),

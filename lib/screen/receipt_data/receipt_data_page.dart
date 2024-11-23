@@ -194,24 +194,25 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   }
 
   get content => Center(
-      child: Padding(
-        padding: const EdgeInsets.only(
-          top: 32.0,
-          left: 16.0,
-          right: 16.0,
-          bottom: 32.0,
+        child: Padding(
+          padding: const EdgeInsets.only(
+            top: 32.0,
+            left: 16.0,
+            right: 16.0,
+            bottom: 32.0,
+          ),
+          child: Column(
+            children: [
+              ReceiptPageTopBar(
+                onImageIconPress: openFullImageMode,
+                receiptImgPath: _receipt.imgPath,
+                barcodeImgPaht: _receipt.imgPath,
+              ),
+              receiptEditor,
+            ],
+          ),
         ),
-        child: Column(
-          children: [
-            ReceiptPageTopBar(
-              onImageIconPress: openFullImageMode,
-              receiptImgPath: _receipt.imgPath,
-            ),
-            receiptEditor,
-          ],
-        ),
-      ),
-    );
+      );
 
   @override
   Widget build(BuildContext context) {
