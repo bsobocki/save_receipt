@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:save_receipt/color/gradient.dart';
+import 'package:save_receipt/color/themes/main_theme.dart';
 import 'package:save_receipt/components/receipt_image.dart';
 import 'package:save_receipt/screen/receipt_data/components/top_bar.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/data_field.dart';
@@ -153,8 +153,8 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
       children: [
         Container(
           height: 320,
-          decoration: const BoxDecoration(
-            gradient: mainGradient,
+          decoration: BoxDecoration(
+            gradient: mainTheme.gradient,
           ),
         ),
         Expanded(child: Container()),

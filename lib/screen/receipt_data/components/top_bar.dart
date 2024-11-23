@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:save_receipt/color/themes/main_theme.dart';
 import 'package:save_receipt/components/expandable_button.dart';
 
 enum ImageState { justImage, justBarcode, bothAvailable, bothUnavailable }
@@ -110,7 +111,7 @@ class ReceiptPageTopBar extends StatelessWidget {
   }
 
   get popupMenu => PopupMenuButton<String>(
-        color: Colors.black,
+        color: mainTheme.mainColor,
         onSelected: (String value) {
           print("chosen: $value");
         },

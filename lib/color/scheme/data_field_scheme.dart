@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:save_receipt/color/colors.dart';
+import 'package:save_receipt/color/themes/main_theme.dart';
 
 class DataFieldColorScheme {
   late final Color textColor;
@@ -10,11 +11,11 @@ class DataFieldColorScheme {
 
   DataFieldColorScheme(bool isDarker, bool editMode) {
     if (editMode) {
-      backgroundColor = Colors.black.withOpacity(0.6);
+      backgroundColor = mainTheme.mainColor.withOpacity(0.6);
       textColor = Colors.white.withOpacity(0.6);
     } else {
       textColor = Colors.black;
-      backgroundColor = Colors.black.withOpacity(isDarker ? 0.04 : 0.0);
+      backgroundColor = mainTheme.mainColor.withOpacity(isDarker ? 0.04 : 0.0);
     }
     redButtonColor = Colors.red[800]!;
     goldButtonColor = gold;

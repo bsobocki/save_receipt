@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:save_receipt/color/colors.dart';
 
-const LinearGradient mainGradient = LinearGradient(
+const LinearGradient blackGradient = LinearGradient(
   begin: Alignment.topLeft,
   end: Alignment.bottomRight,
   colors: [
@@ -10,6 +10,17 @@ const LinearGradient mainGradient = LinearGradient(
     Colors.black54,
     Colors.black45,
     Colors.black38,
+  ],
+);
+
+const LinearGradient purpleGradient = LinearGradient(
+  begin: Alignment.topLeft,
+  end: Alignment.bottomRight,
+  colors: [
+    Color.fromARGB(255, 59, 0, 66),
+    Color.fromARGB(221, 59, 0, 66),
+    Color.fromARGB(120, 59, 0, 66),
+    Color.fromARGB(36, 59, 0, 66),
   ],
 );
 

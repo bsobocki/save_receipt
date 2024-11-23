@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:save_receipt/color/themes/main_theme.dart';
 
 const dropdownmenuHeight = 300.0;
 
@@ -51,11 +52,11 @@ class _ValueFieldState extends State<ValueField> {
           enableSearch: true,
           requestFocusOnTap: true,
           controller: menuController,
-          inputDecorationTheme: const InputDecorationTheme(
+          inputDecorationTheme: InputDecorationTheme(
             filled: true,
-            fillColor: Colors.black,
+            fillColor: mainTheme.mainColor,
             suffixIconColor: Colors.white,
-            border: OutlineInputBorder(
+            border: const OutlineInputBorder(
               borderSide: BorderSide(color: Colors.red),
               borderRadius: BorderRadius.all(Radius.circular(15.0)),
             ),
@@ -72,9 +73,9 @@ class _ValueFieldState extends State<ValueField> {
         ),
       );
 
-  get menuStyle => const MenuStyle(
-        backgroundColor: WidgetStatePropertyAll(Colors.black),
-        shadowColor: WidgetStatePropertyAll(
+  get menuStyle => MenuStyle(
+        backgroundColor: WidgetStatePropertyAll(mainTheme.mainColor),
+        shadowColor: const WidgetStatePropertyAll(
           Color.fromARGB(193, 0, 0, 0),
         ),
         surfaceTintColor: WidgetStatePropertyAll(Colors.white),
@@ -92,9 +93,9 @@ class _ValueFieldState extends State<ValueField> {
           menuController.text = textFieldController.text;
           switchView();
         },
-        icon: const Icon(
+        icon: Icon(
           Icons.arrow_drop_down_circle,
-          color: Colors.black,
+          color: mainTheme.mainColor,
         ),
       );
 

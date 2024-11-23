@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:save_receipt/color/colors.dart';
-import 'package:save_receipt/color/gradient.dart';
+import 'package:save_receipt/color/gradients/gradient.dart';
 import 'package:save_receipt/color/scheme/data_field_scheme.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/edit_mode_value_row.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/text/field_text.dart';
