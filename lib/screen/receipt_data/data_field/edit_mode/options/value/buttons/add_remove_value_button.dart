@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:save_receipt/screen/receipt_data/components/expandable_button.dart';
+import 'package:save_receipt/components/expandable_button.dart';
 
 class DataFieldAddRemoveValueButton extends StatefulWidget {
   const DataFieldAddRemoveValueButton({
