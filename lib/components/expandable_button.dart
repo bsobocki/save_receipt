@@ -24,6 +24,10 @@ class ExpandableButton extends StatefulWidget {
 
 class _ExpandableButtonState extends State<ExpandableButton> {
   bool expanded = false;
+  final Color defaultFrontColor = Colors.white;
+
+  get iconColor => widget.iconColor ?? defaultFrontColor;
+  get textColor => widget.textColor ?? defaultFrontColor;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +39,7 @@ class _ExpandableButtonState extends State<ExpandableButton> {
             expanded = true;
           }),
           icon: Icon(widget.iconData, color: widget.iconColor),
-          color: Colors.white,
+          color: iconColor,
         ),
       );
     }
@@ -59,12 +63,12 @@ class _ExpandableButtonState extends State<ExpandableButton> {
           children: [
             Icon(
               widget.iconData,
-              color: widget.iconColor,
+              color: iconColor,
             ),
             const SizedBox(width: 8),
             Text(
               widget.label,
-              style: TextStyle(color: widget.textColor),
+              style: TextStyle(color: textColor),
             ),
           ],
         ),
