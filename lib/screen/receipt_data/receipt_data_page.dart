@@ -206,7 +206,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
               ReceiptPageTopBar(
                 onImageIconPress: openFullImageMode,
                 receiptImgPath: _receipt.imgPath,
-                barcodeImgPaht: _receipt.imgPath,
+                //barcodeImgPaht: _receipt.barcodePath,
               ),
               receiptEditor,
             ],

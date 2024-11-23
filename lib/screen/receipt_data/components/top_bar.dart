@@ -145,6 +145,7 @@ class ReceiptPageTopBar extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              expandedPlaceholder,
               Expanded(
                 child: LayoutBuilder(
                   builder: (context, constraints) => Column(
@@ -170,7 +171,7 @@ class ReceiptPageTopBar extends StatelessWidget {
               Expanded(
                 child: Container(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
