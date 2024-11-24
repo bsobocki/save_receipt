@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:save_receipt/color/scheme/data_field_scheme.dart';
 import 'package:save_receipt/components/expandable_button.dart';
+import 'package:save_receipt/components/expandable_option_panel.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/options/value/buttons/add_remove_value_button.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/options/value/buttons/value_type_menu.dart';
 import 'package:save_receipt/source/data/structures/receipt.dart';
@@ -47,8 +48,8 @@ class _ExpandableValueOptionsState extends State<ExpandableValueOptions> {
     isExpanded = widget.isExpanded;
   }
 
-  get buttonList {
-    List<Widget> buttons = [
+  get options {
+    List<Widget> optionButtons = [
       separator,
       DataFieldAddRemoveValueButton(
         valueExists: widget.valueExists,
@@ -67,7 +68,7 @@ class _ExpandableValueOptionsState extends State<ExpandableValueOptions> {
     ];
 
     if (widget.valueExists) {
-      buttons += [
+      optionButtons += [
         ExpandableButton(
           label: 'Value As New Item',
           buttonColor: Colors.blueGrey,
@@ -80,57 +81,15 @@ class _ExpandableValueOptionsState extends State<ExpandableValueOptions> {
       ];
     }
 
-    return buttons;
+    return optionButtons;
   }
-
-  get expandingButton => IconButton(
-        icon: Container(
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.black,
-            ),
-            child: Icon(
-              isExpanded
-                  ? Icons.arrow_right_outlined
-                  : Icons.arrow_left_outlined,
-              color: Colors.white,
-            )),
-        onPressed: () {
-          setState(() {
-            isExpanded = !isExpanded;
-          });
-        },
-      );
-
-  Widget optionPanel(double expandedOptionsWidth) => AnimatedContainer(
-        width: expandedOptionsWidth,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: buttonList,
-          ),
-        ),
-      );
 
   @override
   Widget build(BuildContext context) {
-    double expandedOptionPanelWidth =
-        isExpanded ? widget.constraints.maxWidth - iconButtonSize : 0.0;
-    double widgetWidth =
-        isExpanded ? widget.constraints.maxWidth : iconButtonSize;
-
-    return Container(
-      constraints: BoxConstraints(maxWidth: widgetWidth),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          expandingButton,
-          optionPanel(expandedOptionPanelWidth),
-        ],
-      ),
-    );
+    return ExpandableOptionsPanel(
+        options: options,
+        onCollapse: widget.onCollapse,
+        constraints: widget.constraints,
+        isExpanded: isExpanded,);
   }
 }
