@@ -9,12 +9,15 @@ class ExpandableOptionsPanel extends StatefulWidget {
     required this.onCollapse,
     required this.constraints,
     this.isExpanded = false,
+    this.buttonColor = Colors.black, this.iconColor = Colors.white,
   });
 
   final VoidCallback onCollapse;
   final BoxConstraints constraints;
   final bool isExpanded;
   final List<Widget> options;
+  final Color? buttonColor;
+  final Color? iconColor;
 
   @override
   State<ExpandableOptionsPanel> createState() => _ExpandableOptionsPanelState();
@@ -32,15 +35,15 @@ class _ExpandableOptionsPanelState extends State<ExpandableOptionsPanel> {
 
   get expandingButton => IconButton(
         icon: Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.black,
+              color: widget.buttonColor,
             ),
             child: Icon(
               isExpanded
                   ? Icons.arrow_right_outlined
                   : Icons.arrow_left_outlined,
-              color: Colors.white,
+              color: widget.iconColor,
             )),
         onPressed: () {
           setState(() {
