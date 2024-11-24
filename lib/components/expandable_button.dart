@@ -9,6 +9,7 @@ class ExpandableButton extends StatefulWidget {
     this.iconColor,
     this.textColor,
     required this.label,
+    this.constraints,
   });
 
   final String label;
@@ -17,6 +18,7 @@ class ExpandableButton extends StatefulWidget {
   final VoidCallback onPressed;
   final Color? iconColor;
   final Color? textColor;
+  final BoxConstraints? constraints;
 
   @override
   State<ExpandableButton> createState() => _ExpandableButtonState();
@@ -31,8 +33,10 @@ class _ExpandableButtonState extends State<ExpandableButton> {
 
   @override
   Widget build(BuildContext context) {
+    Widget? content;
+
     if (!expanded) {
-      return CircleAvatar(
+      content = CircleAvatar(
         backgroundColor: widget.buttonColor,
         child: IconButton(
           onPressed: () => setState(() {
@@ -42,37 +46,42 @@ class _ExpandableButtonState extends State<ExpandableButton> {
           color: iconColor,
         ),
       );
-    }
-
-    return TapRegion(
-      onTapOutside: (event) {
-        setState(() => expanded = false);
-      },
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          shape: const StadiumBorder(), // This creates the pill shape
-          backgroundColor: widget.buttonColor,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        ),
-        onPressed: () {
-          widget.onPressed();
+    } else {
+      content = TapRegion(
+        onTapOutside: (event) {
           setState(() => expanded = false);
         },
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              widget.iconData,
-              color: iconColor,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              widget.label,
-              style: TextStyle(color: textColor),
-            ),
-          ],
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            shape: const StadiumBorder(), // This creates the pill shape
+            backgroundColor: widget.buttonColor,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          ),
+          onPressed: () {
+            widget.onPressed();
+            setState(() => expanded = false);
+          },
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                widget.iconData,
+                color: iconColor,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  widget.label,
+                  style: TextStyle(color: textColor),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    }
+
+    return Container(constraints: widget.constraints, child: content);
   }
 }
