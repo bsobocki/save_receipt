@@ -5,10 +5,12 @@ class DataFieldValueText extends StatelessWidget {
     super.key,
     required this.text,
     required this.textColor,
+    required this.fontWeight,
   });
 
   final String text;
   final Color textColor;
+  final FontWeight fontWeight;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,7 @@ class DataFieldValueText extends StatelessWidget {
       constraints: const BoxConstraints(maxWidth: 80),
       child: Text(
         text,
-        style: TextStyle(color: textColor),
+        style: TextStyle(color: textColor, fontWeight: fontWeight),
         overflow: TextOverflow.ellipsis,
       ),
     );

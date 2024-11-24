@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:save_receipt/color/themes/main_theme.dart';
-import 'package:save_receipt/components/expandable_button.dart';
+import 'package:save_receipt/components/expendable/expandable_button.dart';
 import 'package:save_receipt/settings/receipt_data_page.dart';
 
 class ReceiptPageTopBar extends StatelessWidget {

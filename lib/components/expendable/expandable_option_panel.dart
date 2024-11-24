@@ -8,8 +8,10 @@ class ExpandableOptionsPanel extends StatefulWidget {
     required this.options,
     required this.onCollapse,
     required this.constraints,
+    required this.alignment,
     this.isExpanded = false,
-    this.buttonColor = Colors.black, this.iconColor = Colors.white,
+    this.buttonColor = Colors.black,
+    this.iconColor = Colors.white,
   });
 
   final VoidCallback onCollapse;
@@ -18,6 +20,7 @@ class ExpandableOptionsPanel extends StatefulWidget {
   final List<Widget> options;
   final Color? buttonColor;
   final Color? iconColor;
+  final MainAxisAlignment alignment;
 
   @override
   State<ExpandableOptionsPanel> createState() => _ExpandableOptionsPanelState();
@@ -33,6 +36,15 @@ class _ExpandableOptionsPanelState extends State<ExpandableOptionsPanel> {
     isExpanded = widget.isExpanded;
   }
 
+  get iconData {
+    if (widget.alignment == MainAxisAlignment.start) {
+      return isExpanded
+          ? Icons.arrow_left_outlined
+          : Icons.arrow_right_outlined;
+    }
+    return isExpanded ? Icons.arrow_right_outlined : Icons.arrow_left_outlined;
+  }
+
   get expandingButton => IconButton(
         icon: Container(
             decoration: BoxDecoration(
@@ -40,9 +52,7 @@ class _ExpandableOptionsPanelState extends State<ExpandableOptionsPanel> {
               color: widget.buttonColor,
             ),
             child: Icon(
-              isExpanded
-                  ? Icons.arrow_right_outlined
-                  : Icons.arrow_left_outlined,
+              iconData,
               color: widget.iconColor,
             )),
         onPressed: () {
@@ -52,6 +62,13 @@ class _ExpandableOptionsPanelState extends State<ExpandableOptionsPanel> {
         },
       );
 
+  get panelAlignment {
+    if (widget.alignment == MainAxisAlignment.start) {
+      return MainAxisAlignment.end;
+    }
+    return MainAxisAlignment.start;
+  }
+
   Widget optionPanel(double expandedOptionsWidth) => AnimatedContainer(
         width: expandedOptionsWidth,
         duration: const Duration(milliseconds: 300),
@@ -59,6 +76,7 @@ class _ExpandableOptionsPanelState extends State<ExpandableOptionsPanel> {
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
+            mainAxisAlignment: widget.alignment,
             children: widget.options,
           ),
         ),
@@ -71,15 +89,25 @@ class _ExpandableOptionsPanelState extends State<ExpandableOptionsPanel> {
     double widgetWidth =
         isExpanded ? widget.constraints.maxWidth : iconButtonSize;
 
+    List<Widget> content = [
+      expandingButton,
+      optionPanel(expandedOptionPanelWidth),
+    ];
+
+    if (widget.alignment == MainAxisAlignment.start) {
+      content = [
+        optionPanel(expandedOptionPanelWidth),
+        expandingButton,
+      ];
+    }
+
     return Container(
       constraints: BoxConstraints(maxWidth: widgetWidth),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          expandingButton,
-          optionPanel(expandedOptionPanelWidth),
-        ],
+      child: ClipRect(
+        child: Row(
+          mainAxisAlignment: widget.alignment,
+          children: content,
+        ),
       ),
     );
   }

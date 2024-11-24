@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:save_receipt/color/scheme/data_field_scheme.dart';
-import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/options/value/value_options.dart';
+import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/options/value/expandable_value_options.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/text/value_text.dart';
 import 'package:save_receipt/source/data/structures/data_field.dart';
 import 'package:save_receipt/source/data/structures/receipt.dart';
@@ -52,14 +52,19 @@ class _DataFieldEditModeValueRowState extends State<DataFieldEditModeValueRow> {
   @override
   Widget build(BuildContext context) {
     return Row(children: [
-      DataFieldValueText(
-          text: widget.model.value ?? '',
-          textColor: widget.colorScheme.textColor),
       Expanded(
         child: LayoutBuilder(
           builder: (context, constraints) =>
               expandableOptionsButtons(constraints),
         ),
+      ),
+      if (!expandedOptions)
+      Padding(
+        padding: const EdgeInsets.only(right: 16.0),
+        child: DataFieldValueText(
+          fontWeight: FontWeight.normal,
+            text: widget.model.value ?? '',
+            textColor: widget.colorScheme.textColor),
       ),
     ]);
   }

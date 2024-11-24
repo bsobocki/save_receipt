@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:save_receipt/color/colors.dart';
 import 'package:save_receipt/color/gradients/gradient.dart';
 import 'package:save_receipt/color/scheme/data_field_scheme.dart';
-import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/edit_mode_value_row.dart';
-import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/text/field_text.dart';
+import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/data_field_edit_mode_text_row.dart';
+import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/data_fiels_edit_mode_value_row.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/main_view/text_field.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/main_view/value_field.dart';
 import 'package:save_receipt/source/data/structures/data_field.dart';
@@ -80,18 +79,12 @@ class _DataFieldState extends State<DataField> {
       values: allValuesForType(widget.model.type),
       onValueChanged: (String? value) => widget.model.value = value);
 
-  get changeItemToValueButton => IconButton(
-        onPressed: widget.onChangeToValue,
-        icon: const Icon(Icons.transform, color: darkGreen),
-      );
-
   get dataFieldContent {
     List<Widget> columnContent = [];
 
     if (widget.model.isEditing) {
       columnContent = [
-        DataFieldEditModeText(
-            text: textController.text, textColor: colorScheme.textColor),
+        DataFieldEditModeTextRow(colorScheme: colorScheme, model: widget.model, onFieldToValueChanged: widget.onChangeToValue),
         DataFieldEditModeValueRow(
           model: widget.model,
           colorScheme: colorScheme,
@@ -117,12 +110,6 @@ class _DataFieldState extends State<DataField> {
         child: Column(children: columnContent),
       ),
     );
-
-    if (widget.model.isEditing) {
-      return Row(
-        children: [changeItemToValueButton, Expanded(child: dataFieldWidget)],
-      );
-    }
 
     return dataFieldWidget;
   }

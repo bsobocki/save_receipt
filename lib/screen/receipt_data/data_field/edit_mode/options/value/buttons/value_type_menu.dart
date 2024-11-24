@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:save_receipt/components/expandable_button.dart';
+import 'package:save_receipt/color/themes/main_theme.dart';
+import 'package:save_receipt/components/expendable/expandable_button.dart';
 import 'package:save_receipt/source/data/structures/receipt.dart';
 
 class DataFieldValueTypeMenu extends StatefulWidget {
@@ -78,9 +79,9 @@ class _DataFieldValueTypeMenuState extends State<DataFieldValueTypeMenu> {
           dynamic state = buttonKey.currentState;
           state?.showButtonMenu();
         },
-        buttonColor: widget.color,
+        buttonColor: mainTheme.mainColor.withOpacity(0.5),
         iconData: getTypeIcon(type),
-        iconColor: Colors.white,
+        iconColor: widget.color,
         textColor: Colors.white,
       ),
     );

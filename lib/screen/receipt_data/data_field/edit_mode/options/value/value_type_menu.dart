@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:save_receipt/components/expandable_button.dart';
+import 'package:save_receipt/components/expendable/expandable_button.dart';
 import 'package:save_receipt/source/data/structures/receipt.dart';
 
 class DataFieldValueTypeMenu extends StatefulWidget {

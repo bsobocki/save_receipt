@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:save_receipt/color/scheme/data_field_scheme.dart';
 import 'package:save_receipt/color/themes/main_theme.dart';
-import 'package:save_receipt/components/expandable_button.dart';
-import 'package:save_receipt/components/expandable_option_panel.dart';
+import 'package:save_receipt/components/expendable/expandable_button.dart';
+import 'package:save_receipt/components/expendable/expandable_option_panel.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/options/value/buttons/add_remove_value_button.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/options/value/buttons/value_type_menu.dart';
 import 'package:save_receipt/source/data/structures/receipt.dart';
@@ -72,10 +72,10 @@ class _ExpandableValueOptionsState extends State<ExpandableValueOptions> {
       optionButtons += [
         ExpandableButton(
           label: 'Value As New Item',
-          buttonColor: Colors.blueGrey,
-          iconData: Icons.swap_horiz_outlined,
-          iconColor: Colors.white,
           textColor: Colors.white,
+          iconData: Icons.swap_horiz_outlined,
+          iconColor: Colors.blueGrey,
+          buttonColor: mainTheme.mainColor.withOpacity(0.5),
           onPressed: widget.onValueToFieldChange,
         ),
         separator,
@@ -88,11 +88,13 @@ class _ExpandableValueOptionsState extends State<ExpandableValueOptions> {
   @override
   Widget build(BuildContext context) {
     return ExpandableOptionsPanel(
-        options: options,
-        onCollapse: widget.onCollapse,
-        constraints: widget.constraints,
-        isExpanded: isExpanded,
-        iconColor: mainTheme.mainColor,
-        buttonColor: Colors.white,);
+      alignment: MainAxisAlignment.start,
+      options: options,
+      onCollapse: widget.onCollapse,
+      constraints: widget.constraints,
+      isExpanded: isExpanded,
+      iconColor: mainTheme.mainColor,
+      buttonColor: Colors.white,
+    );
   }
 }

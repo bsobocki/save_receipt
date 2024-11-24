@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:save_receipt/components/expandable_button.dart';
+import 'package:save_receipt/color/themes/main_theme.dart';
+import 'package:save_receipt/components/expendable/expandable_button.dart';
 
 class DataFieldAddRemoveValueButton extends StatefulWidget {
   const DataFieldAddRemoveValueButton({
@@ -27,18 +28,18 @@ class _DataFeildAddRemoveValueButtonState
   get valueRemoveButton => ExpandableButton(
         label: "Remove Value",
         onPressed: widget.onRemoveValue,
-        buttonColor: widget.removeButtonColor,
+        iconColor: widget.removeButtonColor,
+        buttonColor: mainTheme.mainColor.withOpacity(0.5),
         iconData: Icons.delete_forever_sharp,
-        iconColor: Colors.white,
         textColor: Colors.white,
       );
 
   get valueAddButton => ExpandableButton(
         label: "Add Value",
         onPressed: widget.onAddValue,
-        buttonColor: widget.addButtonColor,
+        buttonColor: mainTheme.mainColor.withOpacity(0.5),
+        iconColor: widget.addButtonColor,
         iconData: Icons.add,
-        iconColor: Colors.white,
         textColor: Colors.white,
       );
 
