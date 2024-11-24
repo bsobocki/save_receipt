@@ -3,10 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:save_receipt/color/themes/main_theme.dart';
 import 'package:save_receipt/components/expandable_button.dart';
-
-enum ImageState { justImage, justBarcode, bothAvailable, bothUnavailable }
-
-enum ImageType { image, barcode }
+import 'package:save_receipt/settings/receipt_data_page.dart';
 
 class ReceiptPageTopBar extends StatelessWidget {
   const ReceiptPageTopBar({
@@ -20,44 +17,6 @@ class ReceiptPageTopBar extends StatelessWidget {
   final String? barcodeImgPaht;
 
   get expandedPlaceholder => Expanded(child: Container());
-
-  get imageState {
-    if (receiptImgPath != null) {
-      if (barcodeImgPaht != null) {
-        return ImageState.bothAvailable;
-      }
-      return ImageState.justImage;
-    }
-    if (barcodeImgPaht != null) {
-      return ImageState.justBarcode;
-    }
-    return ImageState.bothUnavailable;
-  }
-
-  double getHeight(ImageType type, BoxConstraints constraints) {
-    final state = imageState;
-    final height = constraints.maxHeight;
-    double divider = 3;
-
-    switch (state) {
-      case ImageState.bothAvailable:
-      case ImageState.bothUnavailable:
-        divider = 2;
-      case ImageState.justBarcode:
-        if (type == ImageType.barcode) {
-          divider = 1.5;
-        } else {
-          divider = 3;
-        }
-      case ImageState.justImage:
-        if (type == ImageType.image) {
-          divider = 1.5;
-        } else {
-          divider = 3;
-        }
-    }
-    return height / divider;
-  }
 
   Widget receiptIcon(String? path, IconData iconData) {
     Widget? icon;
@@ -73,7 +32,7 @@ class ReceiptPageTopBar extends StatelessWidget {
       icon = Center(child: Icon(iconData));
     }
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(color: Colors.white, style: BorderStyle.solid),
@@ -127,7 +86,7 @@ class ReceiptPageTopBar extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(
-          height: 20,
+          height: ReceiptEditorSettings.topBarNavigationBarHeight,
           child: Row(
             children: [
               IconButton(
@@ -139,9 +98,9 @@ class ReceiptPageTopBar extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: ReceiptEditorSettings.topBarSpaceHeight),
         SizedBox(
-          height: 160,
+          height: ReceiptEditorSettings.topBarMainContentHeight,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -151,14 +110,14 @@ class ReceiptPageTopBar extends StatelessWidget {
                   builder: (context, constraints) => Column(
                     children: [
                       SizedBox(
-                        height: getHeight(ImageType.image, constraints),
+                        height: constraints.maxHeight * 2 / 3,
                         child: GestureDetector(
                           onTap: onImageIconPress,
                           child: receiptIcon(receiptImgPath, Icons.image),
                         ),
                       ),
                       SizedBox(
-                        height: getHeight(ImageType.barcode, constraints),
+                        height: constraints.maxHeight / 3,
                         child: GestureDetector(
                           onTap: () {},
                           child: receiptIcon(barcodeImgPaht, Icons.qr_code),
@@ -176,23 +135,27 @@ class ReceiptPageTopBar extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ExpandableButton(
-                            buttonColor: Colors.red,
-                            iconData: Icons.qr_code,
-                            onPressed: () {},
-                            label: 'Add barcode'),
+                          buttonColor: Colors.red,
+                          iconData: Icons.qr_code,
+                          onPressed: () {},
+                          label: 'Add barcode',
+                          wrapText: true,
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ExpandableButton(
-                            buttonColor: Colors.cyan,
-                            iconData: Icons.add,
-                            onPressed: () {},
-                            label: 'Add Item'),
+                          buttonColor: Colors.cyan,
+                          iconData: Icons.add,
+                          onPressed: () {},
+                          label: 'Add Item',
+                          wrapText: true,
+                        ),
                       ),
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

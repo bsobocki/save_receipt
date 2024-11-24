@@ -125,8 +125,6 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     initData();
   }
 
-  get topBarHeight => 200.0;
-
   get dataFieldsList {
     return ListView.builder(
       itemCount: _dataFields.length,

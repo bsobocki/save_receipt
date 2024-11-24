@@ -10,6 +10,7 @@ class ExpandableButton extends StatefulWidget {
     this.textColor,
     required this.label,
     this.constraints,
+    this.wrapText = false,
   });
 
   final String label;
@@ -19,6 +20,7 @@ class ExpandableButton extends StatefulWidget {
   final Color? iconColor;
   final Color? textColor;
   final BoxConstraints? constraints;
+  final bool wrapText;
 
   @override
   State<ExpandableButton> createState() => _ExpandableButtonState();
@@ -30,6 +32,18 @@ class _ExpandableButtonState extends State<ExpandableButton> {
 
   get iconColor => widget.iconColor ?? defaultFrontColor;
   get textColor => widget.textColor ?? defaultFrontColor;
+
+  get label {
+    Widget labelWidget = Text(
+      widget.label,
+      style: TextStyle(color: textColor),
+      overflow: TextOverflow.ellipsis,
+    );
+    if (widget.wrapText) {
+      return Expanded(child: labelWidget);
+    }
+    return labelWidget;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +67,7 @@ class _ExpandableButtonState extends State<ExpandableButton> {
         },
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            shape: const StadiumBorder(), // This creates the pill shape
+            //shape: const StadiumBorder(), // This creates the pill shape
             backgroundColor: widget.buttonColor,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           ),
@@ -62,20 +76,13 @@ class _ExpandableButtonState extends State<ExpandableButton> {
             setState(() => expanded = false);
           },
           child: Row(
-            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 widget.iconData,
                 color: iconColor,
               ),
               const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  widget.label,
-                  style: TextStyle(color: textColor),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
+              label,
             ],
           ),
         ),
