@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:save_receipt/color/scheme/data_field_scheme.dart';
+import 'package:save_receipt/color/themes/main_theme.dart';
 import 'package:save_receipt/components/expandable_button.dart';
 import 'package:save_receipt/components/expandable_option_panel.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/options/value/buttons/add_remove_value_button.dart';
@@ -90,6 +91,8 @@ class _ExpandableValueOptionsState extends State<ExpandableValueOptions> {
         options: options,
         onCollapse: widget.onCollapse,
         constraints: widget.constraints,
-        isExpanded: isExpanded,);
+        isExpanded: isExpanded,
+        iconColor: mainTheme.mainColor,
+        buttonColor: Colors.white,);
   }
 }
