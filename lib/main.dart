@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:save_receipt/color/color_theme.dart';
 import 'package:save_receipt/color/scheme/main_sheme.dart';
 import 'package:save_receipt/color/themes/main_theme.dart';
 import 'package:save_receipt/screen/receipt_data/receipt_data_page.dart';
@@ -191,12 +192,14 @@ class _MyHomePageState extends State<MyHomePage> {
           child: const Icon(Icons.receipt_sharp),
           fabSize: ExpandableFabSize.regular,
           shape: const CircleBorder(),
+          foregroundColor: Colors.white,
+          backgroundColor: mainTheme.mainColor,
         ),
         closeButtonBuilder: RotateFloatingActionButtonBuilder(
           child: const Icon(Icons.close),
           fabSize: ExpandableFabSize.regular,
-          backgroundColor: Theme.of(context).colorScheme.onPrimaryFixed,
-          foregroundColor: Theme.of(context).colorScheme.primaryFixed,
+          backgroundColor: mainTheme.mainColor.lighter(0.82),
+          foregroundColor: mainTheme.mainColor,
           shape: const CircleBorder(),
         ),
         children: [
@@ -204,6 +207,7 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               FloatingActionButton(
                 heroTag: null,
+                backgroundColor: mainTheme.mainColor,
                 onPressed: () async {
                   toggleFloatingActionButton();
                   openReceiptPage(await _googleScanAndExtractRecipe());
@@ -214,12 +218,16 @@ class _MyHomePageState extends State<MyHomePage> {
                   width: 24,
                 ),
               ),
-              const Text("scan"),
+              Text(
+                "scan",
+                style: TextStyle(color: mainTheme.mainColor),
+              ),
             ],
           ),
           Column(
             children: [
               FloatingActionButton(
+                backgroundColor: mainTheme.mainColor,
                 heroTag: null,
                 onPressed: () async {
                   toggleFloatingActionButton();
@@ -227,7 +235,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 },
                 child: const Icon(Icons.drive_folder_upload),
               ),
-              const Text("import"),
+              Text(
+                "import",
+                style: TextStyle(color: mainTheme.mainColor),
+              ),
             ],
           ),
         ],
