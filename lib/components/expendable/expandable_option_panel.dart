@@ -74,6 +74,7 @@ class _ExpandableOptionsPanelState extends State<ExpandableOptionsPanel> {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
         child: SingleChildScrollView(
+          reverse: widget.alignment == MainAxisAlignment.start,
           scrollDirection: Axis.horizontal,
           child: Row(
             mainAxisAlignment: widget.alignment,
