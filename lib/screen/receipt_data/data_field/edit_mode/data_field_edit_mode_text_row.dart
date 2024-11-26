@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:save_receipt/color/scheme/data_field_scheme.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/options/label/expandable_text_options.dart';
-import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/text/value_text.dart';
+import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/text/field_text.dart';
 import 'package:save_receipt/source/data/structures/data_field.dart';
 
 class DataFieldEditModeTextRow extends StatefulWidget {
@@ -36,21 +36,23 @@ class _DataFieldEditModeTextRowState extends State<DataFieldEditModeTextRow> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(children: [
-      if (!expandedOptions)
-      Padding(
-        padding: const EdgeInsets.only(left: 16.0),
-        child: DataFieldValueText(
-          fontWeight: FontWeight.bold,
-            text: widget.model.text,
-            textColor: widget.colorScheme.textColor),
-      ),
-      Expanded(
-        child: LayoutBuilder(
-          builder: (context, constraints) =>
-              expandableOptionsButtons(constraints),
+    return Container(
+      color: Colors.black.withOpacity(0.3),
+      child: Row(children: [
+        if (!expandedOptions)
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0),
+          child: DataFieldEditModeText(
+              text: widget.model.text,
+              textColor: widget.colorScheme.textColor),
         ),
-      ),
-    ]);
+        Expanded(
+          child: LayoutBuilder(
+            builder: (context, constraints) =>
+                expandableOptionsButtons(constraints),
+          ),
+        ),
+      ]),
+    );
   }
 }

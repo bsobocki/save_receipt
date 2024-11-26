@@ -11,14 +11,13 @@ class DataFieldEditModeText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          text,
-          style: TextStyle(color: textColor, fontWeight: FontWeight.w600),
-        ),
-        Expanded(child: Container()),
-      ],
+    return Container(
+      constraints: const BoxConstraints(maxWidth: 150),
+      child: Text(
+        text,
+        style: TextStyle(color: textColor, fontWeight: FontWeight.w600),
+        overflow: TextOverflow.ellipsis,
+      ),
     );
   }
 }

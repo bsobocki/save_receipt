@@ -13,7 +13,7 @@ class ValueField extends StatefulWidget {
   });
 
   final String initValue;
-  final List<String> values;
+  final List<dynamic> values;
   final Function(String? value) onValueChanged;
   final Color textColor;
 
@@ -25,52 +25,53 @@ class _ValueFieldState extends State<ValueField> {
   bool showMenu = false;
   final TextEditingController menuController = TextEditingController();
   final TextEditingController textFieldController = TextEditingController();
+  late final List<dynamic> initialValues;
+  late List<dynamic> values;
 
   @override
   void initState() {
-    textFieldController.text = widget.initValue;
+    menuController.text = widget.initValue;
+    initialValues = List.from(widget.values)..sort();
+    values = initialValues;
+    menuController.addListener(() {
+      setState(() {
+        if (menuController.text.isNotEmpty) {
+          final String trimmedFilter = menuController.text.trim().toLowerCase();
+          values = initialValues
+              .where(
+                (element) =>
+                    element.toString().toLowerCase().contains(trimmedFilter),
+              )
+              .toList();
+        } else {
+          values = initialValues;
+        }
+        widget.onValueChanged(menuController.text);
+      });
+    });
+
     super.initState();
   }
 
-  void switchView() => setState(() => showMenu = !showMenu);
-
-  get textFieldView => TextField(
-        controller: textFieldController,
-        onSubmitted: widget.onValueChanged,
-        onChanged: widget.onValueChanged,
+  get dropdownMenu => DropdownMenu<dynamic>(
+        menuHeight: dropdownmenuHeight,
+        enableSearch: true,
+        requestFocusOnTap: true,
+        controller: menuController,
+        inputDecorationTheme: InputDecorationTheme(
+            suffixIconColor: mainTheme.mainColor,
+            border: InputBorder.none,
+            enabledBorder: InputBorder.none,
+            focusedBorder: InputBorder.none),
+        textStyle: TextStyle(color: widget.textColor),
+        menuStyle: menuStyle,
+        onSelected: (value) {
+          String newValue = value?.toString() ?? menuController.text;
+          textFieldController.text = newValue;
+          widget.onValueChanged(newValue);
+        },
+        dropdownMenuEntries: menuEntries,
         textAlign: TextAlign.right,
-        style: TextStyle(color: widget.textColor),
-        decoration: const InputDecoration(border: InputBorder.none),
-      );
-
-  get dropdownMenu => ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 300),
-        child: DropdownMenu<String>(
-          // todo: filtering without error when nothjing found - custon filtering
-          // enableFilter: true,
-          menuHeight: dropdownmenuHeight,
-          enableSearch: true,
-          requestFocusOnTap: true,
-          controller: menuController,
-          inputDecorationTheme: InputDecorationTheme(
-            filled: true,
-            fillColor: mainTheme.mainColor,
-            suffixIconColor: Colors.white,
-            border: const OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.red),
-              borderRadius: BorderRadius.all(Radius.circular(15.0)),
-            ),
-          ),
-          textStyle: menuTextStyle,
-          menuStyle: menuStyle,
-          onSelected: (value) {
-            String newValue = value ?? menuController.text;
-            textFieldController.text = newValue;
-            switchView();
-            widget.onValueChanged(newValue);
-          },
-          dropdownMenuEntries: menuEntries,
-        ),
       );
 
   get menuStyle => MenuStyle(
@@ -78,38 +79,19 @@ class _ValueFieldState extends State<ValueField> {
         shadowColor: const WidgetStatePropertyAll(
           Color.fromARGB(193, 0, 0, 0),
         ),
-        surfaceTintColor: WidgetStatePropertyAll(Colors.white),
+        surfaceTintColor: const WidgetStatePropertyAll(Colors.white),
       );
 
-  get menuTextStyle => const TextStyle(color: Colors.white);
-
-  get menuEntries =>
-      widget.values.map<DropdownMenuEntry<String>>((String value) {
-        return DropdownMenuEntry<String>(value: value, label: value);
+  get menuEntries => values.map<DropdownMenuEntry<dynamic>>((value) {
+        return DropdownMenuEntry<dynamic>(
+            value: value, label: value.toString());
       }).toList();
-
-  get menuButton => IconButton(
-        onPressed: () {
-          menuController.text = textFieldController.text;
-          switchView();
-        },
-        icon: Icon(
-          Icons.arrow_drop_down_circle,
-          color: mainTheme.mainColor,
-        ),
-      );
 
   @override
   Widget build(BuildContext context) {
-    if (showMenu) {
-      return Row(children: [
-        Expanded(child: Container()),
-        dropdownMenu,
-      ]);
-    }
     return Row(children: [
-      Expanded(child: textFieldView),
-      menuButton,
+      Expanded(child: Container()),
+      dropdownMenu,
     ]);
   }
 }

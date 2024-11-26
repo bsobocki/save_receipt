@@ -38,7 +38,7 @@ class _DataFieldState extends State<DataField> {
   TextEditingController textController = TextEditingController();
   late final DataFieldColorScheme colorScheme;
 
-  List<String> allValuesForType(ReceiptObjectType type) {
+  List<dynamic> allValuesForType(ReceiptObjectType type) {
     switch (type) {
       case ReceiptObjectType.product:
         return widget.allValuesData.prices;
@@ -77,14 +77,20 @@ class _DataFieldState extends State<DataField> {
       textColor: colorScheme.textColor,
       initValue: widget.model.value ?? '',
       values: allValuesForType(widget.model.type),
-      onValueChanged: (String? value) => widget.model.value = value);
+      onValueChanged: (String? value) {
+        widget.model.value = value;
+        print("VALUE!!!!!!!!!!!!!!!!!!!!!!!!!! to $value");
+      });
 
   get dataFieldContent {
     List<Widget> columnContent = [];
 
     if (widget.model.isEditing) {
       columnContent = [
-        DataFieldEditModeTextRow(colorScheme: colorScheme, model: widget.model, onFieldToValueChanged: widget.onChangeToValue),
+        DataFieldEditModeTextRow(
+            colorScheme: colorScheme,
+            model: widget.model,
+            onFieldToValueChanged: widget.onChangeToValue),
         DataFieldEditModeValueRow(
           model: widget.model,
           colorScheme: colorScheme,
@@ -105,10 +111,7 @@ class _DataFieldState extends State<DataField> {
 
     Widget dataFieldWidget = Container(
       color: colorScheme.backgroundColor,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(children: columnContent),
-      ),
+      child: Column(children: columnContent),
     );
 
     return dataFieldWidget;

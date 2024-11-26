@@ -58,14 +58,14 @@ class _DataFieldEditModeValueRowState extends State<DataFieldEditModeValueRow> {
               expandableOptionsButtons(constraints),
         ),
       ),
-      if (!expandedOptions)
-      Padding(
-        padding: const EdgeInsets.only(right: 16.0),
-        child: DataFieldValueText(
-          fontWeight: FontWeight.normal,
-            text: widget.model.value ?? '',
-            textColor: widget.colorScheme.textColor),
-      ),
+        Padding(
+          padding: const EdgeInsets.only(right: 16.0),
+          child: DataFieldValueText(
+              key: UniqueKey(),
+              fontWeight: FontWeight.normal,
+              text: widget.model.value ?? '',
+              textColor: widget.colorScheme.textColor),
+        ),
     ]);
   }
 }

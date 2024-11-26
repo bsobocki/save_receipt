@@ -18,7 +18,7 @@ class DataFieldModel {
 }
 
 class AllValuesModel {
-  List<String> prices;
+  List<double> prices;
   List<String> info;
   List<String> dates;
 

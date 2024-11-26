@@ -4,7 +4,7 @@ class Receipt {
 
   const Receipt({this.imgPath, required this.objects});
 
-  getObjects(ReceiptObjectType type) {
+  List<ReceiptObject> getObjects(ReceiptObjectType type) {
     List<ReceiptObject> objs = [];
     for (ReceiptObject obj in objects) {
       if (obj.type == type) {
@@ -24,7 +24,11 @@ class Receipt {
     return objs;
   }
 
-  get products => getObjects(ReceiptObjectType.product);
+  List<ReceiptProduct> get products => getObjects(ReceiptObjectType.product)
+      .map((e) => e as ReceiptProduct)
+      .toList();
+
+  get prices => products.map((e) => e.price).toList();
   get info => getObjects(ReceiptObjectType.info);
   get dates => getObjects(ReceiptObjectType.date);
   get pricesStr => getObjectsAsStr(ReceiptObjectType.product);
