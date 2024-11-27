@@ -1,38 +1,33 @@
 import 'package:flutter/material.dart';
 
 extension ColorBrightness on Color {
-  Color brighter([double factor = 0.3]) {
-    HSLColor hsl = HSLColor.fromColor(this);
-    return hsl
-        .withLightness((hsl.lightness + factor).clamp(0.0, 1.0))
-        .toColor();
-  }
-
-  Color darker([double factor = 0.3]) {
-    HSLColor hsl = HSLColor.fromColor(this);
-    return hsl
-        .withLightness((hsl.lightness - factor).clamp(0.0, 1.0))
-        .toColor();
-  }
-
-  Color lighter([double amount = 0.1]) {
-    HSLColor hsl = HSLColor.fromColor(this);
-    return hsl
-        .withLightness((hsl.lightness + amount).clamp(0.0, 1.0))
-        .toColor();
+  Color moved([int value = 20]) {
+    return Color.fromARGB(alpha, red + value, green + value, blue + value);
   }
 }
 
 class ColorTheme {
   final Color mainColor;
-  final Color ligtherMainColor;
-  final Color extraLightMainColor;
+  late final Color ligtherMainColor;
+  late final Color extraLightMainColor;
+  late final Color darkerMainColor;
+  late final Color extraDarkMainColor;
+  late final Color unselectedColor;
 
   ColorTheme({
-    required this.ligtherMainColor,
     required this.mainColor,
-    required this.extraLightMainColor,
-  });
+  }) {
+    const int lighter = 40;
+    const int darker = -40;
+
+    ligtherMainColor = mainColor.moved(lighter);
+    extraLightMainColor = ligtherMainColor.moved(lighter);
+
+    darkerMainColor = mainColor.moved(darker);
+    extraDarkMainColor = darkerMainColor.moved(darker);
+
+    unselectedColor = extraLightMainColor;
+  }
 
   LinearGradient get gradient => LinearGradient(
           begin: Alignment.topLeft,

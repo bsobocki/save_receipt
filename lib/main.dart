@@ -163,7 +163,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Text(
               imageScannerText,
-              style: TextStyle(color: mainTheme.mainColor.lighter(0.1)),
+              style: TextStyle(color: mainTheme.mainColor),
             ),
           ],
         ),
@@ -175,7 +175,8 @@ class _MyHomePageState extends State<MyHomePage> {
           BottomNavigationBarItem(
               icon: Icon(Icons.adobe_rounded), label: 'label'),
         ],
-        unselectedItemColor: Colors.grey[400],
+        selectedItemColor: mainTheme.mainColor,
+        unselectedItemColor: mainTheme.unselectedColor,
       ),
       floatingActionButtonLocation: ExpandableFab.location,
       floatingActionButton: ExpandableFab(
@@ -193,7 +194,7 @@ class _MyHomePageState extends State<MyHomePage> {
           fabSize: ExpandableFabSize.regular,
           shape: const CircleBorder(),
           foregroundColor: Colors.white,
-          backgroundColor: mainTheme.ligtherMainColor,
+          backgroundColor: mainTheme.mainColor,
         ),
         closeButtonBuilder: RotateFloatingActionButtonBuilder(
           child: const Icon(Icons.close),
@@ -207,7 +208,7 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               FloatingActionButton(
                 heroTag: null,
-                backgroundColor: mainTheme.mainColor.withOpacity(0.9),
+                backgroundColor: mainTheme.mainColor,
                 onPressed: () async {
                   toggleFloatingActionButton();
                   openReceiptPage(await _googleScanAndExtractRecipe());
@@ -220,20 +221,22 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               Text(
                 "scan",
-                style: TextStyle(color: mainTheme.ligtherMainColor),
+                style: TextStyle(color: mainTheme.mainColor),
               ),
             ],
           ),
           Column(
             children: [
               FloatingActionButton(
-                backgroundColor: mainTheme.ligtherMainColor,
+                backgroundColor: mainTheme.mainColor,
                 heroTag: null,
                 onPressed: () async {
                   toggleFloatingActionButton();
                   openReceiptPage(await _readImage());
                 },
-                child: const Icon(Icons.drive_folder_upload),
+                child: const Icon(
+                  Icons.drive_folder_upload,
+                ),
               ),
               Text(
                 "import",
