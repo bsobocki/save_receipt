@@ -11,6 +11,8 @@ class DataFieldTextOptions extends StatefulWidget {
     required this.constraints,
     required this.isExpanded,
     required this.onFieldToValueChanged,
+    required this.buttonColor,
+    required this.foregroundColor,
   });
 
   final VoidCallback onChangeToValue;
@@ -18,6 +20,8 @@ class DataFieldTextOptions extends StatefulWidget {
   final BoxConstraints constraints;
   final bool isExpanded;
   final VoidCallback onFieldToValueChanged;
+  final Color buttonColor;
+  final Color foregroundColor;
 
   @override
   State<DataFieldTextOptions> createState() => _DataFieldOptionsState();
@@ -38,8 +42,8 @@ class _DataFieldOptionsState extends State<DataFieldTextOptions> {
         ExpandableButton(
           onPressed: widget.onChangeToValue,
           iconData: Icons.transform,
-          iconColor: Colors.blueGrey,
-          buttonColor: mainTheme.mainColor.withOpacity(0.5),
+          iconColor: widget.foregroundColor,
+          buttonColor: widget.buttonColor,
           label: 'Item To Value',
         ),
       ];

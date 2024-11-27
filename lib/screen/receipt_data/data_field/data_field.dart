@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:save_receipt/color/gradients/gradient.dart';
 import 'package:save_receipt/color/scheme/data_field_scheme.dart';
-import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/data_field_edit_mode_text_row.dart';
+import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/data_field_edit_mode_label_row.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/edit_mode/data_fiels_edit_mode_value_row.dart';
-import 'package:save_receipt/screen/receipt_data/data_field/main_view/text_field.dart';
+import 'package:save_receipt/screen/receipt_data/data_field/main_view/label_field.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/main_view/value_field.dart';
 import 'package:save_receipt/source/data/structures/data_field.dart';
 import 'package:save_receipt/source/data/structures/receipt.dart';

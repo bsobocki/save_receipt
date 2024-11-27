@@ -135,7 +135,7 @@ class ReceiptPageTopBar extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ExpandableButton(
-                          buttonColor: Colors.red,
+                          buttonColor: mainTheme.mainColor,
                           iconData: Icons.qr_code,
                           onPressed: () {},
                           label: 'Add barcode',
@@ -145,7 +145,7 @@ class ReceiptPageTopBar extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ExpandableButton(
-                          buttonColor: Colors.cyan,
+                          buttonColor: mainTheme.mainColor,
                           iconData: Icons.add,
                           onPressed: () {},
                           label: 'Add Item',

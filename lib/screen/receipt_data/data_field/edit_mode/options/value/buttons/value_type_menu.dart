@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:save_receipt/color/themes/main_theme.dart';
 import 'package:save_receipt/components/expendable/expandable_button.dart';
 import 'package:save_receipt/source/data/structures/receipt.dart';
 
 class DataFieldValueTypeMenu extends StatefulWidget {
   const DataFieldValueTypeMenu({
+    super.key,
     required this.onSelected,
     required this.color,
     required this.type,
-    super.key,
+    required this.buttonColor,
   });
 
   final Function(ReceiptObjectType) onSelected;
   final Color color;
   final ReceiptObjectType type;
+  final Color buttonColor;
 
   @override
   State<DataFieldValueTypeMenu> createState() => _DataFieldValueTypeMenuState();
@@ -79,7 +80,7 @@ class _DataFieldValueTypeMenuState extends State<DataFieldValueTypeMenu> {
           dynamic state = buttonKey.currentState;
           state?.showButtonMenu();
         },
-        buttonColor: mainTheme.mainColor.withOpacity(0.5),
+        buttonColor: widget.buttonColor,
         iconData: getTypeIcon(type),
         iconColor: widget.color,
         textColor: Colors.white,

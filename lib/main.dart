@@ -159,11 +159,11 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Text(
               imageProcessingText,
-              style: const TextStyle(color: Colors.blueGrey),
+              style: TextStyle(color: mainTheme.mainColor),
             ),
             Text(
               imageScannerText,
-              style: const TextStyle(color: Colors.red),
+              style: TextStyle(color: mainTheme.mainColor.lighter(0.1)),
             ),
           ],
         ),
@@ -193,12 +193,12 @@ class _MyHomePageState extends State<MyHomePage> {
           fabSize: ExpandableFabSize.regular,
           shape: const CircleBorder(),
           foregroundColor: Colors.white,
-          backgroundColor: mainTheme.mainColor,
+          backgroundColor: mainTheme.ligtherMainColor,
         ),
         closeButtonBuilder: RotateFloatingActionButtonBuilder(
           child: const Icon(Icons.close),
           fabSize: ExpandableFabSize.regular,
-          backgroundColor: mainTheme.mainColor.lighter(0.82),
+          backgroundColor: mainTheme.extraLightMainColor,
           foregroundColor: mainTheme.mainColor,
           shape: const CircleBorder(),
         ),
@@ -207,7 +207,7 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               FloatingActionButton(
                 heroTag: null,
-                backgroundColor: mainTheme.mainColor,
+                backgroundColor: mainTheme.mainColor.withOpacity(0.9),
                 onPressed: () async {
                   toggleFloatingActionButton();
                   openReceiptPage(await _googleScanAndExtractRecipe());
@@ -220,14 +220,14 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               Text(
                 "scan",
-                style: TextStyle(color: mainTheme.mainColor),
+                style: TextStyle(color: mainTheme.ligtherMainColor),
               ),
             ],
           ),
           Column(
             children: [
               FloatingActionButton(
-                backgroundColor: mainTheme.mainColor,
+                backgroundColor: mainTheme.ligtherMainColor,
                 heroTag: null,
                 onPressed: () async {
                   toggleFloatingActionButton();

@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:save_receipt/color/themes/main_theme.dart';
 import 'package:save_receipt/components/expendable/expandable_button.dart';
 
 class DataFieldAddRemoveValueButton extends StatefulWidget {
   const DataFieldAddRemoveValueButton({
     super.key,
     required this.valueExists,
-    required this.removeButtonColor,
-    required this.addButtonColor,
+    required this.removeButtonForegroundColor,
+    required this.addButtonForegroundColor,
     required this.onRemoveValue,
     required this.onAddValue,
+    required this.buttonColor,
   });
 
   final bool valueExists;
-  final Color removeButtonColor;
-  final Color addButtonColor;
+  final Color removeButtonForegroundColor;
+  final Color addButtonForegroundColor;
   final VoidCallback onRemoveValue;
   final VoidCallback onAddValue;
+  final Color buttonColor;
 
   @override
   State<DataFieldAddRemoveValueButton> createState() =>
@@ -28,8 +29,8 @@ class _DataFeildAddRemoveValueButtonState
   get valueRemoveButton => ExpandableButton(
         label: "Remove Value",
         onPressed: widget.onRemoveValue,
-        iconColor: widget.removeButtonColor,
-        buttonColor: mainTheme.mainColor.withOpacity(0.5),
+        iconColor: widget.removeButtonForegroundColor,
+        buttonColor: widget.buttonColor,
         iconData: Icons.delete_forever_sharp,
         textColor: Colors.white,
       );
@@ -37,8 +38,8 @@ class _DataFeildAddRemoveValueButtonState
   get valueAddButton => ExpandableButton(
         label: "Add Value",
         onPressed: widget.onAddValue,
-        buttonColor: mainTheme.mainColor.withOpacity(0.5),
-        iconColor: widget.addButtonColor,
+        buttonColor: widget.buttonColor,
+        iconColor: widget.addButtonForegroundColor,
         iconData: Icons.add,
         textColor: Colors.white,
       );
