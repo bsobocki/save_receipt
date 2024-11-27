@@ -40,7 +40,7 @@ class _DataFieldEditModeTextRowState extends State<DataFieldEditModeTextRow> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.black.withOpacity(0.1),
+      color: Colors.black.withOpacity(0.05),
       child: Row(children: [
         if (!expandedOptions)
         Padding(

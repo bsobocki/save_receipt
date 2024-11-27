@@ -2,7 +2,18 @@ import 'package:flutter/material.dart';
 
 extension ColorBrightness on Color {
   Color moved([int value = 20]) {
-    return Color.fromARGB(alpha, red + value, green + value, blue + value);
+    int r = red + value;
+    r = r > 255 ? 255 : r;
+    r = r < 0 ? 0 : r;
+
+    int g = green + value;
+    g = g > 255 ? 255 : g;
+    g = g < 0 ? 0 : g;
+
+    int b = blue + value;
+    b = b > 255 ? 255 : b;
+    b = b < 0 ? 0 : b;
+    return Color.fromARGB(alpha, r, g, b);
   }
 }
 
@@ -33,10 +44,10 @@ class ColorTheme {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
+            mainColor.moved(-60),
             mainColor,
-            mainColor.withOpacity(0.9),
-            mainColor.withOpacity(0.8),
-            mainColor.withOpacity(0.6),
-            mainColor.withOpacity(0.4),
+            mainColor.moved(40),
+            mainColor.moved(100),
+            mainColor.moved(160),
           ]);
 }
