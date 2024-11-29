@@ -18,7 +18,7 @@ Future<String> scanRecipe() async {
       return images[0];
     }
   } catch (err) {
-    return 'Error scanning document: $err';
+    print('Error scanning document: $err');
   }
 
   return '';

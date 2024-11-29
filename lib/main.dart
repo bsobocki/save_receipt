@@ -6,6 +6,7 @@ import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart
 import 'package:image_picker/image_picker.dart';
 import 'package:save_receipt/color/scheme/main_sheme.dart';
 import 'package:save_receipt/color/themes/main_theme.dart';
+import 'package:save_receipt/screen/effect/page_slide_animation.dart';
 import 'package:save_receipt/screen/receipt_data/receipt_data_page.dart';
 import 'package:save_receipt/source/data/connect_data.dart';
 import 'package:save_receipt/source/data/parse_data.dart';
@@ -126,8 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (receipt != null) {
       Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (context) => ReceiptDataPage(
+        SlidePageRoute( page: ReceiptDataPage(
             initialReceipt: receipt,
           ),
         ),

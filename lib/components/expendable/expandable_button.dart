@@ -70,6 +70,7 @@ class _ExpandableButtonState extends State<ExpandableButton> {
             //shape: const StadiumBorder(), // This creates the pill shape
             backgroundColor: widget.buttonColor,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            shadowColor: Colors.white,
           ),
           onPressed: () {
             widget.onPressed();
