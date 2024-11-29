@@ -1,6 +1,6 @@
 import 'package:google_mlkit_document_scanner/google_mlkit_document_scanner.dart';
 
-Future<String> scanRecipe() async {
+Future<String?> scanRecipe() async {
   final documentScanner = DocumentScanner(
     options: DocumentScannerOptions(
         documentFormat: DocumentFormat.jpeg,
@@ -21,5 +21,5 @@ Future<String> scanRecipe() async {
     print('Error scanning document: $err');
   }
 
-  return '';
+  return null;
 }
