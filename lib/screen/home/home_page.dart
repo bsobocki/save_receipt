@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:save_receipt/color/themes/main_theme.dart';
 import 'package:save_receipt/screen/effect/page_slide_animation.dart';
 import 'package:save_receipt/screen/home/components/expandable_fab.dart';
@@ -15,17 +16,17 @@ import 'package:save_receipt/source/data/structures/receipt.dart';
 import 'package:save_receipt/source/document_operations/scan/google_read_text_from_image.dart';
 import 'package:save_receipt/source/document_operations/scan/google_scan.dart';
 
+enum ReceiptState {
+  noAction,
+  browse,
+  opening,
+  processing,
+  imageChoosing,
+  ready
+}
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -38,6 +39,10 @@ class _MyHomePageState extends State<MyHomePage> {
   String imageScannerText = "Please select an image to scan.";
   String imageProcessingText = "Please select an image to process.";
   String imgPath = "";
+  ReceiptState _receiptState = ReceiptState.noAction;
+
+  void setReceiptState(ReceiptState newState) =>
+      setState(() => _receiptState = newState);
 
   Widget getImg() {
     if (imgPath.isEmpty) {
@@ -56,9 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return await scanRecipe();
   }
 
-  Future<Receipt?> _processImage({bool scan = false}) async {
-    String? filePath =
-        scan ? await _googleScanAndExtractRecipe() : await _pickImage();
+  Future<Receipt?> _processImage(String? filePath) async {
     if (filePath != null) {
       List<TextLine> textLines = await processImage(filePath);
       List<ConnectedTextLines> connectedLines =
@@ -81,18 +84,67 @@ class _MyHomePageState extends State<MyHomePage> {
             initialReceipt: receipt,
           ),
         ),
+      ).then((value) => setReceiptState(ReceiptState.noAction),);
+    }
+  }
+
+  get choosingContent => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          LoadingAnimationWidget.dotsTriangle(
+              color: mainTheme.mainColor, size: 100.0),
+          Text("Choose Image to process",
+              style: TextStyle(color: mainTheme.mainColor))
+        ],
       );
+
+  get readyContent => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+         Icon(Icons.check_circle_outlined, color: mainTheme.mainColor, size: 100.0),
+          Text("Ready!", style: TextStyle(color: mainTheme.mainColor))
+        ],
+      );
+
+  get processingContent => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          LoadingAnimationWidget.staggeredDotsWave(
+              color: mainTheme.mainColor, size: 100.0),
+          Text('Processing Image...',
+              style: TextStyle(color: mainTheme.mainColor)),
+        ],
+      );
+
+  get mainContent => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            imageProcessingText,
+            style: TextStyle(color: mainTheme.mainColor),
+          ),
+          Text(
+            imageScannerText,
+            style: TextStyle(color: mainTheme.mainColor),
+          ),
+        ],
+      );
+
+  get body {
+    switch (_receiptState) {
+      case ReceiptState.processing:
+        return processingContent;
+      case ReceiptState.imageChoosing:
+        return choosingContent;
+      case ReceiptState.ready:
+        return readyContent;
+      default:
+        return mainContent;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: Container(
@@ -103,19 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              imageProcessingText,
-              style: TextStyle(color: mainTheme.mainColor),
-            ),
-            Text(
-              imageScannerText,
-              style: TextStyle(color: mainTheme.mainColor),
-            ),
-          ],
-        ),
+        child: body,
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
@@ -130,13 +170,23 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButtonLocation: ExpandableFab.location,
       floatingActionButton: ExpandableFloatingActionButton(
         onDocumentScanning: () async {
-          Receipt? receipt = await _processImage(scan: true);
+          setReceiptState(ReceiptState.imageChoosing);
+          String? filePath = await _googleScanAndExtractRecipe();
+          setReceiptState(ReceiptState.processing);
+          Receipt? receipt = await _processImage(filePath);
+          setReceiptState(ReceiptState.ready);
+          await Future.delayed(const Duration(milliseconds: 300));
           if (receipt != null) {
             openReceiptPage(receipt);
           }
         },
         onImageProcessing: () async {
-          Receipt? receipt = await _processImage(scan: false);
+          setReceiptState(ReceiptState.imageChoosing);
+          String? filePath = await _pickImage();
+          setReceiptState(ReceiptState.processing);
+          Receipt? receipt = await _processImage(filePath);
+          setReceiptState(ReceiptState.ready);
+          await Future.delayed(const Duration(milliseconds: 300));
           if (receipt != null) {
             openReceiptPage(receipt);
           }

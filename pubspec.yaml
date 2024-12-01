@@ -31,6 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   google_mlkit_text_recognition: ^0.13.1
+  loading_animation_widget:
 
 
   # The following adds the Cupertino Icons font to your application.
