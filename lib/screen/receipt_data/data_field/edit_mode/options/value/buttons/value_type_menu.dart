@@ -11,9 +11,9 @@ class DataFieldValueTypeMenu extends StatefulWidget {
     required this.buttonColor,
   });
 
-  final Function(ReceiptObjectType) onSelected;
+  final Function(ReceiptModelObjectType) onSelected;
   final Color color;
-  final ReceiptObjectType type;
+  final ReceiptModelObjectType type;
   final Color buttonColor;
 
   @override
@@ -21,7 +21,7 @@ class DataFieldValueTypeMenu extends StatefulWidget {
 }
 
 class _DataFieldValueTypeMenuState extends State<DataFieldValueTypeMenu> {
-  late ReceiptObjectType type;
+  late ReceiptModelObjectType type;
 
   @override
   void initState() {
@@ -29,9 +29,9 @@ class _DataFieldValueTypeMenuState extends State<DataFieldValueTypeMenu> {
     type = widget.type;
   }
 
-  PopupMenuItem<ReceiptObjectType> getPopupMenuItem(
-      String text, ReceiptObjectType type) {
-    return PopupMenuItem<ReceiptObjectType>(
+  PopupMenuItem<ReceiptModelObjectType> getPopupMenuItem(
+      String text, ReceiptModelObjectType type) {
+    return PopupMenuItem<ReceiptModelObjectType>(
         value: type,
         child: Row(
           children: [
@@ -42,15 +42,15 @@ class _DataFieldValueTypeMenuState extends State<DataFieldValueTypeMenu> {
         ));
   }
 
-  IconData getTypeIcon(ReceiptObjectType type) {
+  IconData getTypeIcon(ReceiptModelObjectType type) {
     switch (type) {
-      case ReceiptObjectType.object:
+      case ReceiptModelObjectType.object:
         return Icons.question_mark_sharp;
-      case ReceiptObjectType.product:
+      case ReceiptModelObjectType.product:
         return Icons.price_change;
-      case ReceiptObjectType.info:
+      case ReceiptModelObjectType.info:
         return Icons.info;
-      case ReceiptObjectType.date:
+      case ReceiptModelObjectType.date:
         return Icons.calendar_month;
     }
   }
@@ -59,16 +59,16 @@ class _DataFieldValueTypeMenuState extends State<DataFieldValueTypeMenu> {
   Widget build(BuildContext context) {
     final GlobalKey buttonKey = GlobalKey();
 
-    return PopupMenuButton<ReceiptObjectType>(
+    return PopupMenuButton<ReceiptModelObjectType>(
       key: buttonKey,
-      onSelected: (ReceiptObjectType value) => setState(() {
+      onSelected: (ReceiptModelObjectType value) => setState(() {
         widget.onSelected(value);
         type = value;
       }),
       itemBuilder: (context) => [
-        getPopupMenuItem('price', ReceiptObjectType.product),
-        getPopupMenuItem('info', ReceiptObjectType.info),
-        getPopupMenuItem('date', ReceiptObjectType.date),
+        getPopupMenuItem('price', ReceiptModelObjectType.product),
+        getPopupMenuItem('info', ReceiptModelObjectType.info),
+        getPopupMenuItem('date', ReceiptModelObjectType.date),
       ],
       color: widget.color,
       // custom button

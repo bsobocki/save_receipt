@@ -38,13 +38,13 @@ class _DataFieldState extends State<DataField> {
   TextEditingController textController = TextEditingController();
   late final DataFieldColorScheme colorScheme;
 
-  List<dynamic> allValuesForType(ReceiptObjectType type) {
+  List<dynamic> allValuesForType(ReceiptModelObjectType type) {
     switch (type) {
-      case ReceiptObjectType.product:
+      case ReceiptModelObjectType.product:
         return widget.allValuesData.prices;
-      case ReceiptObjectType.date:
+      case ReceiptModelObjectType.date:
         return widget.allValuesData.dates;
-      case ReceiptObjectType.info:
+      case ReceiptModelObjectType.info:
         return widget.allValuesData.info;
       default:
         return [];

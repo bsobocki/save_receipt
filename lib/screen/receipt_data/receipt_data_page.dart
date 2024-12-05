@@ -9,7 +9,7 @@ import 'package:save_receipt/source/data/values.dart';
 
 class ReceiptDataPage extends StatefulWidget {
   final String title = 'Fill Receipt Data';
-  final Receipt initialReceipt;
+  final ReceiptModel initialReceipt;
 
   const ReceiptDataPage({required this.initialReceipt, super.key});
 
@@ -19,7 +19,7 @@ class ReceiptDataPage extends StatefulWidget {
 
 class _ReceiptDataPageState extends State<ReceiptDataPage> {
   bool _showFullScreenReceiptImage = false;
-  late Receipt _receipt;
+  late ReceiptModel _receipt;
   late AllReceiptValues _allValues;
   List<DataFieldModel> _dataFields = [];
   final ScrollController _scrollController = ScrollController();
@@ -37,7 +37,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         _allValues.removeValue(_dataFields[index].value!);
         _dataFields.add(
           DataFieldModel(
-            type: ReceiptObjectType.object,
+            type: ReceiptModelObjectType.object,
             text: _dataFields[index].value!,
             value: null,
           ),
@@ -90,21 +90,21 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     _dataFields = [];
     _allValues = AllReceiptValues.fromReceipt(_receipt);
 
-    for (ReceiptObject obj in _receipt.objects) {
+    for (ReceiptModelObject obj in _receipt.objects) {
       String text = obj.text;
       String? value;
 
       switch (obj.type) {
-        case ReceiptObjectType.product:
-          value = (obj as ReceiptProduct).price.toString();
+        case ReceiptModelObjectType.product:
+          value = (obj as ReceiptModelProduct).price.toString();
           break;
 
-        case ReceiptObjectType.date:
-          value = (obj as ReceiptDate).date;
+        case ReceiptModelObjectType.date:
+          value = (obj as ReceiptModelDate).date;
           break;
 
-        case ReceiptObjectType.info:
-          value = (obj as ReceiptInfo).info;
+        case ReceiptModelObjectType.info:
+          value = (obj as ReceiptModelInfo).info;
           break;
       }
 

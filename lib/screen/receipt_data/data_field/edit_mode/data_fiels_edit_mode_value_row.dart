@@ -38,7 +38,7 @@ class _DataFieldEditModeValueRowState extends State<DataFieldEditModeValueRow> {
           widget.model.value = '<no value>';
           expandedOptions = true;
         }),
-        onValueTypeChange: (ReceiptObjectType value) =>
+        onValueTypeChange: (ReceiptModelObjectType value) =>
             widget.model.type = value,
         onCollapse: () => setState(() {
           expandedOptions = false;
@@ -58,14 +58,14 @@ class _DataFieldEditModeValueRowState extends State<DataFieldEditModeValueRow> {
               expandableOptionsButtons(constraints),
         ),
       ),
-        Padding(
-          padding: const EdgeInsets.only(right: 16.0),
-          child: DataFieldValueText(
-              key: UniqueKey(),
-              fontWeight: FontWeight.normal,
-              text: widget.model.value ?? '',
-              textColor: widget.colorScheme.textColor),
-        ),
+      Padding(
+        padding: const EdgeInsets.only(right: 16.0),
+        child: DataFieldValueText(
+            key: UniqueKey(),
+            fontWeight: FontWeight.normal,
+            text: widget.model.value ?? '',
+            textColor: widget.colorScheme.textColor),
+      ),
     ]);
   }
 }

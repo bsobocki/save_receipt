@@ -29,8 +29,8 @@ class ExpandableValueOptions extends StatefulWidget {
   final VoidCallback onAddValue;
   final VoidCallback onCollapse;
   final VoidCallback onValueToFieldChange;
-  final Function(ReceiptObjectType) onValueTypeChange;
-  final ReceiptObjectType initType;
+  final Function(ReceiptModelObjectType) onValueTypeChange;
+  final ReceiptModelObjectType initType;
   final BoxConstraints constraints;
   final bool valueExists;
   final bool isExpanded;

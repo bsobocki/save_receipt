@@ -61,13 +61,13 @@ class _MyHomePageState extends State<MyHomePage> {
     return await scanRecipe();
   }
 
-  Future<Receipt?> _processImage(String? filePath) async {
+  Future<ReceiptModel?> _processImage(String? filePath) async {
     if (filePath != null) {
       List<TextLine> textLines = await processImage(filePath);
       List<ConnectedTextLines> connectedLines =
           getConnectedTextLines(textLines);
-      List<ReceiptObject> parsedObjects = parseData(connectedLines);
-      return Receipt(
+      List<ReceiptModelObject> parsedObjects = parseData(connectedLines);
+      return ReceiptModel(
         imgPath: filePath,
         objects: parsedObjects,
       );
@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return null;
   }
 
-  void openReceiptPage(Receipt? receipt) {
+  void openReceiptPage(ReceiptModel? receipt) {
     if (receipt != null) {
       Navigator.push(
         context,
@@ -84,7 +84,9 @@ class _MyHomePageState extends State<MyHomePage> {
             initialReceipt: receipt,
           ),
         ),
-      ).then((value) => setReceiptState(ReceiptState.noAction),);
+      ).then(
+        (value) => setReceiptState(ReceiptState.noAction),
+      );
     }
   }
 
@@ -101,7 +103,8 @@ class _MyHomePageState extends State<MyHomePage> {
   get readyContent => Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-         Icon(Icons.check_circle_outlined, color: mainTheme.mainColor, size: 100.0),
+          Icon(Icons.check_circle_outlined,
+              color: mainTheme.mainColor, size: 100.0),
           Text("Ready!", style: TextStyle(color: mainTheme.mainColor))
         ],
       );
@@ -173,7 +176,7 @@ class _MyHomePageState extends State<MyHomePage> {
           setReceiptState(ReceiptState.imageChoosing);
           String? filePath = await _googleScanAndExtractRecipe();
           setReceiptState(ReceiptState.processing);
-          Receipt? receipt = await _processImage(filePath);
+          ReceiptModel? receipt = await _processImage(filePath);
           setReceiptState(ReceiptState.ready);
           await Future.delayed(const Duration(milliseconds: 300));
           if (receipt != null) {
@@ -184,7 +187,7 @@ class _MyHomePageState extends State<MyHomePage> {
           setReceiptState(ReceiptState.imageChoosing);
           String? filePath = await _pickImage();
           setReceiptState(ReceiptState.processing);
-          Receipt? receipt = await _processImage(filePath);
+          ReceiptModel? receipt = await _processImage(filePath);
           setReceiptState(ReceiptState.ready);
           await Future.delayed(const Duration(milliseconds: 300));
           if (receipt != null) {

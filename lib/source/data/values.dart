@@ -11,7 +11,7 @@ class AllReceiptValues {
       : model = AllValuesModel(
             prices: priceValues, info: infoValues, dates: dateValues);
 
-  AllReceiptValues.fromReceipt(Receipt receipt)
+  AllReceiptValues.fromReceipt(ReceiptModel receipt)
       : this(
           priceValues: receipt.prices,
           dateValues: receipt.datesStr,
@@ -27,7 +27,7 @@ class AllReceiptValues {
       model.info.add(value);
     }
   }
-  
+
   void removeValue(String value) {
     if (isPrice(value)) {
       model.prices.remove(double.tryParse(value));

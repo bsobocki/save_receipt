@@ -1,12 +1,12 @@
-class Receipt {
+class ReceiptModel {
   final String? imgPath;
-  final List<ReceiptObject> objects;
+  final List<ReceiptModelObject> objects;
 
-  const Receipt({this.imgPath, required this.objects});
+  const ReceiptModel({this.imgPath, required this.objects});
 
-  List<ReceiptObject> getObjects(ReceiptObjectType type) {
-    List<ReceiptObject> objs = [];
-    for (ReceiptObject obj in objects) {
+  List<ReceiptModelObject> getObjects(ReceiptModelObjectType type) {
+    List<ReceiptModelObject> objs = [];
+    for (ReceiptModelObject obj in objects) {
       if (obj.type == type) {
         objs.add(obj);
       }
@@ -14,9 +14,9 @@ class Receipt {
     return objs;
   }
 
-  getObjectsAsStr(ReceiptObjectType type) {
+  getObjectsAsStr(ReceiptModelObjectType type) {
     List<String> objs = [];
-    for (ReceiptObject obj in objects) {
+    for (ReceiptModelObject obj in objects) {
       if (obj.type == type) {
         objs.add(obj.valueStr);
       }
@@ -24,42 +24,43 @@ class Receipt {
     return objs;
   }
 
-  List<ReceiptProduct> get products => getObjects(ReceiptObjectType.product)
-      .map((e) => e as ReceiptProduct)
-      .toList();
+  List<ReceiptModelProduct> get products =>
+      getObjects(ReceiptModelObjectType.product)
+          .map((e) => e as ReceiptModelProduct)
+          .toList();
 
   get prices => products.map((e) => e.price).toList();
-  get info => getObjects(ReceiptObjectType.info);
-  get dates => getObjects(ReceiptObjectType.date);
-  get pricesStr => getObjectsAsStr(ReceiptObjectType.product);
-  get infoStr => getObjectsAsStr(ReceiptObjectType.info);
-  get datesStr => getObjectsAsStr(ReceiptObjectType.date);
+  get info => getObjects(ReceiptModelObjectType.info);
+  get dates => getObjects(ReceiptModelObjectType.date);
+  get pricesStr => getObjectsAsStr(ReceiptModelObjectType.product);
+  get infoStr => getObjectsAsStr(ReceiptModelObjectType.info);
+  get datesStr => getObjectsAsStr(ReceiptModelObjectType.date);
 
   @override
   String toString() => 'img: $imgPath, [$objects]';
 }
 
-enum ReceiptObjectType { object, product, info, date }
+enum ReceiptModelObjectType { object, product, info, date }
 
-class ReceiptObject {
+class ReceiptModelObject {
   final String text;
 
-  const ReceiptObject({required this.text});
+  const ReceiptModelObject({required this.text});
 
-  get type => ReceiptObjectType.object;
+  get type => ReceiptModelObjectType.object;
   get valueStr => '';
 
   @override
   String toString() => '\n text: $text';
 }
 
-class ReceiptProduct extends ReceiptObject {
+class ReceiptModelProduct extends ReceiptModelObject {
   final double price;
 
-  const ReceiptProduct({required super.text, required this.price});
+  const ReceiptModelProduct({required super.text, required this.price});
 
   @override
-  get type => ReceiptObjectType.product;
+  get type => ReceiptModelObjectType.product;
   @override
   get valueStr => price.toString();
 
@@ -69,13 +70,13 @@ class ReceiptProduct extends ReceiptObject {
   }
 }
 
-class ReceiptInfo extends ReceiptObject {
+class ReceiptModelInfo extends ReceiptModelObject {
   final String info;
 
-  const ReceiptInfo({required super.text, required this.info});
+  const ReceiptModelInfo({required super.text, required this.info});
 
   @override
-  get type => ReceiptObjectType.info;
+  get type => ReceiptModelObjectType.info;
   @override
   get valueStr => info;
 
@@ -85,13 +86,13 @@ class ReceiptInfo extends ReceiptObject {
   }
 }
 
-class ReceiptDate extends ReceiptObject {
+class ReceiptModelDate extends ReceiptModelObject {
   final String date;
 
-  const ReceiptDate({required super.text, required this.date});
+  const ReceiptModelDate({required super.text, required this.date});
 
   @override
-  get type => ReceiptObjectType.date;
+  get type => ReceiptModelObjectType.date;
   @override
   get valueStr => date;
 

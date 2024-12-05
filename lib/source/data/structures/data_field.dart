@@ -1,7 +1,7 @@
 import 'package:save_receipt/source/data/structures/receipt.dart';
 
 class DataFieldModel {
-  ReceiptObjectType type;
+  ReceiptModelObjectType type;
   String text;
   String? value;
   bool isEditing;
