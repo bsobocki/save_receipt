@@ -1,17 +1,17 @@
 import 'package:save_receipt/source/data/structures/data_field.dart';
 import 'package:save_receipt/source/data/structures/receipt.dart';
 
-class AllReceiptValues {
+class AllReceiptValuesController {
   AllValuesModel model;
 
-  AllReceiptValues(
+  AllReceiptValuesController(
       {required List<double> priceValues,
       required List<String> infoValues,
       required List<String> dateValues})
       : model = AllValuesModel(
             prices: priceValues, info: infoValues, dates: dateValues);
 
-  AllReceiptValues.fromReceipt(ReceiptModel receipt)
+  AllReceiptValuesController.fromReceipt(ReceiptModel receipt)
       : this(
           priceValues: receipt.prices,
           dateValues: receipt.datesStr,

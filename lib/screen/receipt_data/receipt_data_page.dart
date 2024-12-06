@@ -5,7 +5,7 @@ import 'package:save_receipt/screen/receipt_data/components/top_bar.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/data_field.dart';
 import 'package:save_receipt/source/data/structures/data_field.dart';
 import 'package:save_receipt/source/data/structures/receipt.dart';
-import 'package:save_receipt/source/data/values.dart';
+import 'package:save_receipt/source/document_operations/controller/receipt_model_controller.dart';
 
 class ReceiptDataPage extends StatefulWidget {
   final String title = 'Fill Receipt Data';
@@ -19,33 +19,16 @@ class ReceiptDataPage extends StatefulWidget {
 
 class _ReceiptDataPageState extends State<ReceiptDataPage> {
   bool _showFullScreenReceiptImage = false;
-  late ReceiptModel _receipt;
-  late AllReceiptValues _allValues;
-  List<DataFieldModel> _dataFields = [];
   final ScrollController _scrollController = ScrollController();
+  late ReceiptModelController modelController;
 
-  void changeItemToValue(int index) {
-    setState(() {
-      _allValues.insertValue(_dataFields[index].text);
-      _dataFields.removeAt(index);
-    });
-  }
-
-  void changeValueToItem(int index) {
-    if (_dataFields[index].value != null) {
-      setState(() {
-        _allValues.removeValue(_dataFields[index].value!);
-        _dataFields.add(
-          DataFieldModel(
-            type: ReceiptModelObjectType.object,
-            text: _dataFields[index].value!,
-            value: null,
-          ),
-        );
-        _dataFields[index].value = null;
+  void changeItemToValue(int index) => setState(() {
+        modelController.changeItemToValue(index);
       });
-    }
-  }
+
+  void changeValueToItem(int index) => setState(() {
+        modelController.changeValueToItem(index);
+      });
 
   void handleItemSwipe(
       BuildContext context, DismissDirection direction, int index) {
@@ -57,83 +40,44 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   }
 
   void handleItemEditMode(BuildContext context, int index) {
-    final DataFieldModel dataField = _dataFields[index];
+    setState(() => modelController.toggleEditModeOfDataField(index));
 
-    setState(() {
-      dataField.isEditing = !dataField.isEditing;
-    });
+    final DataFieldModel? dataField = modelController.dataFieldAt(index);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content:
-            Text('set edit mode: ${dataField.text} to ${dataField.isEditing}'),
+            Text('set edit mode: ${dataField?.text} to ${dataField?.isEditing}'),
         backgroundColor: const Color.fromARGB(73, 0, 0, 0),
       ),
     );
   }
 
   void handleItemDismiss(BuildContext context, int index) {
-    final String dataFieldText = _dataFields[index].text;
-
-    setState(() {
-      _dataFields.removeAt(index);
-    });
+    setState(() => modelController.removeDataField(index));
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('remove: ${dataFieldText}'),
+        content: Text('remove: ${modelController.dataFieldAt(index)?.text}'),
         backgroundColor: const Color.fromARGB(73, 0, 0, 0),
       ),
     );
   }
 
-  void initData() {
-    _dataFields = [];
-    _allValues = AllReceiptValues.fromReceipt(_receipt);
-
-    for (ReceiptModelObject obj in _receipt.objects) {
-      String text = obj.text;
-      String? value;
-
-      switch (obj.type) {
-        case ReceiptModelObjectType.product:
-          value = (obj as ReceiptModelProduct).price.toString();
-          break;
-
-        case ReceiptModelObjectType.date:
-          value = (obj as ReceiptModelDate).date;
-          break;
-
-        case ReceiptModelObjectType.info:
-          value = (obj as ReceiptModelInfo).info;
-          break;
-      }
-
-      _dataFields.add(
-        DataFieldModel(
-          type: obj.type,
-          text: text,
-          value: value,
-        ),
-      );
-    }
-  }
-
   @override
   void initState() {
     super.initState();
-    _receipt = widget.initialReceipt;
-    initData();
+    modelController = ReceiptModelController(widget.initialReceipt);
   }
 
   get dataFieldsList {
     return ListView.builder(
-      itemCount: _dataFields.length,
+      itemCount: modelController.dataFields.length,
       controller: _scrollController,
       itemBuilder: (context, index) {
         return DataField(
           key: UniqueKey(),
-          model: _dataFields[index],
-          allValuesData: _allValues.model,
+          model: modelController.dataFieldAt(index)!,
+          allValuesData: modelController.allValuesModel,
           isDarker: (index % 2 == 0),
           onItemDismissSwipe: () =>
               handleItemSwipe(context, DismissDirection.startToEnd, index),
@@ -182,7 +126,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
       );
 
   void openFullImageMode() {
-    if (_receipt.imgPath != null) {
+    if (modelController.imgPathExists) {
       setState(() {
         _showFullScreenReceiptImage = true;
       });
@@ -203,7 +147,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             children: [
               ReceiptPageTopBar(
                 onImageIconPress: openFullImageMode,
-                receiptImgPath: _receipt.imgPath,
+                receiptImgPath: modelController.imgPath,
                 //barcodeImgPaht: _receipt.barcodePath,
               ),
               receiptEditor,
@@ -222,7 +166,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     if (_showFullScreenReceiptImage) {
       screenElements.add(
         ReceiptImageViewer(
-          imagePath: _receipt.imgPath!,
+          imagePath: modelController.imgPath!,
           onExit: () {
             setState(() {
               _showFullScreenReceiptImage = false;
