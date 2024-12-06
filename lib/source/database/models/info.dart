@@ -1,32 +1,31 @@
-class ProductData {
+class InfoData {
   final int id;
   final String name;
-  final double price;
+  final String value;
   final int receiptId;
 
-  const ProductData({
+  const InfoData({
     required this.id,
     required this.name,
-    required this.price,
+    required this.value,
     required this.receiptId,
   });
 
-  ProductData copyWith({
+  InfoData copyWith({
     int? id,
     String? name,
-    double? price,
     String? value,
     int? receiptId,
   }) {
-    return ProductData(
+    return InfoData(
       id: id ?? this.id,
       name: name ?? this.name,
-      price: price ?? this.price,
+      value: value ?? this.value,
       receiptId: receiptId ?? this.receiptId,
     );
   }
 
   @override
   String toString() =>
-      'Product(id: $id, name: $name, price: $price, receiptId: $receiptId)';
+      'Product(id: $id, name: $name, value: $value, receiptId: $receiptId)';
 }

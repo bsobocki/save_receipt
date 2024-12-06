@@ -1,8 +1,8 @@
-class Shop {
+class ShopData {
   final int id;
   final String name;
 
-  Shop({
+  ShopData({
     required this.id,
     required this.name,
   });
@@ -14,15 +14,15 @@ class Shop {
     };
   }
 
-  Shop.fromMap(Map<String, dynamic> map)
+  ShopData.fromMap(Map<String, dynamic> map)
       : id = map['id'] ?? -1,
         name = map['name'] ?? '';
 
-  Shop copyWith({
+  ShopData copyWith({
     int? id,
     String? name,
   }) {
-    return Shop(
+    return ShopData(
       id: id ?? this.id,
       name: name ?? this.name,
     );
