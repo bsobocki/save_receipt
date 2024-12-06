@@ -5,7 +5,7 @@ import 'package:save_receipt/screen/receipt_data/components/top_bar.dart';
 import 'package:save_receipt/screen/receipt_data/data_field/data_field.dart';
 import 'package:save_receipt/source/data/structures/data_field.dart';
 import 'package:save_receipt/source/data/structures/receipt.dart';
-import 'package:save_receipt/source/document_operations/controller/receipt_model_controller.dart';
+import 'package:save_receipt/source/data/controller/receipt_model_controller.dart';
 
 class ReceiptDataPage extends StatefulWidget {
   final String title = 'Fill Receipt Data';
