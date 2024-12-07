@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:save_receipt/color/scheme/main_sheme.dart';
-import 'package:save_receipt/screen/home/home_page.dart';
+import 'package:save_receipt/core/themes/schemes/main_sheme.dart';
+import 'package:save_receipt/presentation/home/home_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
