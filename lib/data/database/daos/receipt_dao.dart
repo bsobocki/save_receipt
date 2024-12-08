@@ -3,14 +3,19 @@ import 'package:save_receipt/data/models/receipt.dart';
 import 'package:save_receipt/data/database/structure/names.dart';
 
 class ReceiptDao extends Dao<ReceiptData> {
+  final String shopIdColumnt = 'shop_id';
+  final String dateColumn = 'date';
+  final String totalCostColumn = 'total_cost';
+  final String imgPathColumn = 'img_path';
+
   @override
   Map<String, dynamic> toMap(ReceiptData object) {
     return {
       'id': object.id,
-      'shop_id': object.shopId,
-      'date': object.date,
-      'total_amount': object.totalAmount,
-      'img_path': object.imgPath,
+      shopIdColumnt: object.shopId,
+      dateColumn: object.date,
+      totalCostColumn: object.totalCost,
+      imgPathColumn: object.imgPath,
     };
   }
 
@@ -18,10 +23,10 @@ class ReceiptDao extends Dao<ReceiptData> {
   String get createTableQuery => '''
       CREATE TABLE ${DatabaseTableNames.receipts}(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        shop_id INTEGER DEFAULT -1,
-        date TEXT NOT NULL,
-        total_amount INTEGER NOT NULL,
-        img_path TEXT NOT NULL
+        $shopIdColumnt INTEGER DEFAULT -1,
+        $dateColumn TEXT NOT NULL,
+        $totalCostColumn INTEGER NOT NULL,
+        $imgPathColumn TEXT,
         FOREIGN KEY (receipt_id) REFERENCES receipts (id) ON DELETE SET DEFAULT
       )
     ''';
@@ -32,7 +37,7 @@ class ReceiptDao extends Dao<ReceiptData> {
       id: query['id'],
       shopId: query['shop_id'],
       date: query['date'],
-      totalAmount: query['total_amount'],
+      totalCost: query['total_amount'],
       imgPath: query['img_path'],
     );
   }
