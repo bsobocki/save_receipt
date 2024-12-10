@@ -56,6 +56,15 @@ class ReceiptDatabaseRepository implements IReceiptRepository {
     );
   }
 
+  Future<int> updateObject(QueryResult data, String tableName) async {
+    final Database db = await database;
+    return await db.update(
+      tableName,
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
   Future<int> deleteObject(int id, String tableName) async {
     final Database db = await database;
     return await db.delete(
@@ -86,6 +95,22 @@ class ReceiptDatabaseRepository implements IReceiptRepository {
   @override
   Future<int> insertShop(ShopData data) async =>
       insertObject(_shopDao.toMap(data), DatabaseTableNames.shops);
+
+  @override
+  Future<int> updateReceipt(ReceiptData data) async =>
+      updateObject(_receiptDao.toMap(data), DatabaseTableNames.receipts);
+
+  @override
+  Future<int> updateProduct(ProductData data) async =>
+      updateObject(_productDao.toMap(data), DatabaseTableNames.products);
+
+  @override
+  Future<int> updateInfo(InfoData data) async =>
+      updateObject(_infoDao.toMap(data), DatabaseTableNames.info);
+
+  @override
+  Future<int> updateShop(ShopData data) async =>
+      updateObject(_shopDao.toMap(data), DatabaseTableNames.shops);
 
   @override
   Future<int> deleteReceipt(int id) async =>

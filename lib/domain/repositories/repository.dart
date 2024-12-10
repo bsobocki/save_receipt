@@ -9,6 +9,11 @@ abstract class IReceiptRepository {
   Future<int> insertInfo(InfoData data);
   Future<int> insertShop(ShopData data);
 
+  Future<int> updateReceipt(ReceiptData data);
+  Future<int> updateProduct(ProductData data);
+  Future<int> updateInfo(InfoData data);
+  Future<int> updateShop(ShopData data);
+
   Future<int> deleteReceipt(int id);
   Future<int> deleteProduct(int id);
   Future<int> deleteInfo(int id);
