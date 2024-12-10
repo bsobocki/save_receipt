@@ -14,7 +14,7 @@ class DataFieldEditModeTextRow extends StatefulWidget {
   });
 
   final DataFieldColorScheme colorScheme;
-  final DataFieldModel model;
+  final ReceiptObjectModel model;
   final VoidCallback onFieldToValueChanged;
 
   @override
@@ -43,12 +43,12 @@ class _DataFieldEditModeTextRowState extends State<DataFieldEditModeTextRow> {
       color: Colors.black.withOpacity(0.05),
       child: Row(children: [
         if (!expandedOptions)
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0),
-          child: DataFieldEditModeText(
-              text: widget.model.text,
-              textColor: widget.colorScheme.textColor),
-        ),
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0),
+            child: DataFieldEditModeText(
+                text: widget.model.text,
+                textColor: widget.colorScheme.textColor),
+          ),
         Expanded(
           child: LayoutBuilder(
             builder: (context, constraints) =>

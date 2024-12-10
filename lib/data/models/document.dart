@@ -9,7 +9,7 @@ class ReceiptDocumentData {
   final List<InfoData> infos;
   final ShopData? shop;
 
-  const ReceiptDocumentData({
+  ReceiptDocumentData({
     required this.receipt,
     required this.products,
     required this.infos,

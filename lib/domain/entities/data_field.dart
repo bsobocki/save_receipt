@@ -1,12 +1,12 @@
-import 'package:save_receipt/domain/entities/receipt.dart';
+enum ReceiptObjectModelType { object, product, info, date }
 
-class DataFieldModel {
-  ReceiptModelObjectType type;
+class ReceiptObjectModel {
+  ReceiptObjectModelType type;
   String text;
   String? value;
   bool isEditing;
 
-  DataFieldModel({
+  ReceiptObjectModel({
     required this.type,
     required this.text,
     this.value,

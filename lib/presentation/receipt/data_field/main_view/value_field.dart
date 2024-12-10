@@ -25,8 +25,8 @@ class _ValueFieldState extends State<ValueField> {
   bool showMenu = false;
   final TextEditingController menuController = TextEditingController();
   final TextEditingController textFieldController = TextEditingController();
-  late final List<dynamic> initialValues;
-  late List<dynamic> values;
+  late final List<String> initialValues;
+  late List<String> values;
 
   @override
   void initState() {

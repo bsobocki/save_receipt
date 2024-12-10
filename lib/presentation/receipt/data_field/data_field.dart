@@ -7,10 +7,9 @@ import 'package:save_receipt/presentation/receipt/data_field/edit_mode/data_fiel
 import 'package:save_receipt/presentation/receipt/data_field/main_view/label_field.dart';
 import 'package:save_receipt/presentation/receipt/data_field/main_view/value_field.dart';
 import 'package:save_receipt/domain/entities/data_field.dart';
-import 'package:save_receipt/domain/entities/receipt.dart';
 
 class DataField extends StatefulWidget {
-  final DataFieldModel model;
+  final ReceiptObjectModel model;
   final AllValuesModel allValuesData;
   final bool isDarker;
   final Function() onItemDismissSwipe;
@@ -39,13 +38,13 @@ class _DataFieldState extends State<DataField> {
   TextEditingController textController = TextEditingController();
   late final DataFieldColorScheme colorScheme;
 
-  List<dynamic> allValuesForType(ReceiptModelObjectType type) {
+  List<String> allValuesForType(ReceiptObjectModelType type) {
     switch (type) {
-      case ReceiptModelObjectType.product:
+      case ReceiptObjectModelType.product:
         return widget.allValuesData.prices;
-      case ReceiptModelObjectType.date:
+      case ReceiptObjectModelType.date:
         return widget.allValuesData.dates;
-      case ReceiptModelObjectType.info:
+      case ReceiptObjectModelType.info:
         return widget.allValuesData.info;
       default:
         return [];
@@ -78,10 +77,7 @@ class _DataFieldState extends State<DataField> {
       textColor: colorScheme.textColor,
       initValue: widget.model.value ?? '',
       values: allValuesForType(widget.model.type),
-      onValueChanged: (String? value) {
-        widget.model.value = value;
-        print("VALUE!!!!!!!!!!!!!!!!!!!!!!!!!! to $value");
-      });
+      onValueChanged: (String? value) => widget.model.value = value);
 
   get dataFieldContent {
     List<Widget> columnContent = [];

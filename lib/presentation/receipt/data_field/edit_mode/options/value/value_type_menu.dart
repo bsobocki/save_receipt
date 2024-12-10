@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:save_receipt/domain/entities/data_field.dart';
 import 'package:save_receipt/presentation/common/widgets/expendable/expandable_button.dart';
-import 'package:save_receipt/domain/entities/receipt.dart';
 
 class DataFieldValueTypeMenu extends StatefulWidget {
   const DataFieldValueTypeMenu({
@@ -10,16 +10,16 @@ class DataFieldValueTypeMenu extends StatefulWidget {
     super.key,
   });
 
-  final Function(ReceiptModelObjectType) onSelected;
+  final Function(ReceiptObjectModelType) onSelected;
   final Color color;
-  final ReceiptModelObjectType type;
+  final ReceiptObjectModelType type;
 
   @override
   State<DataFieldValueTypeMenu> createState() => _DataFieldValueTypeMenuState();
 }
 
 class _DataFieldValueTypeMenuState extends State<DataFieldValueTypeMenu> {
-  late ReceiptModelObjectType type;
+  late ReceiptObjectModelType type;
 
   @override
   void initState() {
@@ -27,9 +27,9 @@ class _DataFieldValueTypeMenuState extends State<DataFieldValueTypeMenu> {
     type = widget.type;
   }
 
-  PopupMenuItem<ReceiptModelObjectType> getPopupMenuItem(
-      String text, ReceiptModelObjectType type) {
-    return PopupMenuItem<ReceiptModelObjectType>(
+  PopupMenuItem<ReceiptObjectModelType> getPopupMenuItem(
+      String text, ReceiptObjectModelType type) {
+    return PopupMenuItem<ReceiptObjectModelType>(
         value: type,
         child: Row(
           children: [
@@ -40,15 +40,15 @@ class _DataFieldValueTypeMenuState extends State<DataFieldValueTypeMenu> {
         ));
   }
 
-  IconData getTypeIcon(ReceiptModelObjectType type) {
+  IconData getTypeIcon(ReceiptObjectModelType type) {
     switch (type) {
-      case ReceiptModelObjectType.object:
+      case ReceiptObjectModelType.object:
         return Icons.question_mark_sharp;
-      case ReceiptModelObjectType.product:
+      case ReceiptObjectModelType.product:
         return Icons.price_change;
-      case ReceiptModelObjectType.info:
+      case ReceiptObjectModelType.info:
         return Icons.info;
-      case ReceiptModelObjectType.date:
+      case ReceiptObjectModelType.date:
         return Icons.calendar_month;
     }
   }
@@ -57,16 +57,16 @@ class _DataFieldValueTypeMenuState extends State<DataFieldValueTypeMenu> {
   Widget build(BuildContext context) {
     final GlobalKey buttonKey = GlobalKey();
 
-    return PopupMenuButton<ReceiptModelObjectType>(
+    return PopupMenuButton<ReceiptObjectModelType>(
       key: buttonKey,
-      onSelected: (ReceiptModelObjectType value) => setState(() {
+      onSelected: (ReceiptObjectModelType value) => setState(() {
         widget.onSelected(value);
         type = value;
       }),
       itemBuilder: (context) => [
-        getPopupMenuItem('price', ReceiptModelObjectType.product),
-        getPopupMenuItem('info', ReceiptModelObjectType.info),
-        getPopupMenuItem('date', ReceiptModelObjectType.date),
+        getPopupMenuItem('price', ReceiptObjectModelType.product),
+        getPopupMenuItem('info', ReceiptObjectModelType.info),
+        getPopupMenuItem('date', ReceiptObjectModelType.date),
       ],
       color: widget.color,
       // custom button

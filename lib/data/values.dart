@@ -5,7 +5,7 @@ class AllReceiptValuesController {
   AllValuesModel model;
 
   AllReceiptValuesController(
-      {required List<double> priceValues,
+      {required List<String> priceValues,
       required List<String> infoValues,
       required List<String> dateValues})
       : model = AllValuesModel(
@@ -20,7 +20,7 @@ class AllReceiptValuesController {
 
   void insertValue(String value) {
     if (isPrice(value)) {
-      model.prices.add(double.tryParse(value) ?? 0.0);
+      model.prices.add(value);
     } else if (isDate(value)) {
       model.dates.add(value);
     } else {
@@ -30,7 +30,7 @@ class AllReceiptValuesController {
 
   void removeValue(String value) {
     if (isPrice(value)) {
-      model.prices.remove(double.tryParse(value));
+      model.prices.remove(value);
     } else if (isDate(value)) {
       model.dates.remove(value);
     } else {
@@ -45,7 +45,7 @@ bool isNumeric(String data) {
 
 bool isPrice(String data) {
   RegExp regex = RegExp(r'[0-9]+[,\.][0-9]+[a-zA-Z]*');
-  return regex.hasMatch(data);
+  return regex.hasMatch(data) && double.tryParse(getPriceStr(data)) != null;
 }
 
 String getPriceStr(String data) {

@@ -1,10 +1,10 @@
 import 'dart:core';
 import 'package:save_receipt/domain/entities/connected_data.dart';
-import 'package:save_receipt/domain/entities/receipt.dart';
 import 'package:save_receipt/data/values.dart';
+import 'package:save_receipt/domain/entities/data_field.dart';
 
-List<ReceiptModelObject> parseData(List<ConnectedTextLines> lines) {
-  List<ReceiptModelObject> data = [];
+List<ReceiptObjectModel> parseData(List<ConnectedTextLines> lines) {
+  List<ReceiptObjectModel> data = [];
 
   for (ConnectedTextLines line in lines) {
     bool isTwoPart = line.connectedLine != null;
@@ -14,22 +14,16 @@ List<ReceiptModelObject> parseData(List<ConnectedTextLines> lines) {
       String connectedStr = line.connectedLine!.text;
       if (isPrice(connectedStr)) {
         String priceStr = getPriceStr(connectedStr);
-        double price = double.tryParse(priceStr) ?? -1.0;
-        if (price != -1.0) {
-          data.add(ReceiptModelProduct(text: text, price: price));
-        } else {
-          text += connectedStr;
-          isTwoPart = false;
-        }
+          data.add(ReceiptObjectModel(text: text, value: priceStr, type: ReceiptObjectModelType.product));
       } else if (isDate(connectedStr)) {
-        data.add(ReceiptModelDate(text: text, date: connectedStr));
+        data.add(ReceiptObjectModel(text: text, value: connectedStr, type: ReceiptObjectModelType.date));
       } else {
-        data.add(ReceiptModelInfo(text: text, info: connectedStr));
+        data.add(ReceiptObjectModel(text: text, value: connectedStr, type: ReceiptObjectModelType.info));
       }
     }
 
     if (!isTwoPart) {
-      data.add(ReceiptModelObject(text: text));
+      data.add(ReceiptObjectModel(text: text, type: ReceiptObjectModelType.info));
     }
   }
   return data;

@@ -1,5 +1,5 @@
 class AllValuesModel {
-  List<double> prices;
+  List<String> prices;
   List<String> info;
   List<String> dates;
 

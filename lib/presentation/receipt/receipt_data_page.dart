@@ -42,11 +42,11 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   void handleItemEditMode(BuildContext context, int index) {
     setState(() => modelController.toggleEditModeOfDataField(index));
 
-    final DataFieldModel? dataField = modelController.dataFieldAt(index);
+    final ReceiptObjectModel? dataField = modelController.dataFieldAt(index);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content:
-            Text('set edit mode: ${dataField?.text} to ${dataField?.isEditing}'),
+        content: Text(
+            'set edit mode: ${dataField?.text} to ${dataField?.isEditing}'),
         backgroundColor: const Color.fromARGB(73, 0, 0, 0),
       ),
     );
