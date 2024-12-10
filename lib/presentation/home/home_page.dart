@@ -6,7 +6,7 @@ import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
-import 'package:save_receipt/domain/entities/data_field.dart';
+import 'package:save_receipt/domain/entities/receipt_object.dart';
 import 'package:save_receipt/presentation/effect/page_slide_animation.dart';
 import 'package:save_receipt/presentation/home/components/expandable_fab.dart';
 import 'package:save_receipt/presentation/receipt/receipt_data_page.dart';

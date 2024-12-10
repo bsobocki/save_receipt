@@ -1,7 +1,7 @@
 import 'dart:core';
 import 'package:save_receipt/domain/entities/connected_data.dart';
 import 'package:save_receipt/data/values.dart';
-import 'package:save_receipt/domain/entities/data_field.dart';
+import 'package:save_receipt/domain/entities/receipt_object.dart';
 
 List<ReceiptObjectModel> parseData(List<ConnectedTextLines> lines) {
   List<ReceiptObjectModel> data = [];

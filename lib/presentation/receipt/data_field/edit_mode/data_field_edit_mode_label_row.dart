@@ -3,7 +3,7 @@ import 'package:save_receipt/core/themes/schemes/data_field_scheme.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/presentation/receipt/data_field/edit_mode/options/label/expandable_text_options.dart';
 import 'package:save_receipt/presentation/receipt/data_field/edit_mode/text/label_text.dart';
-import 'package:save_receipt/domain/entities/data_field.dart';
+import 'package:save_receipt/domain/entities/receipt_object.dart';
 
 class DataFieldEditModeTextRow extends StatefulWidget {
   const DataFieldEditModeTextRow({

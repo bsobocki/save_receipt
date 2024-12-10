@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:save_receipt/core/themes/schemes/data_field_scheme.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
-import 'package:save_receipt/domain/entities/data_field.dart';
+import 'package:save_receipt/domain/entities/receipt_object.dart';
 import 'package:save_receipt/presentation/common/widgets/expendable/expandable_button.dart';
 import 'package:save_receipt/presentation/common/widgets/expendable/expandable_option_panel.dart';
 import 'package:save_receipt/presentation/receipt/data_field/edit_mode/options/value/buttons/add_remove_value_button.dart';

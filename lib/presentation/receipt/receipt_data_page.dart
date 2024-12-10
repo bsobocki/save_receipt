@@ -3,7 +3,7 @@ import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/presentation/common/widgets/receipt_image.dart';
 import 'package:save_receipt/presentation/receipt/components/top_bar.dart';
 import 'package:save_receipt/presentation/receipt/data_field/data_field.dart';
-import 'package:save_receipt/domain/entities/data_field.dart';
+import 'package:save_receipt/domain/entities/receipt_object.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
 import 'package:save_receipt/presentation/receipt/controller/receipt_controller.dart';
 

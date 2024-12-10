@@ -1,4 +1,4 @@
-import 'package:save_receipt/domain/entities/data_field.dart';
+import 'package:save_receipt/domain/entities/receipt_object.dart';
 
 class ReceiptModel {
   final String? imgPath;

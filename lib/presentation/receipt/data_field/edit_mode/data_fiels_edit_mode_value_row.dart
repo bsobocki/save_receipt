@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:save_receipt/core/themes/schemes/data_field_scheme.dart';
 import 'package:save_receipt/presentation/receipt/data_field/edit_mode/options/value/expandable_value_options.dart';
 import 'package:save_receipt/presentation/receipt/data_field/edit_mode/text/value_text.dart';
-import 'package:save_receipt/domain/entities/data_field.dart';
+import 'package:save_receipt/domain/entities/receipt_object.dart';
 
 class DataFieldEditModeValueRow extends StatefulWidget {
   const DataFieldEditModeValueRow({
