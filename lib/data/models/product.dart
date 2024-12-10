@@ -1,16 +1,17 @@
-class ProductData {
-  final int id;
-  final String name;
+import 'package:save_receipt/data/models/object.dart';
+
+class ProductData extends ObjectData {
   final double price;
   final int receiptId;
 
   const ProductData({
-    required this.id,
-    required this.name,
+    required super.id,
+    required super.name,
     required this.price,
     required this.receiptId,
   });
 
+  @override
   ProductData copyWith({
     int? id,
     String? name,

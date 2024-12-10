@@ -1,15 +1,15 @@
 class ReceiptData {
   final int? id; // null for new receipts - database will create a new id
-  final int shopId;
+  final int? shopId;
   final String date;
   final double totalCost;
   final String? imgPath;
 
   ReceiptData({
-    required this.shopId,
+    this.id,
+    this.shopId,
     required this.totalCost,
     required this.imgPath,
-    required this.id,
     required this.date,
   });
 

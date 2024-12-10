@@ -1,16 +1,17 @@
-class InfoData {
-  final int id;
-  final String name;
+import 'package:save_receipt/data/models/object.dart';
+
+class InfoData extends ObjectData {
   final String value;
   final int receiptId;
 
   const InfoData({
-    required this.id,
-    required this.name,
+    super.id,
+    required super.name,
     required this.value,
     required this.receiptId,
   });
 
+  @override
   InfoData copyWith({
     int? id,
     String? name,
