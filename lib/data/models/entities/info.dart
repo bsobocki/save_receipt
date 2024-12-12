@@ -1,4 +1,4 @@
-import 'package:save_receipt/data/models/object.dart';
+import 'package:save_receipt/data/models/entities/object.dart';
 
 class InfoData extends ObjectData {
   final String value;
@@ -28,5 +28,5 @@ class InfoData extends ObjectData {
 
   @override
   String toString() =>
-      'Product(id: $id, name: $name, value: $value, receiptId: $receiptId)';
+      'Info(id: $id, name: $name, value: $value, receiptId: $receiptId)';
 }

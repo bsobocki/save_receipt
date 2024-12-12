@@ -1,5 +1,5 @@
 import 'package:save_receipt/data/database/daos/data_access_object.dart';
-import 'package:save_receipt/data/models/shop.dart';
+import 'package:save_receipt/data/models/entities/shop.dart';
 import 'package:save_receipt/data/database/structure/names.dart';
 
 class ShopDao extends Dao<ShopData> {
@@ -13,9 +13,9 @@ class ShopDao extends Dao<ShopData> {
 
   @override
   String get createTableQuery => '''
-      CREATE TABLE ${DatabaseTableNames.info}(
+      CREATE TABLE ${DatabaseTableNames.shops}(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT,
+        name TEXT NOT NULL
       )
     ''';
 

@@ -3,15 +3,16 @@ import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/presentation/common/widgets/receipt_image.dart';
 import 'package:save_receipt/presentation/receipt/components/top_bar.dart';
 import 'package:save_receipt/presentation/receipt/data_field/data_field.dart';
-import 'package:save_receipt/domain/entities/receipt_object.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
 import 'package:save_receipt/presentation/receipt/controller/receipt_controller.dart';
 
 class ReceiptDataPage extends StatefulWidget {
   final String title = 'Fill Receipt Data';
   final ReceiptModel initialReceipt;
+  final Function(ReceiptModel) onSaveReceipt;
 
-  const ReceiptDataPage({required this.initialReceipt, super.key});
+  const ReceiptDataPage(
+      {required this.initialReceipt, required this.onSaveReceipt, super.key});
 
   @override
   State<ReceiptDataPage> createState() => _ReceiptDataPageState();
@@ -71,7 +72,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
 
   get dataFieldsList {
     return ListView.builder(
-      itemCount: modelController.dataFields.length,
+      itemCount: modelController.objects.length,
       controller: _scrollController,
       itemBuilder: (context, index) {
         return DataField(
@@ -149,6 +150,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
                 onImageIconPress: openFullImageMode,
                 receiptImgPath: modelController.imgPath,
                 //barcodeImgPaht: _receipt.barcodePath,
+                onSaveReceipt: () => widget.onSaveReceipt(modelController.model),
               ),
               receiptEditor,
             ],

@@ -1,4 +1,5 @@
 import 'package:save_receipt/domain/entities/receipt_object.dart';
+export 'package:save_receipt/domain/entities/receipt_object.dart';
 
 class ReceiptModel {
   final String? imgPath;
@@ -30,8 +31,9 @@ class ReceiptModel {
   List<ReceiptObjectModel> get products =>
       getObjects(ReceiptObjectModelType.product);
 
+  List<ReceiptObjectModel> get info => getObjects(ReceiptObjectModelType.info);
+
   get prices => products.map((e) => e.value!).toList();
-  get info => getObjects(ReceiptObjectModelType.info);
   get dates => getObjects(ReceiptObjectModelType.date);
   get infoStr => getValuesAsStr(ReceiptObjectModelType.info);
   get datesStr => getValuesAsStr(ReceiptObjectModelType.date);

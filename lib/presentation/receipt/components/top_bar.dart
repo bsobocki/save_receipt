@@ -11,7 +11,9 @@ class ReceiptPageTopBar extends StatelessWidget {
     required this.onImageIconPress,
     this.receiptImgPath,
     this.barcodeImgPaht,
+    required this.onSaveReceipt,
   });
+  final Function() onSaveReceipt;
   final VoidCallback onImageIconPress;
   final String? receiptImgPath;
   final String? barcodeImgPaht;
@@ -73,6 +75,10 @@ class ReceiptPageTopBar extends StatelessWidget {
         color: mainTheme.mainColor,
         onSelected: (String value) {
           print("chosen: $value");
+
+          if (value == 'save receipt') {
+            onSaveReceipt();
+          }
         },
         itemBuilder: (context) => ['save receipt', 'edit item', 'remove item']
             .map((text) => getPopupMenuItem(text))

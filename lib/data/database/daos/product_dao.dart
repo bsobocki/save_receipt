@@ -1,26 +1,33 @@
 import 'package:save_receipt/data/database/daos/data_access_object.dart';
-import 'package:save_receipt/data/models/product.dart';
+import 'package:save_receipt/data/models/entities/product.dart';
 import 'package:save_receipt/data/database/structure/names.dart';
 
 class ProductDao extends Dao<ProductData> {
+  final String nameColumn = 'name';
+  final String priceColumn = 'price';
+  final String receiptIdColumn = 'receipt_id';
+
   @override
   Map<String, dynamic> toMap(ProductData object) {
-    return {
-      'id': object.id,
-      'name': object.name,
-      'price': object.price,
-      'receipt_id': object.receiptId,
+    var map = {
+      nameColumn: object.name,
+      priceColumn: object.price,
+      receiptIdColumn: object.receiptId,
     };
+    if (object.id != null) {
+      map['id'] = object.id!;
+    }
+    return map;
   }
 
   @override
   String get createTableQuery => '''
       CREATE TABLE ${DatabaseTableNames.products}(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        receipt_id INTEGER,
-        name TEXT,
-        price REAL,
-        FOREIGN KEY (receipt_id) REFERENCES receipts (id) ON DELETE CASCADE
+        $nameColumn TEXT NOT NULL,
+        $priceColumn REAL NOT NULL,
+        $receiptIdColumn INTEGER NOT NULL,
+        FOREIGN KEY ($receiptIdColumn) REFERENCES ${DatabaseTableNames.receipts} (id) ON DELETE CASCADE
       )
     ''';
 
@@ -28,8 +35,8 @@ class ProductDao extends Dao<ProductData> {
   ProductData fromMap(Map<String, dynamic> query) {
     return ProductData(
         id: query['id'],
-        name: query['name'] ?? '<invalid_name>',
-        price: query['price'] ?? 0.0,
-        receiptId: query['receipt_id'] ?? -1);
+        name: query[nameColumn] ?? '<invalid_name>',
+        price: (query[priceColumn] ?? 0.0) as double ,
+        receiptId: query[receiptIdColumn] ?? -1);
   }
 }

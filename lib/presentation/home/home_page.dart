@@ -6,7 +6,10 @@ import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
-import 'package:save_receipt/domain/entities/receipt_object.dart';
+import 'package:save_receipt/data/converters/data_converter.dart';
+import 'package:save_receipt/data/models/document.dart';
+import 'package:save_receipt/data/models/database_entities.dart';
+import 'package:save_receipt/data/repositories/database_repository.dart';
 import 'package:save_receipt/presentation/effect/page_slide_animation.dart';
 import 'package:save_receipt/presentation/home/components/expandable_fab.dart';
 import 'package:save_receipt/presentation/receipt/receipt_data_page.dart';
@@ -17,7 +20,7 @@ import 'package:save_receipt/domain/entities/receipt.dart';
 import 'package:save_receipt/services/document/scan/google_read_text_from_image.dart';
 import 'package:save_receipt/services/document/scan/google_scan.dart';
 
-enum ReceiptState {
+enum ReceiptProcessingState {
   noAction,
   browse,
   opening,
@@ -36,13 +39,29 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  ReceiptProcessingState _receiptState = ReceiptProcessingState.noAction;
   final ImagePicker picker = ImagePicker();
-  String imageScannerText = "Please select an image to scan.";
-  String imageProcessingText = "Please select an image to process.";
+  String databaseStatusText(bool dbExists) =>
+      dbExists ? "Databse exists" : "Database doesn't exist";
+  String noContentText = "Nothing here yet.";
+  String tipText =
+      "Please select an image from gallery\n to scan a new one for processing.";
   String imgPath = "";
-  ReceiptState _receiptState = ReceiptState.noAction;
+  late Future<List<ReceiptDocumentData>> _documentData;
 
-  void setReceiptState(ReceiptState newState) =>
+  void refreshDocumentData() {
+    setState(() {
+      _documentData = ReceiptDatabaseRepository.get.getAllDocumentDatas();
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _documentData = ReceiptDatabaseRepository.get.getAllDocumentDatas();
+  }
+
+  void setReceiptState(ReceiptProcessingState newState) =>
       setState(() => _receiptState = newState);
 
   Widget getImg() {
@@ -83,12 +102,44 @@ class _MyHomePageState extends State<MyHomePage> {
         SlidePageRoute(
           page: ReceiptDataPage(
             initialReceipt: receipt,
+            onSaveReceipt: saveReceipt,
           ),
         ),
       ).then(
-        (value) => setReceiptState(ReceiptState.noAction),
+        (value) {
+          _receiptState = ReceiptProcessingState.noAction;
+          refreshDocumentData();
+        },
       );
     }
+  }
+
+  void saveReceipt(ReceiptModel model) async {
+    var dbRepo = ReceiptDatabaseRepository.get;
+    ReceiptDocumentData data;
+
+    if (model.receiptId != null) {
+      data = ReceiptDataConverter.toDocumentDataForExistingReceipt(model);
+      await dbRepo.updateReceipt(data.receipt);
+    } else {
+      ReceiptData receiptData = ReceiptDataConverter.toReceiptData(model);
+      int receiptId = await dbRepo.insertReceipt(receiptData);
+      data = ReceiptDataConverter.toDocumentData(model, receiptId);
+    }
+
+    for (ProductData prod in data.products) {
+      await dbRepo.insertProduct(prod);
+    }
+    for (InfoData info in data.infos) {
+      await dbRepo.insertInfo(info);
+    }
+    if (data.shop != null) {
+      await dbRepo.insertShop(data.shop!);
+    }
+
+    print("receipt saved!!!");
+    print("saved document: ");
+    print(data);
   }
 
   get choosingContent => Column(
@@ -120,31 +171,67 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       );
 
-  get mainContent => Column(
+  Widget textInfoContent(bool dbExists) => Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(
-            imageProcessingText,
+            databaseStatusText(dbExists),
             style: TextStyle(color: mainTheme.mainColor),
           ),
           Text(
-            imageScannerText,
+            noContentText,
             style: TextStyle(color: mainTheme.mainColor),
+          ),
+          Text(
+            tipText,
+            style: TextStyle(color: mainTheme.mainColor),
+            textAlign: TextAlign.center,
           ),
         ],
       );
 
   get body {
     switch (_receiptState) {
-      case ReceiptState.processing:
+      case ReceiptProcessingState.processing:
         return processingContent;
-      case ReceiptState.imageChoosing:
+      case ReceiptProcessingState.imageChoosing:
         return choosingContent;
-      case ReceiptState.ready:
+      case ReceiptProcessingState.ready:
         return readyContent;
       default:
-        return mainContent;
+        return FutureBuilder(
+            future: _documentData, builder: receiptListViewBuilder);
     }
+  }
+
+  Widget receiptListViewBuilder(
+      BuildContext context, AsyncSnapshot<List<ReceiptDocumentData>> snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return Center(
+        child: LoadingAnimationWidget.newtonCradle(
+          color: mainTheme.mainColor,
+          size: 100.0,
+        ),
+      );
+    } else if (!snapshot.hasData) {
+      return textInfoContent(false);
+    } else if (snapshot.data!.isEmpty) {
+      return textInfoContent(true);
+    }
+
+    List<ReceiptDocumentData> dataList = snapshot.data!;
+
+    return ListView.builder(
+      itemCount: dataList.length,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+              color: mainTheme.mainColor,
+              child: Text(dataList[index].toString())),
+        );
+      },
+    );
   }
 
   @override
@@ -157,6 +244,19 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         title: Text(widget.title),
+        actions: [
+          IconButton(
+              onPressed: () {
+                ReceiptDatabaseRepository.get.deleteDb();
+                refreshDocumentData();
+              },
+              icon: const Icon(Icons.playlist_remove_rounded)),
+          IconButton(
+              onPressed: refreshDocumentData, icon: const Icon(Icons.refresh)),
+          IconButton(
+              onPressed: ReceiptDatabaseRepository.get.printDatabase,
+              icon: const Icon(Icons.text_snippet_sharp)),
+        ],
       ),
       body: Center(
         child: body,
@@ -174,22 +274,22 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButtonLocation: ExpandableFab.location,
       floatingActionButton: ExpandableFloatingActionButton(
         onDocumentScanning: () async {
-          setReceiptState(ReceiptState.imageChoosing);
+          setReceiptState(ReceiptProcessingState.imageChoosing);
           String? filePath = await _googleScanAndExtractRecipe();
-          setReceiptState(ReceiptState.processing);
+          setReceiptState(ReceiptProcessingState.processing);
           ReceiptModel? receipt = await _processImage(filePath);
-          setReceiptState(ReceiptState.ready);
-          await Future.delayed(const Duration(milliseconds: 300));
+          setReceiptState(ReceiptProcessingState.ready);
+          await Future.delayed(const Duration(milliseconds: 200));
           if (receipt != null) {
             openReceiptPage(receipt);
           }
         },
         onImageProcessing: () async {
-          setReceiptState(ReceiptState.imageChoosing);
+          setReceiptState(ReceiptProcessingState.imageChoosing);
           String? filePath = await _pickImage();
-          setReceiptState(ReceiptState.processing);
+          setReceiptState(ReceiptProcessingState.processing);
           ReceiptModel? receipt = await _processImage(filePath);
-          setReceiptState(ReceiptState.ready);
+          setReceiptState(ReceiptProcessingState.ready);
           await Future.delayed(const Duration(milliseconds: 300));
           if (receipt != null) {
             openReceiptPage(receipt);

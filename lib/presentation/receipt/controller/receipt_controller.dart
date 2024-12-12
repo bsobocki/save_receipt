@@ -1,5 +1,4 @@
 import 'package:save_receipt/domain/entities/all_values.dart';
-import 'package:save_receipt/domain/entities/receipt_object.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
 import 'package:save_receipt/data/values.dart';
 
@@ -7,12 +6,14 @@ class ReceiptModelController {
   String? _receiptImagePath;
   late AllReceiptValuesController _allValues;
   List<ReceiptObjectModel> _receiptObjects = [];
+  late final int? _receiptId;
 
   ReceiptModelController(final ReceiptModel receipt) {
     _receiptImagePath = receipt.imgPath;
     _receiptObjects = [];
     _allValues = AllReceiptValuesController.fromReceipt(receipt);
     _receiptObjects = receipt.objects;
+    _receiptId = receipt.receiptId;
   }
 
   void changeItemToValue(int index) {
@@ -57,7 +58,8 @@ class ReceiptModelController {
 
   AllValuesModel get allValuesModel => _allValues.model;
   String? get imgPath => _receiptImagePath;
-  List<ReceiptObjectModel> get dataFields => _receiptObjects;
+  List<ReceiptObjectModel> get objects => _receiptObjects;
+  ReceiptModel get model => ReceiptModel(receiptId: _receiptId, objects: objects, imgPath: _receiptImagePath);
 
   bool indexExists(int index) => index >= 0 && index < _receiptObjects.length;
   bool dataFieldHasValue(int index) => _receiptObjects[index].value != null;

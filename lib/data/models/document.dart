@@ -1,7 +1,4 @@
-import 'package:save_receipt/data/models/info.dart';
-import 'package:save_receipt/data/models/product.dart';
-import 'package:save_receipt/data/models/receipt.dart';
-import 'package:save_receipt/data/models/shop.dart';
+import 'package:save_receipt/data/models/database_entities.dart';
 
 class ReceiptDocumentData {
   final ReceiptData receipt;
@@ -15,4 +12,19 @@ class ReceiptDocumentData {
     required this.infos,
     this.shop,
   });
+
+  @override
+  String toString() {
+    String str = '$receipt\n';
+    str += 'products:\n';
+    for (var prod in products) {
+      str += '$prod\n';
+    }
+    str += 'infos:\n';
+    for (var info in infos) {
+      str += '$info\n';
+    }
+    str += 'shop: $shop';
+    return str;
+  }
 }

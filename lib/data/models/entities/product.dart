@@ -1,4 +1,4 @@
-import 'package:save_receipt/data/models/object.dart';
+import 'package:save_receipt/data/models/entities/object.dart';
 
 class ProductData extends ObjectData {
   final double price;
