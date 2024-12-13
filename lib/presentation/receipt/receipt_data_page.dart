@@ -9,7 +9,7 @@ import 'package:save_receipt/presentation/receipt/controller/receipt_controller.
 class ReceiptDataPage extends StatefulWidget {
   final String title = 'Fill Receipt Data';
   final ReceiptModel initialReceipt;
-  final Function(ReceiptModel) onSaveReceipt;
+  final Future<int> Function(ReceiptModel) onSaveReceipt;
 
   const ReceiptDataPage(
       {required this.initialReceipt, required this.onSaveReceipt, super.key});
@@ -150,7 +150,11 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
                 onImageIconPress: openFullImageMode,
                 receiptImgPath: modelController.imgPath,
                 //barcodeImgPaht: _receipt.barcodePath,
-                onSaveReceipt: () => widget.onSaveReceipt(modelController.model),
+                onSaveReceipt: () async {
+                  int receiptId =
+                      await widget.onSaveReceipt(modelController.model);
+                  modelController.receiptId ??= receiptId;
+                },
               ),
               receiptEditor,
             ],

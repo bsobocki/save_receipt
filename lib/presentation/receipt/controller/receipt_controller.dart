@@ -6,14 +6,14 @@ class ReceiptModelController {
   String? _receiptImagePath;
   late AllReceiptValuesController _allValues;
   List<ReceiptObjectModel> _receiptObjects = [];
-  late final int? _receiptId;
+  int? receiptId;
 
   ReceiptModelController(final ReceiptModel receipt) {
     _receiptImagePath = receipt.imgPath;
     _receiptObjects = [];
     _allValues = AllReceiptValuesController.fromReceipt(receipt);
     _receiptObjects = receipt.objects;
-    _receiptId = receipt.receiptId;
+    receiptId = receipt.receiptId;
   }
 
   void changeItemToValue(int index) {
@@ -59,7 +59,7 @@ class ReceiptModelController {
   AllValuesModel get allValuesModel => _allValues.model;
   String? get imgPath => _receiptImagePath;
   List<ReceiptObjectModel> get objects => _receiptObjects;
-  ReceiptModel get model => ReceiptModel(receiptId: _receiptId, objects: objects, imgPath: _receiptImagePath);
+  ReceiptModel get model => ReceiptModel(receiptId: receiptId, objects: objects, imgPath: _receiptImagePath);
 
   bool indexExists(int index) => index >= 0 && index < _receiptObjects.length;
   bool dataFieldHasValue(int index) => _receiptObjects[index].value != null;

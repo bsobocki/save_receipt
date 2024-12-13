@@ -115,17 +115,18 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void saveReceipt(ReceiptModel model) async {
+  Future<int> saveReceipt(ReceiptModel model) async {
+    int receipt_id = -1;
     var dbRepo = ReceiptDatabaseRepository.get;
     ReceiptDocumentData data;
 
     if (model.receiptId != null) {
       data = ReceiptDataConverter.toDocumentDataForExistingReceipt(model);
-      await dbRepo.updateReceipt(data.receipt);
+      receipt_id = await dbRepo.updateReceipt(data.receipt);
     } else {
       ReceiptData receiptData = ReceiptDataConverter.toReceiptData(model);
-      int receiptId = await dbRepo.insertReceipt(receiptData);
-      data = ReceiptDataConverter.toDocumentData(model, receiptId);
+      receipt_id = await dbRepo.insertReceipt(receiptData);
+      data = ReceiptDataConverter.toDocumentData(model, receipt_id);
     }
 
     for (ProductData prod in data.products) {
@@ -138,7 +139,9 @@ class _MyHomePageState extends State<MyHomePage> {
       await dbRepo.insertShop(data.shop!);
     }
 
-    print("receipt ${data.receipt.id} saved!!!");
+    print("receipt $receipt_id saved!!!");
+
+    return receipt_id;
   }
 
   get choosingContent => Column(
