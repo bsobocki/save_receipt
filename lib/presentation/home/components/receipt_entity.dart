@@ -36,12 +36,14 @@ class ReceiptEntity extends StatelessWidget {
           child: Row(
             children: [
               Container(
+                color: Colors.white.withOpacity(0.4),
                 height: 100.0,
-                constraints: const BoxConstraints(maxWidth: 100.0),
+                width: 100.0,
                 child: img,
               ),
               const SizedBox(width: 26.0),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
