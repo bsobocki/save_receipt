@@ -138,9 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
       await dbRepo.insertShop(data.shop!);
     }
 
-    print("receipt saved!!!");
-    print("saved document: ");
-    print(data);
+    print("receipt ${data.receipt.id} saved!!!");
   }
 
   get choosingContent => Column(
@@ -231,8 +229,8 @@ class _MyHomePageState extends State<MyHomePage> {
             color: mainTheme.mainColor,
             data: dataList[index],
             onPressed: () {
-              openReceiptPage(ReceiptDataConverter.toReceiptModel(dataList[index]));
-              print('${dataList[index].receipt.id} has been pressed!');
+              openReceiptPage(
+                  ReceiptDataConverter.toReceiptModel(dataList[index]));
             },
           ),
         );

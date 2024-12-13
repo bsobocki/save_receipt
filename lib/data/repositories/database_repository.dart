@@ -92,9 +92,12 @@ class ReceiptDatabaseRepository implements IReceiptRepository {
 
   Future<int> updateObject(QueryResult data, String tableName) async {
     final Database db = await database;
+    print("updating: $data");
     return await db.update(
       tableName,
       data,
+      where: 'id = ?',
+      whereArgs: [data['id']],
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
