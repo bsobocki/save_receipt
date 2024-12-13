@@ -43,7 +43,9 @@ class ReceiptDataConverter {
     List<ReceiptObjectModel> dates = model.dates;
     List<ProductData> products =
         model.products.map((e) => toProductData(e, receiptId)).toList();
-    List<InfoData> infos = model.info.map((e) => ReceiptDataConverter.toInfoData(e, receiptId)).toList();
+    List<InfoData> infos = model.info
+        .map((e) => ReceiptDataConverter.toInfoData(e, receiptId))
+        .toList();
     ReceiptData receipt = ReceiptData(
         id: model.receiptId,
         shopId: -1,
@@ -57,5 +59,34 @@ class ReceiptDataConverter {
   static ReceiptDocumentData toDocumentDataForExistingReceipt(
       ReceiptModel model) {
     return toDocumentData(model, model.receiptId!);
+  }
+
+  static ReceiptObjectModel productToReceiptObjectModel(ProductData prod) =>
+      ReceiptObjectModel(
+        type: ReceiptObjectModelType.product,
+        dataId: prod.id,
+        text: prod.name,
+        value: prod.price.toString(),
+        isEditing: false,
+      );
+
+  static ReceiptObjectModel infoToReceiptObjectModel(InfoData info) =>
+      ReceiptObjectModel(
+        type: ReceiptObjectModelType.info,
+        dataId: info.id,
+        text: info.name,
+        value: info.value,
+        isEditing: false,
+      );
+
+  static ReceiptModel toReceiptModel(ReceiptDocumentData data) {
+    List<ReceiptObjectModel> objects =
+        data.products.map((prod) => productToReceiptObjectModel(prod)).toList();
+    objects +=
+        data.infos.map((info) => infoToReceiptObjectModel(info)).toList();
+    return ReceiptModel(
+        objects: objects,
+        imgPath: data.receipt.imgPath,
+        receiptId: data.receipt.id);
   }
 }

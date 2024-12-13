@@ -12,6 +12,7 @@ import 'package:save_receipt/data/models/database_entities.dart';
 import 'package:save_receipt/data/repositories/database_repository.dart';
 import 'package:save_receipt/presentation/effect/page_slide_animation.dart';
 import 'package:save_receipt/presentation/home/components/expandable_fab.dart';
+import 'package:save_receipt/presentation/home/components/receipt_entity.dart';
 import 'package:save_receipt/presentation/receipt/receipt_data_page.dart';
 import 'package:save_receipt/data/connect_data.dart';
 import 'package:save_receipt/data/parse_data.dart';
@@ -226,9 +227,14 @@ class _MyHomePageState extends State<MyHomePage> {
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Container(
-              color: mainTheme.mainColor,
-              child: Text(dataList[index].toString())),
+          child: ReceiptEntity(
+            color: mainTheme.mainColor,
+            data: dataList[index],
+            onPressed: () {
+              openReceiptPage(ReceiptDataConverter.toReceiptModel(dataList[index]));
+              print('${dataList[index].receipt.id} has been pressed!');
+            },
+          ),
         );
       },
     );
