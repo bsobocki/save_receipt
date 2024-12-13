@@ -10,9 +10,13 @@ class ReceiptDataPage extends StatefulWidget {
   final String title = 'Fill Receipt Data';
   final ReceiptModel initialReceipt;
   final Future<int> Function(ReceiptModel) onSaveReceipt;
+  final Future<void> Function(int) onDeleteRecipt;
 
   const ReceiptDataPage(
-      {required this.initialReceipt, required this.onSaveReceipt, super.key});
+      {required this.initialReceipt,
+      required this.onSaveReceipt,
+      super.key,
+      required this.onDeleteRecipt});
 
   @override
   State<ReceiptDataPage> createState() => _ReceiptDataPageState();
@@ -154,6 +158,26 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
                   int receiptId =
                       await widget.onSaveReceipt(modelController.model);
                   modelController.receiptId ??= receiptId;
+                },
+                onDeleteReceipt: () async {
+                  try {
+                    if (modelController.receiptId != null) {
+                      await widget.onDeleteRecipt(modelController.receiptId!);
+                    }
+                    if (mounted) {
+                      Navigator.pop(context);
+                    }
+                  } catch (e) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content:
+                              Text('Failed to delete receipt: ${e.toString()}'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  }
                 },
               ),
               receiptEditor,

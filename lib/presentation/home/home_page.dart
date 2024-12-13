@@ -104,6 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
           page: ReceiptDataPage(
             initialReceipt: receipt,
             onSaveReceipt: saveReceipt,
+            onDeleteRecipt: ReceiptDatabaseRepository.get.deleteReceipt
           ),
         ),
       ).then(

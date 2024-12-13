@@ -12,8 +12,10 @@ class ReceiptPageTopBar extends StatelessWidget {
     this.receiptImgPath,
     this.barcodeImgPaht,
     required this.onSaveReceipt,
+    required this.onDeleteReceipt,
   });
   final Function() onSaveReceipt;
+  final Function() onDeleteReceipt;
   final VoidCallback onImageIconPress;
   final String? receiptImgPath;
   final String? barcodeImgPaht;
@@ -54,6 +56,8 @@ class ReceiptPageTopBar extends StatelessWidget {
         return Icons.edit;
       case 'remove item':
         return Icons.delete_rounded;
+      case 'delete receipt':
+        return Icons.playlist_remove_rounded;
       default:
         return Icons.keyboard_option_key;
     }
@@ -76,13 +80,21 @@ class ReceiptPageTopBar extends StatelessWidget {
         onSelected: (String value) {
           print("chosen: $value");
 
-          if (value == 'save receipt') {
-            onSaveReceipt();
+          switch (value) {
+            case 'save receipt':
+              onSaveReceipt();
+              break;
+            case 'delete receipt':
+              onDeleteReceipt();
+              break;
           }
         },
-        itemBuilder: (context) => ['save receipt', 'edit item', 'remove item']
-            .map((text) => getPopupMenuItem(text))
-            .toList(),
+        itemBuilder: (context) => [
+          'save receipt',
+          'delete receipt',
+          'edit item',
+          'remove item'
+        ].map((text) => getPopupMenuItem(text)).toList(),
         child: const Icon(Icons.menu),
       );
 
