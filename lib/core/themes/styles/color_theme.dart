@@ -40,14 +40,19 @@ class ColorTheme {
     unselectedColor = extraLightMainColor;
   }
 
+  List<Color> get _colors => [
+    mainColor.moved(-80),
+    mainColor,
+    mainColor.moved(80),
+  ];
+
   LinearGradient get gradient => LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            mainColor.moved(-60),
-            mainColor,
-            mainColor.moved(40),
-            mainColor.moved(100),
-            mainColor.moved(160),
-          ]);
+          colors: _colors);
+
+  LinearGradient get reverseGradient => LinearGradient(
+          begin: Alignment.bottomRight,
+          end: Alignment.topLeft,
+          colors: _colors);
 }

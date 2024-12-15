@@ -12,6 +12,7 @@ import 'package:save_receipt/data/models/database_entities.dart';
 import 'package:save_receipt/data/repositories/database_repository.dart';
 import 'package:save_receipt/presentation/effect/page_slide_animation.dart';
 import 'package:save_receipt/presentation/home/components/expandable_fab.dart';
+import 'package:save_receipt/presentation/home/components/menu.dart';
 import 'package:save_receipt/presentation/home/components/receipt_entity.dart';
 import 'package:save_receipt/presentation/receipt/receipt_data_page.dart';
 import 'package:save_receipt/data/connect_data.dart';
@@ -102,10 +103,9 @@ class _MyHomePageState extends State<MyHomePage> {
         context,
         SlidePageRoute(
           page: ReceiptDataPage(
-            initialReceipt: receipt,
-            onSaveReceipt: saveReceipt,
-            onDeleteRecipt: ReceiptDatabaseRepository.get.deleteReceipt
-          ),
+              initialReceipt: receipt,
+              onSaveReceipt: saveReceipt,
+              onDeleteRecipt: ReceiptDatabaseRepository.get.deleteReceipt),
         ),
       ).then(
         (value) {
@@ -117,17 +117,17 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<int> saveReceipt(ReceiptModel model) async {
-    int receipt_id = -1;
+    int receiptId = -1;
     var dbRepo = ReceiptDatabaseRepository.get;
     ReceiptDocumentData data;
 
     if (model.receiptId != null) {
       data = ReceiptDataConverter.toDocumentDataForExistingReceipt(model);
-      receipt_id = await dbRepo.updateReceipt(data.receipt);
+      receiptId = await dbRepo.updateReceipt(data.receipt);
     } else {
       ReceiptData receiptData = ReceiptDataConverter.toReceiptData(model);
-      receipt_id = await dbRepo.insertReceipt(receiptData);
-      data = ReceiptDataConverter.toDocumentData(model, receipt_id);
+      receiptId = await dbRepo.insertReceipt(receiptData);
+      data = ReceiptDataConverter.toDocumentData(model, receiptId);
     }
 
     for (ProductData prod in data.products) {
@@ -140,9 +140,9 @@ class _MyHomePageState extends State<MyHomePage> {
       await dbRepo.insertShop(data.shop!);
     }
 
-    print("receipt $receipt_id saved!!!");
+    print("receipt $receiptId saved!!!");
 
-    return receipt_id;
+    return receiptId;
   }
 
   get choosingContent => Column(
@@ -253,17 +253,10 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         title: Text(widget.title),
         actions: [
-          IconButton(
-              onPressed: () {
-                ReceiptDatabaseRepository.get.deleteDb();
-                refreshDocumentData();
-              },
-              icon: const Icon(Icons.playlist_remove_rounded)),
-          IconButton(
-              onPressed: refreshDocumentData, icon: const Icon(Icons.refresh)),
-          IconButton(
-              onPressed: ReceiptDatabaseRepository.get.printDatabase,
-              icon: const Icon(Icons.text_snippet_sharp)),
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: Menu(onRefreshData: refreshDocumentData),
+          ),
         ],
       ),
       body: Center(
