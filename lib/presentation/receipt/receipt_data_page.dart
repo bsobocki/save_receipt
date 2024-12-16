@@ -9,14 +9,11 @@ import 'package:save_receipt/presentation/receipt/controller/receipt_controller.
 class ReceiptDataPage extends StatefulWidget {
   final String title = 'Fill Receipt Data';
   final ReceiptModel initialReceipt;
-  final Future<int> Function(ReceiptModel) onSaveReceipt;
-  final Future<void> Function(int) onDeleteRecipt;
 
-  const ReceiptDataPage(
-      {required this.initialReceipt,
-      required this.onSaveReceipt,
-      super.key,
-      required this.onDeleteRecipt});
+  const ReceiptDataPage({
+    required this.initialReceipt,
+    super.key,
+  });
 
   @override
   State<ReceiptDataPage> createState() => _ReceiptDataPageState();
@@ -156,13 +153,13 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
                 //barcodeImgPaht: _receipt.barcodePath,
                 onSaveReceipt: () async {
                   int receiptId =
-                      await widget.onSaveReceipt(modelController.model);
+                      await modelController.saveReceipt(modelController.model);
                   modelController.receiptId ??= receiptId;
                 },
                 onDeleteReceipt: () async {
                   try {
                     if (modelController.receiptId != null) {
-                      await widget.onDeleteRecipt(modelController.receiptId!);
+                      await modelController.deleteReceipt(modelController.receiptId!);
                     }
                     if (mounted) {
                       Navigator.pop(context);

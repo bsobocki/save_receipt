@@ -13,11 +13,12 @@ class ReceiptEntity extends StatelessWidget {
       required this.onPressed,
       required this.color});
 
+
   @override
   Widget build(BuildContext context) {
     String title = "Receipt from ${data.receipt.date}";
-    String product1 = "Dummy product";
-    String product2 = "Dummy product";
+    String product1 = "";
+    String product2 = "";
     Image img = data.receipt.imgPath != null
         ? Image.file(File(data.receipt.imgPath!))
         : Image.asset('assets/no_image.jpg');
