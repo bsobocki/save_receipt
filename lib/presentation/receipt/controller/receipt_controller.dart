@@ -12,6 +12,8 @@ class ReceiptModelController {
   String? _receiptImagePath;
   late AllReceiptValuesController _allValues;
   List<ReceiptObjectModel> _receiptObjects = [];
+  List<int> _deletedProductsIds = [];
+  List<int> _deletedInfosIds = [];
   int? receiptId;
 
   Future<int> saveReceipt(ReceiptModel model) async {
@@ -28,6 +30,8 @@ class ReceiptModelController {
       data = ReceiptDataConverter.toDocumentData(model, receiptId);
     }
 
+    // because of conflictAlgorithm: ConflictAlgorithm.replace
+    // inserting of existing object will work similar to update
     for (ProductData prod in data.products) {
       await dbRepo.insertProduct(prod);
     }
@@ -38,7 +42,12 @@ class ReceiptModelController {
       await dbRepo.insertShop(data.shop!);
     }
 
-    print("receipt $receiptId saved!!!");
+    for (int id in _deletedProductsIds) {
+      await dbRepo.deleteProduct(id);
+    }
+    for (int id in _deletedInfosIds) {
+      await dbRepo.deleteInfo(id);
+    }
 
     return receiptId;
   }
@@ -91,6 +100,15 @@ class ReceiptModelController {
 
   void removeDataField(int index) {
     if (indexExists(index)) {
+      int? id = _receiptObjects[index].dataId;
+      if (id != null) {
+        ReceiptObjectModelType type = _receiptObjects[index].type;
+        if (type == ReceiptObjectModelType.product) {
+          _deletedProductsIds.add(id);
+        } else if (type == ReceiptObjectModelType.info) {
+          _deletedInfosIds.add(id);
+        }
+      }
       _receiptObjects.removeAt(index);
     }
   }

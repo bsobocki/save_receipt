@@ -55,11 +55,12 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   }
 
   void handleItemDismiss(BuildContext context, int index) {
+    String text = modelController.dataFieldAt(index)?.text ?? '';
     setState(() => modelController.removeDataField(index));
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('remove: ${modelController.dataFieldAt(index)?.text}'),
+        content: Text('remove: $text'),
         backgroundColor: const Color.fromARGB(73, 0, 0, 0),
       ),
     );
@@ -159,7 +160,8 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
                 onDeleteReceipt: () async {
                   try {
                     if (modelController.receiptId != null) {
-                      await modelController.deleteReceipt(modelController.receiptId!);
+                      await modelController
+                          .deleteReceipt(modelController.receiptId!);
                     }
                     if (mounted) {
                       Navigator.pop(context);
