@@ -13,7 +13,8 @@ import 'package:save_receipt/data/repositories/database_repository.dart';
 import 'package:save_receipt/presentation/effect/page_slide_animation.dart';
 import 'package:save_receipt/presentation/home/components/expandable_fab.dart';
 import 'package:save_receipt/presentation/home/components/menu.dart';
-import 'package:save_receipt/presentation/home/components/receipt_entity.dart';
+import 'package:save_receipt/presentation/home/components/navigation_bottom_bar.dart';
+import 'package:save_receipt/presentation/home/subsites/receipts.dart';
 import 'package:save_receipt/presentation/receipt/receipt_data_page.dart';
 import 'package:save_receipt/data/connect_data.dart';
 import 'package:save_receipt/data/parse_data.dart';
@@ -41,15 +42,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  ReceiptProcessingState _receiptState = ReceiptProcessingState.noAction;
+  final String noContentText = "Nothing here yet.";
+  final String tipText =
+      "Please select an image from gallery to process\nor scan a new one for processing.";
   final ImagePicker picker = ImagePicker();
-  String databaseStatusText(bool dbExists) =>
-      dbExists ? "Databse exists" : "Database doesn't exist";
-  String noContentText = "Nothing here yet.";
-  String tipText =
-      "Please select an image from gallery\n to scan a new one for processing.";
   String imgPath = "";
   late Future<List<ReceiptDocumentData>> _documentData;
+  ReceiptProcessingState _receiptState = ReceiptProcessingState.noAction;
+  String databaseStatusText(bool dbExists) =>
+      dbExists ? "Databse exists" : "Database doesn't exist";
 
   void refreshDocumentData() {
     setState(() {
@@ -116,35 +117,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<int> saveReceipt(ReceiptModel model) async {
-    int receiptId = -1;
-    var dbRepo = ReceiptDatabaseRepository.get;
-    ReceiptDocumentData data;
-
-    if (model.receiptId != null) {
-      data = ReceiptDataConverter.toDocumentDataForExistingReceipt(model);
-      receiptId = await dbRepo.updateReceipt(data.receipt);
-    } else {
-      ReceiptData receiptData = ReceiptDataConverter.toReceiptData(model);
-      receiptId = await dbRepo.insertReceipt(receiptData);
-      data = ReceiptDataConverter.toDocumentData(model, receiptId);
-    }
-
-    for (ProductData prod in data.products) {
-      await dbRepo.insertProduct(prod);
-    }
-    for (InfoData info in data.infos) {
-      await dbRepo.insertInfo(info);
-    }
-    if (data.shop != null) {
-      await dbRepo.insertShop(data.shop!);
-    }
-
-    print("receipt $receiptId saved!!!");
-
-    return receiptId;
-  }
-
   get choosingContent => Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -173,6 +145,35 @@ class _MyHomePageState extends State<MyHomePage> {
               style: TextStyle(color: mainTheme.mainColor)),
         ],
       );
+
+  Future<int> saveReceipt(ReceiptModel model) async {
+    int receiptId = -1;
+    var dbRepo = ReceiptDatabaseRepository.get;
+    ReceiptDocumentData data;
+
+    if (model.receiptId != null) {
+      data = ReceiptDataConverter.toDocumentDataForExistingReceipt(model);
+      receiptId = await dbRepo.updateReceipt(data.receipt);
+    } else {
+      ReceiptData receiptData = ReceiptDataConverter.toReceiptData(model);
+      receiptId = await dbRepo.insertReceipt(receiptData);
+      data = ReceiptDataConverter.toDocumentData(model, receiptId);
+    }
+
+    for (ProductData prod in data.products) {
+      await dbRepo.insertProduct(prod);
+    }
+    for (InfoData info in data.infos) {
+      await dbRepo.insertInfo(info);
+    }
+    if (data.shop != null) {
+      await dbRepo.insertShop(data.shop!);
+    }
+
+    print("receipt $receiptId saved!!!");
+
+    return receiptId;
+  }
 
   Widget textInfoContent(bool dbExists) => Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -203,11 +204,11 @@ class _MyHomePageState extends State<MyHomePage> {
         return readyContent;
       default:
         return FutureBuilder(
-            future: _documentData, builder: receiptListViewBuilder);
+            future: _documentData, builder: dataItemsListViewBuilder);
     }
   }
 
-  Widget receiptListViewBuilder(
+  Widget dataItemsListViewBuilder(
       BuildContext context, AsyncSnapshot<List<ReceiptDocumentData>> snapshot) {
     if (snapshot.connectionState == ConnectionState.waiting) {
       return Center(
@@ -224,22 +225,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
     List<ReceiptDocumentData> dataList = snapshot.data!;
 
-    return ListView.builder(
-      itemCount: dataList.length,
-      itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ReceiptEntity(
-            color: mainTheme.mainColor,
-            data: dataList[index],
-            onPressed: () {
-              openReceiptPage(
-                  ReceiptDataConverter.toReceiptModel(dataList[index]));
-            },
-          ),
-        );
-      },
-    );
+    return ReceiptsList(
+        documentData: dataList,
+        onItemSelected: (index) {
+          openReceiptPage(ReceiptDataConverter.toReceiptModel(dataList[index]));
+        });
   }
 
   @override
@@ -262,15 +252,8 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: body,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.adb_outlined), label: 'label'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.adobe_rounded), label: 'label'),
-        ],
-        selectedItemColor: mainTheme.mainColor,
-        unselectedItemColor: mainTheme.unselectedColor,
+      bottomNavigationBar: HomePageNavigationBar(
+        onPageSelect: (index) {},
       ),
       floatingActionButtonLocation: ExpandableFab.location,
       floatingActionButton: ExpandableFloatingActionButton(
