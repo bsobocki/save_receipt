@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
+import 'package:save_receipt/core/utils/enums.dart';
 
 enum NavigationPages {
   receipts,
@@ -7,9 +8,7 @@ enum NavigationPages {
 }
 
 extension NavigationPagesExtension on NavigationPages {
-  String get label {
-    return toString().split('.').last;
-  }
+  String get label => enumLabel(this);
 }
 
 class HomePageNavigationBar extends StatefulWidget {
