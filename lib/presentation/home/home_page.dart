@@ -7,6 +7,7 @@ import 'package:save_receipt/data/models/document.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
 import 'package:save_receipt/presentation/effect/page_slide_animation.dart';
 import 'package:save_receipt/presentation/home/components/expandable_fab.dart';
+import 'package:save_receipt/presentation/home/components/loading_animation.dart';
 import 'package:save_receipt/presentation/home/components/menu.dart';
 import 'package:save_receipt/presentation/home/components/navigation_bottom_bar.dart';
 import 'package:save_receipt/presentation/home/controller/home_page_controller.dart';
@@ -35,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final String noContentText = "Nothing here yet.";
   final String tipText =
       "Please select an image from gallery to process\nor scan a new one for processing.";
-  ReceiptProcessingState _receiptState = ReceiptProcessingState.noAction;
+  ReceiptProcessingState _processingState = ReceiptProcessingState.noAction;
   String databaseStatusText(bool dbExists) =>
       dbExists ? "Databse exists" : "Database doesn't exist";
   final HomePageController pageController = HomePageController();
@@ -51,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void setReceiptState(ReceiptProcessingState newState) =>
-      setState(() => _receiptState = newState);
+      setState(() => _processingState = newState);
 
   void openReceiptPage(ReceiptModel? receipt) {
     if (receipt != null) {
@@ -62,41 +63,12 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ).then(
         (value) {
-          _receiptState = ReceiptProcessingState.noAction;
+          _processingState = ReceiptProcessingState.noAction;
           refreshDocumentData();
         },
       );
     }
   }
-
-  get choosingContent => Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          LoadingAnimationWidget.dotsTriangle(
-              color: mainTheme.mainColor, size: 100.0),
-          Text("Choose Image to process",
-              style: TextStyle(color: mainTheme.mainColor))
-        ],
-      );
-
-  get readyContent => Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.check_circle_outlined,
-              color: mainTheme.mainColor, size: 100.0),
-          Text("Ready!", style: TextStyle(color: mainTheme.mainColor))
-        ],
-      );
-
-  get processingContent => Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          LoadingAnimationWidget.staggeredDotsWave(
-              color: mainTheme.mainColor, size: 100.0),
-          Text('Processing Image...',
-              style: TextStyle(color: mainTheme.mainColor)),
-        ],
-      );
 
   Widget textInfoContent(bool dbExists) => Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -118,18 +90,12 @@ class _MyHomePageState extends State<MyHomePage> {
       );
 
   get body {
-    switch (_receiptState) {
-      case ReceiptProcessingState.processing:
-        return processingContent;
-      case ReceiptProcessingState.imageChoosing:
-        return choosingContent;
-      case ReceiptProcessingState.ready:
-        return readyContent;
-      default:
-        return FutureBuilder(
-            future: pageController.documentData,
-            builder: dataItemsListViewBuilder);
+    if (_processingState == ReceiptProcessingState.noAction) {
+      return FutureBuilder(
+          future: pageController.documentData,
+          builder: dataItemsListViewBuilder);
     }
+    return LoadingAnimation(processingState: _processingState);
   }
 
   Widget dataItemsListViewBuilder(
