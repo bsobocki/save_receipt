@@ -34,15 +34,12 @@ class ReceiptDatabaseRepository implements IReceiptRepository {
   ReceiptDatabaseRepository._createInstance();
 
   Future<Database> get database async {
-    print("i'm in get database XD");
     if (!isInitialized) await _init();
     return _db;
   }
 
   Future _init() async {
     try {
-      print(
-          "----=-=-=-=-=-=- INIT DATABASEEEEE!!!! _-----------------=-=-=-=-=-=");
       var databasesPath = await getDatabasesPath();
       String path = join(databasesPath, databaseName);
       _db = await openDatabase(
@@ -54,21 +51,15 @@ class ReceiptDatabaseRepository implements IReceiptRepository {
             await db.execute(_receiptDao.createTableQuery);
             await db.execute(_productDao.createTableQuery);
             await db.execute(_infoDao.createTableQuery);
-            print(
-                "----=-=-=-=-=-=- ALLL TABLES HAS BEEN CREATED!!!! _-----------------=-=-=-=-=-=");
           } catch (e) {
             print("Error creating tables: $e");
             rethrow;
           }
         },
-        onOpen: (db) {
-          print("--------- Database opened successfully");
-        },
       );
       isInitialized = true;
-      print("================ Database initialization completed");
     } catch (e) {
-      print("+++++++++++++++++++ Error initializing database: $e");
+      print("Error initializing database: $e");
       isInitialized = false;
       rethrow;
     }
@@ -92,7 +83,6 @@ class ReceiptDatabaseRepository implements IReceiptRepository {
 
   Future<int> updateObject(QueryResult data, String tableName) async {
     final Database db = await database;
-    print("updating: $data");
     return await db.update(
       tableName,
       data,
@@ -183,11 +173,9 @@ class ReceiptDatabaseRepository implements IReceiptRepository {
 
   @override
   Future<List<ReceiptData>> getAllReceipts() async {
-    print("i'm in getAllReceipts !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     final Database db = await database;
     try {
       final receiptsList = await db.query(DatabaseTableNames.receipts);
-      print("receiptsList: $receiptsList");
       return _receiptDao.fromList(receiptsList);
     } catch (e) {
       print("Error loading ALL RECEIPTS: $e");
@@ -222,8 +210,6 @@ class ReceiptDatabaseRepository implements IReceiptRepository {
 
   @override
   Future<List<ReceiptDocumentData>> getAllDocumentDatas() async {
-    print(
-        "########################## i'm in getAllDocumentDatas ##########################");
     final Database db = await database;
 
     if (!db.isOpen) {
@@ -231,20 +217,13 @@ class ReceiptDatabaseRepository implements IReceiptRepository {
       return [];
     }
 
-    print("Database is open! ");
     List<ReceiptData> receipts = await getAllReceipts();
-    print("receipts: $receipts");
     final List<ProductData> allProducts =
         _productDao.fromList(await db.query(DatabaseTableNames.products));
-    print("allProducts: $allProducts");
     final List<InfoData> allInfos =
         _infoDao.fromList(await db.query(DatabaseTableNames.info));
-    print("allInfos: $allInfos");
     final productsMap = groupBy(allProducts, (ProductData p) => p.receiptId);
     final infosMap = groupBy(allInfos, (InfoData i) => i.receiptId);
-
-    print("productsMap: $productsMap");
-    print("infosMap: $infosMap");
 
     return receipts
         .map((receipt) => ReceiptDocumentData(
@@ -256,6 +235,7 @@ class ReceiptDatabaseRepository implements IReceiptRepository {
 
   Future<void> printDatabase() async {
     final Database db = await database;
+    print('\n=== BEGIN OF DATABASE ===\n');
 
     print('\n=== RECEIPTS ===');
     List<Map<String, dynamic>> receipts =
