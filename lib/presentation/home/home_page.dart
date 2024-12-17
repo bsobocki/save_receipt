@@ -4,12 +4,14 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/data/converters/data_converter.dart';
 import 'package:save_receipt/data/models/document.dart';
+import 'package:save_receipt/data/models/entities/product.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
 import 'package:save_receipt/presentation/effect/page_slide_animation.dart';
 import 'package:save_receipt/presentation/home/components/expandable_fab.dart';
 import 'package:save_receipt/presentation/home/components/loading_animation.dart';
 import 'package:save_receipt/presentation/home/components/menu.dart';
 import 'package:save_receipt/presentation/home/components/navigation_bottom_bar.dart';
+import 'package:save_receipt/presentation/home/content/products/products.dart';
 import 'package:save_receipt/presentation/home/controller/home_page_controller.dart';
 import 'package:save_receipt/presentation/home/content/receipts/receipts.dart';
 import 'package:save_receipt/presentation/receipt/receipt_data_page.dart';
@@ -33,13 +35,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final HomePageController pageController = HomePageController();
   final String noContentText = "Nothing here yet.";
   final String tipText =
-      "Please select an image from gallery to process\nor scan a new one for processing.";
+      "Select an image from gallery or scan a new one\nto start processing.";
   ReceiptProcessingState _processingState = ReceiptProcessingState.noAction;
-  String databaseStatusText(bool dbExists) =>
-      dbExists ? "Databse exists" : "Database doesn't exist";
-  final HomePageController pageController = HomePageController();
+  NavigationPages _selectedPage = NavigationPages.products;
 
   void refreshDocumentData() => setState(() {
         pageController.fetchData();
@@ -73,10 +74,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget textInfoContent(bool dbExists) => Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text(
-            databaseStatusText(dbExists),
-            style: TextStyle(color: mainTheme.mainColor),
-          ),
           Text(
             noContentText,
             style: TextStyle(color: mainTheme.mainColor),
@@ -114,12 +111,22 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     List<ReceiptDocumentData> dataList = snapshot.data!;
+    List<ProductData> productsList = dataList.expand((data) => data.products).toList();
 
-    return ReceiptsList(
-        documentData: dataList,
-        onItemSelected: (index) {
-          openReceiptPage(ReceiptDataConverter.toReceiptModel(dataList[index]));
-        });
+    switch (_selectedPage) {
+      case NavigationPages.receipts:
+        return ReceiptsList(
+            documentData: dataList,
+            onItemSelected: (index) {
+              openReceiptPage(
+                  ReceiptDataConverter.toReceiptModel(dataList[index]));
+            });
+      case NavigationPages.products:
+        return ProductsList(
+            onItemSelected: (index) {
+              print('Selected product: ${productsList[index]}');
+            }, productsData: productsList);
+    }
   }
 
   @override
@@ -143,7 +150,11 @@ class _MyHomePageState extends State<MyHomePage> {
         child: body,
       ),
       bottomNavigationBar: HomePageNavigationBar(
-        onPageSelect: (index) {},
+        onPageSelect: (NavigationPages page) {
+          setState(() {
+            _selectedPage = page;
+          });
+        },
       ),
       floatingActionButtonLocation: ExpandableFab.location,
       floatingActionButton: ExpandableFloatingActionButton(

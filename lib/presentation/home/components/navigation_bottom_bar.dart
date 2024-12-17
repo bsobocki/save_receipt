@@ -12,7 +12,7 @@ extension NavigationPagesExtension on NavigationPages {
 }
 
 class HomePageNavigationBar extends StatefulWidget {
-  final Function(int) onPageSelect;
+  final Function(NavigationPages) onPageSelect;
 
   const HomePageNavigationBar({super.key, required this.onPageSelect});
 
@@ -30,13 +30,14 @@ class _HomePageNavigationBarState extends State<HomePageNavigationBar> {
 
   void onTap(int index) => setState(() {
         _currentIndex = index;
-        widget.onPageSelect(index);
+        widget.onPageSelect(NavigationPages.values[index]);
       });
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       currentIndex: _currentIndex,
+      onTap: onTap,
       items: itemsDatas.entries
           .map(
             (entry) => BottomNavigationBarItem(
