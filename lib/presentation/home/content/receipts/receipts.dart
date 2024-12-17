@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/data/models/document.dart';
-import 'package:save_receipt/presentation/home/subsites/receipts/receipt_entity.dart';
+import 'package:save_receipt/presentation/home/content/receipts/receipt_entity.dart';
 
 class ReceiptsList extends StatefulWidget {
   final List<ReceiptDocumentData> documentData;

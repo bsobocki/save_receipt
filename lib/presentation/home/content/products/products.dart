@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/data/models/database_entities.dart';
-import 'package:save_receipt/presentation/home/subsites/products/product_entity.dart';
+import 'package:save_receipt/presentation/home/content/products/product_entity.dart';
 
 class ProductsList extends StatefulWidget {
   final List<ProductData> productsData;

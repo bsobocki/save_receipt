@@ -11,7 +11,7 @@ import 'package:save_receipt/presentation/home/components/loading_animation.dart
 import 'package:save_receipt/presentation/home/components/menu.dart';
 import 'package:save_receipt/presentation/home/components/navigation_bottom_bar.dart';
 import 'package:save_receipt/presentation/home/controller/home_page_controller.dart';
-import 'package:save_receipt/presentation/home/subsites/receipts/receipts.dart';
+import 'package:save_receipt/presentation/home/content/receipts/receipts.dart';
 import 'package:save_receipt/presentation/receipt/receipt_data_page.dart';
 
 enum ReceiptProcessingState {
