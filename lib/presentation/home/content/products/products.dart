@@ -26,7 +26,7 @@ class _ProductsListState extends State<ProductsList> {
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: ProductEntity(
-            color: mainTheme.mainColor,
+            color: mainTheme.ligtherMainColor,
             data: widget.productsData[index],
             onPressed: () {
               widget.onItemSelected(index);

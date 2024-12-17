@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/data/converters/data_converter.dart';
@@ -40,7 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final String tipText =
       "Select an image from gallery or scan a new one\nto start processing.";
   ReceiptProcessingState _processingState = ReceiptProcessingState.noAction;
-  NavigationPages _selectedPage = NavigationPages.products;
+  NavigationPages _selectedPage = NavigationPages.receipts;
 
   void refreshDocumentData() => setState(() {
         pageController.fetchData();

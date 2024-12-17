@@ -26,7 +26,7 @@ class _ReceiptsListState extends State<ReceiptsList> {
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: ReceiptEntity(
-            color: mainTheme.mainColor,
+            color: mainTheme.ligtherMainColor,
             data: widget.documentData[index],
             onPressed: () {
               widget.onItemSelected(index);

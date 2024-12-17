@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+export 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 
 class ExpandableFloatingActionButton extends StatefulWidget {
-  const ExpandableFloatingActionButton({super.key, required this.onDocumentScanning, required this.onImageProcessing});
+  const ExpandableFloatingActionButton({
+    super.key,
+    required this.onDocumentScanning,
+    required this.onImageProcessing,
+  });
 
   final Function() onDocumentScanning;
   final Function() onImageProcessing;
 
   @override
-  State<ExpandableFloatingActionButton> createState() => _ExpandableFloatingActionButtonState();
-  
+  State<ExpandableFloatingActionButton> createState() =>
+      _ExpandableFloatingActionButtonState();
 }
 
-class _ExpandableFloatingActionButtonState extends State<ExpandableFloatingActionButton> {
+class _ExpandableFloatingActionButtonState
+    extends State<ExpandableFloatingActionButton> {
   final _expandableFabKey = GlobalKey<ExpandableFabState>();
 
   void toggleFloatingActionButton() {
@@ -26,70 +32,90 @@ class _ExpandableFloatingActionButtonState extends State<ExpandableFloatingActio
   Widget build(BuildContext context) {
     return ExpandableFab(
       key: _expandableFabKey,
-        // type: ExpandableFabType.fan,
-        pos: ExpandableFabPos.center,
-        distance: 90,
-        fanAngle: 130,
-        overlayStyle: const ExpandableFabOverlayStyle(
-          blur: 1.0,
-          color: Color.fromARGB(100, 100, 100, 100),
+      // type: ExpandableFabType.fan,
+      pos: ExpandableFabPos.right,
+      distance: 120,
+      fanAngle: 90,
+      openCloseStackAlignment: Alignment.bottomCenter,
+      overlayStyle: const ExpandableFabOverlayStyle(
+        blur: 1.0,
+        color: Color.fromARGB(100, 100, 100, 100),
+      ),
+      openButtonBuilder: RotateFloatingActionButtonBuilder(
+        child: const Icon(Icons.receipt_sharp),
+        fabSize: ExpandableFabSize.regular,
+        foregroundColor: Colors.white,
+        backgroundColor: mainTheme.mainColor,
+      ),
+      closeButtonBuilder: RotateFloatingActionButtonBuilder(
+        child: const Icon(Icons.close),
+        fabSize: ExpandableFabSize.regular,
+        backgroundColor: mainTheme.extraLightMainColor,
+        foregroundColor: mainTheme.mainColor,
+        shape: const CircleBorder(),
+      ),
+      children: [
+        Column(
+          children: [
+            FloatingActionButton.small(
+              heroTag: null,
+              backgroundColor: mainTheme.mainColor,
+              onPressed: () async {
+                toggleFloatingActionButton();
+                await widget.onDocumentScanning();
+              },
+              shape: const CircleBorder(),
+              child: Image.asset(
+                'assets/googleScannerIcon.png',
+                height: 24,
+                width: 24,
+              ),
+            ),
+            Text(
+              "scan",
+              style: TextStyle(color: mainTheme.mainColor),
+            ),
+          ],
         ),
-        openButtonBuilder: RotateFloatingActionButtonBuilder(
-          child: const Icon(Icons.receipt_sharp),
-          fabSize: ExpandableFabSize.regular,
-          shape: const CircleBorder(),
-          foregroundColor: Colors.white,
-          backgroundColor: mainTheme.mainColor,
+        Column(
+          children: [
+            FloatingActionButton.small(
+              backgroundColor: mainTheme.mainColor,
+              heroTag: null,
+              onPressed: () async {
+                toggleFloatingActionButton();
+                await widget.onImageProcessing();
+              },
+              shape: const CircleBorder(),
+              child: const Icon(
+                Icons.drive_folder_upload,
+              ),
+            ),
+            Text(
+              "import",
+              style: TextStyle(color: mainTheme.mainColor),
+            ),
+          ],
         ),
-        closeButtonBuilder: RotateFloatingActionButtonBuilder(
-          child: const Icon(Icons.close),
-          fabSize: ExpandableFabSize.regular,
-          backgroundColor: mainTheme.extraLightMainColor,
-          foregroundColor: mainTheme.mainColor,
-          shape: const CircleBorder(),
+        Column(
+          children: [
+            FloatingActionButton.small(
+              heroTag: null,
+              backgroundColor: mainTheme.mainColor,
+              onPressed: () async {
+                toggleFloatingActionButton();
+                print("Create new receipt!!!!!!!!!!");
+              },
+              shape: const CircleBorder(),
+              child: const Icon(Icons.add),
+            ),
+            Text(
+              "create",
+              style: TextStyle(color: mainTheme.mainColor),
+            ),
+          ],
         ),
-        children: [
-          Column(
-            children: [
-              FloatingActionButton(
-                heroTag: null,
-                backgroundColor: mainTheme.mainColor,
-                onPressed: () async {
-                  toggleFloatingActionButton();
-                  await widget.onDocumentScanning();
-                },
-                child: Image.asset(
-                  'assets/googleScannerIcon.png',
-                  height: 24,
-                  width: 24,
-                ),
-              ),
-              Text(
-                "scan",
-                style: TextStyle(color: mainTheme.mainColor),
-              ),
-            ],
-          ),
-          Column(
-            children: [
-              FloatingActionButton(
-                backgroundColor: mainTheme.mainColor,
-                heroTag: null,
-                onPressed: () async {
-                  toggleFloatingActionButton();
-                  await widget.onImageProcessing();
-                },
-                child: const Icon(
-                  Icons.drive_folder_upload,
-                ),
-              ),
-              Text(
-                "import",
-                style: TextStyle(color: mainTheme.mainColor),
-              ),
-            ],
-          ),
-        ],
-      );
+      ],
+    );
   }
 }
