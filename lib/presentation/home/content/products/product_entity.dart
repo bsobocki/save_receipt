@@ -31,6 +31,7 @@ class ProductEntity extends StatelessWidget {
               Text(
                 data.name,
                 style: const TextStyle(fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
               ),
               Text(data.price.toString()),
             ],

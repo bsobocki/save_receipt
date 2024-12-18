@@ -13,7 +13,6 @@ class ReceiptEntity extends StatelessWidget {
       required this.onPressed,
       required this.color});
 
-
   @override
   Widget build(BuildContext context) {
     String title = "Receipt from ${data.receipt.date}";
@@ -43,16 +42,19 @@ class ReceiptEntity extends StatelessWidget {
                 child: img,
               ),
               const SizedBox(width: 26.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(product1),
-                  Text(product2),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(product1),
+                    Text(product2),
+                  ],
+                ),
               ),
             ],
           ),
