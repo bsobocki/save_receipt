@@ -35,6 +35,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final HomePageController pageController = HomePageController();
+  String dataFilter = "";
   final String noContentText = "Nothing here yet.";
   final String tipText =
       "Select an image from gallery or scan a new one\nto start processing.";
@@ -113,20 +114,36 @@ class _MyHomePageState extends State<MyHomePage> {
     List<ProductData> productsList =
         dataList.expand((data) => data.products).toList();
 
+    List<ReceiptDocumentData> filteredData = dataList;
+    List<ProductData> filteredProducts = productsList;
+
+    if (dataFilter.isNotEmpty) {
+      filteredData = dataList.where((data) {
+        return data.products.any((product) =>
+            product.name.toLowerCase().contains(dataFilter.toLowerCase()));
+      }).toList();
+
+      filteredProducts = productsList.where(
+        (product) => product.name.toLowerCase().contains(dataFilter.toLowerCase()),
+      ).toList();
+    }
+
     switch (_selectedPage) {
       case NavigationPages.receipts:
         return ReceiptsList(
-            documentData: dataList,
-            onItemSelected: (index) {
-              openReceiptPage(
-                  ReceiptDataConverter.toReceiptModel(dataList[index]));
-            });
+          documentData: filteredData,
+          onItemSelected: (index) {
+            openReceiptPage(
+                ReceiptDataConverter.toReceiptModel(dataList[index]));
+          },
+        );
       case NavigationPages.products:
         return ProductsList(
-            onItemSelected: (index) {
-              print('Selected product: ${productsList[index]}');
-            },
-            productsData: productsList);
+          productsData: filteredProducts,
+          onItemSelected: (index) {
+            print('Selected product: ${productsList[index]}');
+          },
+        );
     }
   }
 
@@ -138,6 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
         title: widget.title,
         onSearchTextChanged: (String newValue) {
           print("searching: $newValue");
+          setState(() => dataFilter = newValue);
         },
       ),
       body: Center(

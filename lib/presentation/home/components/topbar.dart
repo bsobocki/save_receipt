@@ -64,7 +64,7 @@ class HomepageTopbar extends PreferredSize {
                           ),
                           decoration: const InputDecoration(
                             border: InputBorder.none,
-                            hintText: 'Search',
+                            hintText: 'Search Products',
                           ),
                           onChanged: onSearchTextChanged,
                         ),
