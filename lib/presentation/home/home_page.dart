@@ -8,8 +8,8 @@ import 'package:save_receipt/domain/entities/receipt.dart';
 import 'package:save_receipt/presentation/effect/page_slide_animation.dart';
 import 'package:save_receipt/presentation/home/components/expandable_fab.dart';
 import 'package:save_receipt/presentation/home/components/loading_animation.dart';
-import 'package:save_receipt/presentation/home/components/menu.dart';
 import 'package:save_receipt/presentation/home/components/navigation_bottom_bar.dart';
+import 'package:save_receipt/presentation/home/components/topbar.dart';
 import 'package:save_receipt/presentation/home/content/products/products.dart';
 import 'package:save_receipt/presentation/home/controller/home_page_controller.dart';
 import 'package:save_receipt/presentation/home/content/receipts/receipts.dart';
@@ -110,7 +110,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     List<ReceiptDocumentData> dataList = snapshot.data!;
-    List<ProductData> productsList = dataList.expand((data) => data.products).toList();
+    List<ProductData> productsList =
+        dataList.expand((data) => data.products).toList();
 
     switch (_selectedPage) {
       case NavigationPages.receipts:
@@ -124,26 +125,20 @@ class _MyHomePageState extends State<MyHomePage> {
         return ProductsList(
             onItemSelected: (index) {
               print('Selected product: ${productsList[index]}');
-            }, productsData: productsList);
+            },
+            productsData: productsList);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: mainTheme.gradient,
-          ),
-        ),
-        title: Text(widget.title),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: Menu(onRefreshData: refreshDocumentData),
-          ),
-        ],
+      appBar: HomepageTopbar(
+        onRefreshData: refreshDocumentData,
+        title: widget.title,
+        onSearchTextChanged: (String newValue) {
+          print("searching: $newValue");
+        },
       ),
       body: Center(
         child: body,
