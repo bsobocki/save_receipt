@@ -30,6 +30,8 @@ class _ExpandableFloatingActionButtonState
 
   @override
   Widget build(BuildContext context) {
+    TextStyle buttonLabelsTextStyle =
+        TextStyle(color: mainTheme.mainColor, fontWeight: FontWeight.w800);
     return ExpandableFab(
       key: _expandableFabKey,
       // type: ExpandableFabType.fan,
@@ -37,9 +39,9 @@ class _ExpandableFloatingActionButtonState
       distance: 120,
       fanAngle: 90,
       openCloseStackAlignment: Alignment.bottomCenter,
-      overlayStyle: const ExpandableFabOverlayStyle(
+      overlayStyle: ExpandableFabOverlayStyle(
         blur: 1.0,
-        color: Color.fromARGB(100, 100, 100, 100),
+        color: Colors.white.withOpacity(0.5),
       ),
       openButtonBuilder: RotateFloatingActionButtonBuilder(
         child: const Icon(Icons.receipt_sharp),
@@ -73,7 +75,7 @@ class _ExpandableFloatingActionButtonState
             ),
             Text(
               "scan",
-              style: TextStyle(color: mainTheme.mainColor),
+              style: buttonLabelsTextStyle,
             ),
           ],
         ),
@@ -93,7 +95,7 @@ class _ExpandableFloatingActionButtonState
             ),
             Text(
               "import",
-              style: TextStyle(color: mainTheme.mainColor),
+              style: buttonLabelsTextStyle,
             ),
           ],
         ),
@@ -111,7 +113,7 @@ class _ExpandableFloatingActionButtonState
             ),
             Text(
               "create",
-              style: TextStyle(color: mainTheme.mainColor),
+              style: buttonLabelsTextStyle,
             ),
           ],
         ),
