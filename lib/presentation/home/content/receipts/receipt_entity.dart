@@ -16,9 +16,9 @@ class ReceiptEntity extends StatelessWidget {
     String title = "Receipt from ${data.receipt.date}";
     String product1 = "";
     String product2 = "";
-    Image img = data.receipt.imgPath != null
-        ? Image.file(File(data.receipt.imgPath!))
-        : Image.asset('assets/no_image.jpg');
+    ImageProvider img = data.receipt.imgPath != null
+        ? FileImage(File(data.receipt.imgPath!))
+        : const AssetImage('assets/no_image.jpg');
     if (data.products.isNotEmpty) {
       product1 = data.products[0].name;
     }
@@ -47,13 +47,18 @@ class ReceiptEntity extends StatelessWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.4),
-                  border: Border.all(color: mainTheme.mainColor),
+                  border: Border.all(
+                      color: mainTheme.extraLightMainColor.withOpacity(0.3)),
                   borderRadius: BorderRadius.circular(10),
+                  image: DecorationImage(
+                    image: img,
+                    fit: BoxFit.cover,
+                    alignment: Alignment.topCenter,
+                  ),
                 ),
+                clipBehavior: Clip.hardEdge,
                 height: 54.0,
                 width: 54.0,
-                child: img,
               ),
               const SizedBox(width: 8.0),
               Expanded(
@@ -69,15 +74,11 @@ class ReceiptEntity extends StatelessWidget {
                     ),
                     Text(
                       product1,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: mainTheme.mainColor),
+                      style: TextStyle(color: mainTheme.mainColor),
                     ),
                     Text(
                       product2,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: mainTheme.mainColor),
+                      style: TextStyle(color: mainTheme.mainColor),
                     ),
                   ],
                 ),
