@@ -1,17 +1,15 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/data/models/document.dart';
 
 class ReceiptEntity extends StatelessWidget {
   final ReceiptDocumentData data;
   final VoidCallback onPressed;
-  final Color color;
+  final Color? color;
   const ReceiptEntity(
-      {super.key,
-      required this.data,
-      required this.onPressed,
-      required this.color});
+      {super.key, required this.data, required this.onPressed, this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -30,29 +28,57 @@ class ReceiptEntity extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        color: color,
+        decoration: BoxDecoration(
+          color: color,
+          boxShadow: [
+            BoxShadow(
+              color: mainTheme.mainColor.withOpacity(0.2), // Shadow color
+              spreadRadius: 5, // How much the shadow spreads
+              blurRadius: 5, // How blurry the shadow is
+              offset: const Offset(
+                  0, 3), // Changes position of shadow (horizontal, vertical)
+            ),
+          ],
+        ),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(
+              left: 16.0, bottom: 8.0, right: 9.0, top: 8.0),
           child: Row(
             children: [
               Container(
-                color: Colors.white.withOpacity(0.4),
-                height: 100.0,
-                width: 100.0,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.4),
+                  border: Border.all(color: mainTheme.mainColor),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                height: 54.0,
+                width: 54.0,
                 child: img,
               ),
-              const SizedBox(width: 26.0),
+              const SizedBox(width: 8.0),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: mainTheme.mainColor),
                       overflow: TextOverflow.ellipsis,
                     ),
-                    Text(product1),
-                    Text(product2),
+                    Text(
+                      product1,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: mainTheme.mainColor),
+                    ),
+                    Text(
+                      product2,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: mainTheme.mainColor),
+                    ),
                   ],
                 ),
               ),

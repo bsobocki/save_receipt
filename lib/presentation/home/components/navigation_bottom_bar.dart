@@ -24,8 +24,8 @@ class _HomePageNavigationBarState extends State<HomePageNavigationBar> {
   int _currentIndex = 0;
 
   final Map<NavigationPages, IconData> itemsDatas = {
-    NavigationPages.receipts: Icons.text_snippet,
-    NavigationPages.products: Icons.art_track
+    NavigationPages.receipts: Icons.receipt_long,
+    NavigationPages.products: Icons.inventory
   };
 
   void onTap(int index) => setState(() {

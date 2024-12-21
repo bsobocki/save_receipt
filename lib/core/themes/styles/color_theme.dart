@@ -41,18 +41,27 @@ class ColorTheme {
   }
 
   List<Color> get _colors => [
-    mainColor.moved(-80),
-    mainColor,
-    mainColor.moved(80),
-  ];
+        mainColor.moved(-80),
+        mainColor,
+        mainColor.moved(80),
+      ];
 
   LinearGradient get gradient => LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: _colors);
+      begin: Alignment.topLeft, end: Alignment.bottomRight, colors: _colors);
 
   LinearGradient get reverseGradient => LinearGradient(
-          begin: Alignment.bottomRight,
-          end: Alignment.topLeft,
-          colors: _colors);
+      begin: Alignment.bottomRight, end: Alignment.topLeft, colors: _colors);
+
+  ColorScheme get colorScheme => ColorScheme(
+      brightness: Brightness.dark,
+      primary: mainColor,
+      onPrimary: Colors.white,
+      secondary: ligtherMainColor,
+      onSecondary: darkerMainColor,
+      error: Colors.red,
+      onError: Colors.white,
+      surface: Colors.white,
+      onSurface: Colors.white,
+      onPrimaryContainer: Colors.white,
+      onTertiaryFixed: Colors.white);
 }

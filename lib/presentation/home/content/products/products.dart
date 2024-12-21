@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/data/models/database_entities.dart';
 import 'package:save_receipt/presentation/home/content/products/product_entity.dart';
 
@@ -24,9 +23,9 @@ class _ProductsListState extends State<ProductsList> {
       itemCount: widget.productsData.length,
       itemBuilder: (context, index) {
         return Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
           child: ProductEntity(
-            color: mainTheme.ligtherMainColor,
+            color: Colors.white,
             data: widget.productsData[index],
             onPressed: () {
               widget.onItemSelected(index);

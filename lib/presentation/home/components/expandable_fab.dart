@@ -41,7 +41,7 @@ class _ExpandableFloatingActionButtonState
       openCloseStackAlignment: Alignment.bottomCenter,
       overlayStyle: ExpandableFabOverlayStyle(
         blur: 1.0,
-        color: Colors.white.withOpacity(0.5),
+        color: mainTheme.extraLightMainColor.withOpacity(0.2),
       ),
       openButtonBuilder: RotateFloatingActionButtonBuilder(
         child: const Icon(Icons.receipt_sharp),

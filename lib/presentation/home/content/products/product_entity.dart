@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/data/models/database_entities.dart';
 
 class ProductEntity extends StatelessWidget {
   final ProductData data;
   final VoidCallback onPressed;
-  final Color color;
+  final Color? color;
   const ProductEntity({
     super.key,
     required this.data,
     required this.onPressed,
-    required this.color,
+    this.color,
   });
 
   @override
@@ -22,18 +23,33 @@ class ProductEntity extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        color: color,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(0.0),
+          boxShadow: [
+            BoxShadow(
+              color: mainTheme.mainColor.withOpacity(0.2), // Shadow color
+              spreadRadius: 5, // How much the shadow spreads
+              blurRadius: 5, // How blurry the shadow is
+              offset: const Offset(
+                  0, 3), // Changes position of shadow (horizontal, vertical)
+            ),
+          ],
+        ),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(
+              top: 4.0, bottom: 4.0, left: 16.0, right: 16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 data.name,
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: mainTheme.mainColor),
                 overflow: TextOverflow.ellipsis,
               ),
-              Text(data.price.toString()),
+              Text(data.price.toString(),
+                  style: TextStyle(color: mainTheme.mainColor)),
             ],
           ),
         ),

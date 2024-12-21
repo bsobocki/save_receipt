@@ -45,3 +45,13 @@ LinearGradient transparentToGoldGradient = LinearGradient(
     gold,
   ],
 );
+
+LinearGradient transparentToGreyGradient = LinearGradient(
+  begin: Alignment.topCenter,
+  end: Alignment.bottomCenter,
+  colors: [
+    const Color.fromARGB(255, 112, 69, 69).withOpacity(0.6),
+    const Color.fromARGB(255, 112, 69, 69).withOpacity(0.6),
+    const Color.fromARGB(255, 112, 69, 69).withOpacity(0.6),
+  ],
+);
