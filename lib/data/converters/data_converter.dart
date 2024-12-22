@@ -75,7 +75,7 @@ class ReceiptDataConverter {
         type: ReceiptObjectModelType.info,
         dataId: info.id,
         text: info.name,
-        value: info.value,
+        value: info.value.isEmpty ? null : info.value,
         isEditing: false,
       );
 
