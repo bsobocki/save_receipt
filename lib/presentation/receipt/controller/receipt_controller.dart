@@ -105,7 +105,7 @@ class ReceiptModelController {
         ReceiptObjectModelType type = _receiptObjects[index].type;
         if (type == ReceiptObjectModelType.product) {
           _deletedProductsIds.add(id);
-        } else if (type == ReceiptObjectModelType.info) {
+        } else if (type == ReceiptObjectModelType.infoText) {
           _deletedInfosIds.add(id);
         }
       }

@@ -42,8 +42,8 @@ class ReceiptDataConverter {
     ShopData? shop; // for now shops are not supported
     List<ReceiptObjectModel> dates = model.dates;
     List<ProductData> products =
-        model.products.map((e) => toProductData(e, receiptId)).toList();
-    List<InfoData> infos = model.info
+        model.productObjs.map((e) => toProductData(e, receiptId)).toList();
+    List<InfoData> infos = model.infoStrObjs
         .map((e) => ReceiptDataConverter.toInfoData(e, receiptId))
         .toList();
     ReceiptData receipt = ReceiptData(
@@ -72,7 +72,7 @@ class ReceiptDataConverter {
 
   static ReceiptObjectModel infoToReceiptObjectModel(InfoData info) =>
       ReceiptObjectModel(
-        type: ReceiptObjectModelType.info,
+        type: ReceiptObjectModelType.infoText,
         dataId: info.id,
         text: info.name,
         value: info.value.isEmpty ? null : info.value,

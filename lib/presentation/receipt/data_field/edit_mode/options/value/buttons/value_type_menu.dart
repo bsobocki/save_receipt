@@ -48,10 +48,14 @@ class _DataFieldValueTypeMenuState extends State<DataFieldValueTypeMenu> {
         return Icons.question_mark_sharp;
       case ReceiptObjectModelType.product:
         return Icons.price_change;
-      case ReceiptObjectModelType.info:
-        return Icons.info;
-      case ReceiptObjectModelType.date:
+      case ReceiptObjectModelType.infoText:
+        return Icons.text_fields_sharp;
+      case ReceiptObjectModelType.infoDate:
         return Icons.calendar_month;
+      case ReceiptObjectModelType.infoDouble:
+        return Icons.wallet_rounded;
+      case ReceiptObjectModelType.infoNumeric:
+        return Icons.looks_one_outlined;
     }
   }
 
@@ -66,9 +70,11 @@ class _DataFieldValueTypeMenuState extends State<DataFieldValueTypeMenu> {
         type = value;
       }),
       itemBuilder: (context) => [
-        getPopupMenuItem('price', ReceiptObjectModelType.product),
-        getPopupMenuItem('info', ReceiptObjectModelType.info),
-        getPopupMenuItem('date', ReceiptObjectModelType.date),
+        getPopupMenuItem('product', ReceiptObjectModelType.product),
+        getPopupMenuItem('text', ReceiptObjectModelType.infoText),
+        getPopupMenuItem('date', ReceiptObjectModelType.infoDate),
+        getPopupMenuItem('price', ReceiptObjectModelType.infoDouble),
+        getPopupMenuItem('numeric', ReceiptObjectModelType.infoNumeric),
       ],
       color: widget.color,
       // custom button

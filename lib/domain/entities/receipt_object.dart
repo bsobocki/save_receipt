@@ -1,4 +1,11 @@
-enum ReceiptObjectModelType { object, product, info, date }
+enum ReceiptObjectModelType {
+  object,
+  product,
+  infoText,
+  infoDouble,
+  infoNumeric,
+  infoDate
+}
 
 class ReceiptObjectModel {
   final int? dataId;

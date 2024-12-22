@@ -42,9 +42,9 @@ class _DataFieldState extends State<DataField> {
     switch (type) {
       case ReceiptObjectModelType.product:
         return widget.allValuesData.prices;
-      case ReceiptObjectModelType.date:
+      case ReceiptObjectModelType.infoDate:
         return widget.allValuesData.dates;
-      case ReceiptObjectModelType.info:
+      case ReceiptObjectModelType.infoText:
         return widget.allValuesData.info;
       default:
         return [];

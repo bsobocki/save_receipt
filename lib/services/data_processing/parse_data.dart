@@ -14,16 +14,24 @@ List<ReceiptObjectModel> parseData(List<ConnectedTextLines> lines) {
       String connectedStr = line.connectedLine!.text;
       if (isPrice(connectedStr)) {
         String priceStr = getPriceStr(connectedStr);
-          data.add(ReceiptObjectModel(text: text, value: priceStr, type: ReceiptObjectModelType.product));
+        data.add(ReceiptObjectModel(
+            text: text, value: priceStr, type: ReceiptObjectModelType.product));
       } else if (isDate(connectedStr)) {
-        data.add(ReceiptObjectModel(text: text, value: connectedStr, type: ReceiptObjectModelType.date));
+        data.add(ReceiptObjectModel(
+            text: text,
+            value: connectedStr,
+            type: ReceiptObjectModelType.infoDate));
       } else {
-        data.add(ReceiptObjectModel(text: text, value: connectedStr, type: ReceiptObjectModelType.info));
+        data.add(ReceiptObjectModel(
+            text: text,
+            value: connectedStr,
+            type: ReceiptObjectModelType.infoText));
       }
     }
 
     if (!isTwoPart) {
-      data.add(ReceiptObjectModel(text: text, type: ReceiptObjectModelType.info));
+      data.add(
+          ReceiptObjectModel(text: text, type: ReceiptObjectModelType.infoText));
     }
   }
   return data;

@@ -28,17 +28,17 @@ class ReceiptModel {
     return objs;
   }
 
-  List<ReceiptObjectModel> get products =>
+  List<ReceiptObjectModel> get productObjs =>
       getObjects(ReceiptObjectModelType.product);
 
-  List<ReceiptObjectModel> get info => getObjects(ReceiptObjectModelType.info);
+  List<ReceiptObjectModel> get infoStrObjs =>
+      getObjects(ReceiptObjectModelType.infoText);
 
-  get prices => products.map((e) => e.value!).toList();
-  get dates => getObjects(ReceiptObjectModelType.date);
-  get infoStr => getValuesAsStr(ReceiptObjectModelType.info);
-  get datesStr => getValuesAsStr(ReceiptObjectModelType.date);
+  get prices => productObjs.map((e) => e.value!).toList();
+  get dates => getObjects(ReceiptObjectModelType.infoDate);
+  get infoStr => getValuesAsStr(ReceiptObjectModelType.infoText);
+  get datesStr => getValuesAsStr(ReceiptObjectModelType.infoDate);
 
   @override
   String toString() => 'img: $imgPath, [$objects]';
 }
-
