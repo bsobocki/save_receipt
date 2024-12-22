@@ -58,12 +58,21 @@ class _ValueFieldState extends State<ValueField> {
         enableSearch: true,
         requestFocusOnTap: true,
         controller: menuController,
+        leadingIcon: null,
+        expandedInsets: EdgeInsets.zero,
         inputDecorationTheme: InputDecorationTheme(
-            suffixIconColor: mainTheme.mainColor,
-            border: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            focusedBorder: InputBorder.none),
-        textStyle: TextStyle(color: widget.textColor),
+          constraints: const BoxConstraints(maxWidth: 200.0, maxHeight: 30.0),
+          isDense: true,
+          contentPadding: EdgeInsets.zero,
+          suffixIconColor: mainTheme.mainColor,
+          border: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          focusedBorder: InputBorder.none,
+        ),
+        textStyle: TextStyle(
+          color: widget.textColor,
+          fontSize: 12.0,
+        ),
         menuStyle: menuStyle,
         onSelected: (value) {
           String newValue = value?.toString() ?? menuController.text;
