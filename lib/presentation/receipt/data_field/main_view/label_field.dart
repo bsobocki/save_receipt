@@ -27,7 +27,7 @@ class _DataTextFieldState extends State<DataTextField> {
           right: 24,
           left: 8.0,
           top: 4.0,
-          bottom: 4.0,
+          bottom: 0.0,
         ),
         child: TextField(
           enabled: !widget.editMode,
