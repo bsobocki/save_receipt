@@ -88,6 +88,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
               handleItemSwipe(context, DismissDirection.endToStart, index),
           onChangeToValue: () => changeItemToValue(index),
           onValueToFieldChange: () => changeValueToItem(index),
+          onValueTypeChanged: (ReceiptObjectModelType type) => modelController.changeValueType(type, index),
         );
       },
     );

@@ -17,6 +17,8 @@ class DataField extends StatefulWidget {
   final Function(DismissDirection direction)? onItemSwipe;
   final Function() onChangeToValue;
   final Function() onValueToFieldChange;
+  final Function(ReceiptObjectModelType) onValueTypeChanged;
+
   const DataField(
       {super.key,
       required this.model,
@@ -26,7 +28,8 @@ class DataField extends StatefulWidget {
       required this.onItemEditModeSwipe,
       required this.onChangeToValue,
       this.onItemSwipe,
-      required this.onValueToFieldChange});
+      required this.onValueToFieldChange,
+      required this.onValueTypeChanged});
 
   get text => null;
 
@@ -92,6 +95,7 @@ class _DataFieldState extends State<DataField> {
           model: widget.model,
           colorScheme: colorScheme,
           onValueToFieldChange: widget.onValueToFieldChange,
+          onValueTypeChanged: widget.onValueTypeChanged,
         ),
       ];
     } else {

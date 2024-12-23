@@ -17,7 +17,7 @@ class ExpandableValueOptions extends StatefulWidget {
     required this.onAddValue,
     required this.onCollapse,
     required this.valueExists,
-    required this.onValueTypeChange,
+    required this.onValueTypeChanged,
     required this.constraints,
     required this.initType,
     required this.onValueToFieldChange,
@@ -29,7 +29,7 @@ class ExpandableValueOptions extends StatefulWidget {
   final VoidCallback onAddValue;
   final VoidCallback onCollapse;
   final VoidCallback onValueToFieldChange;
-  final Function(ReceiptObjectModelType) onValueTypeChange;
+  final Function(ReceiptObjectModelType) onValueTypeChanged;
   final ReceiptObjectModelType initType;
   final BoxConstraints constraints;
   final bool valueExists;
@@ -64,7 +64,7 @@ class _ExpandableValueOptionsState extends State<ExpandableValueOptions> {
       DataFieldValueTypeMenu(
         color: widget.colors.goldButtonColor,
         type: widget.initType,
-        onSelected: widget.onValueTypeChange,
+        onTypeChanged: widget.onValueTypeChanged,
         buttonColor: mainTheme.mainColor,
       ),
       separator,

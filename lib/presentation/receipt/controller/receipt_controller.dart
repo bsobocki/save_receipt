@@ -12,9 +12,20 @@ class ReceiptModelController {
   String? _receiptImagePath;
   late AllReceiptValuesController _allValues;
   List<ReceiptObjectModel> _receiptObjects = [];
-  List<int> _deletedProductsIds = [];
-  List<int> _deletedInfosIds = [];
+  final List<int> _deletedProductsIds = [];
+  final List<int> _deletedInfoTextIds = [];
+  final List<int> _deletedInfoDateIds = [];
+  final List<int> _deletedInfoDoubleIds = [];
+  final List<int> _deletedInfoNumericIds = [];
   int? receiptId;
+
+  ReceiptModelController(final ReceiptModel receipt) {
+    _receiptImagePath = receipt.imgPath;
+    _receiptObjects = [];
+    _allValues = AllReceiptValuesController.fromReceipt(receipt);
+    _receiptObjects = receipt.objects;
+    receiptId = receipt.receiptId;
+  }
 
   Future<int> saveReceipt(ReceiptModel model) async {
     int receiptId = -1;
@@ -45,7 +56,7 @@ class ReceiptModelController {
     for (int id in _deletedProductsIds) {
       await dbRepo.deleteProduct(id);
     }
-    for (int id in _deletedInfosIds) {
+    for (int id in _deletedInfoTextIds) {
       await dbRepo.deleteInfo(id);
     }
 
@@ -54,14 +65,6 @@ class ReceiptModelController {
 
   Future<void> deleteReceipt(int receiptId) async {
     await ReceiptDatabaseRepository.get.deleteReceipt(receiptId);
-  }
-
-  ReceiptModelController(final ReceiptModel receipt) {
-    _receiptImagePath = receipt.imgPath;
-    _receiptObjects = [];
-    _allValues = AllReceiptValuesController.fromReceipt(receipt);
-    _receiptObjects = receipt.objects;
-    receiptId = receipt.receiptId;
   }
 
   void changeItemToValue(int index) {
@@ -82,6 +85,33 @@ class ReceiptModelController {
         ),
       );
       _receiptObjects[index].value = null;
+    }
+  }
+
+  void changeValueType(ReceiptObjectModelType newType, int index) {
+    if (indexExists(index)) {
+      ReceiptObjectModelType oldType = _receiptObjects[index].type;
+      _receiptObjects[index].type = newType;
+
+      switch (oldType) {
+        case ReceiptObjectModelType.object:
+          break;
+        case ReceiptObjectModelType.product:
+          _deletedProductsIds.add(index);
+          break;
+        case ReceiptObjectModelType.infoText:
+          _deletedInfoTextIds.add(index);
+          break;
+        case ReceiptObjectModelType.infoDouble:
+          _deletedInfoDoubleIds.add(index);
+          break;
+        case ReceiptObjectModelType.infoNumeric:
+          _deletedInfoNumericIds.add(index);
+          break;
+        case ReceiptObjectModelType.infoDate:
+          _deletedInfoDateIds.add(index);
+          break;
+      }
     }
   }
 
@@ -106,7 +136,7 @@ class ReceiptModelController {
         if (type == ReceiptObjectModelType.product) {
           _deletedProductsIds.add(id);
         } else if (type == ReceiptObjectModelType.infoText) {
-          _deletedInfosIds.add(id);
+          _deletedInfoTextIds.add(id);
         }
       }
       _receiptObjects.removeAt(index);

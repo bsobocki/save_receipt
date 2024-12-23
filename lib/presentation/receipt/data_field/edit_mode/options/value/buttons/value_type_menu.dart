@@ -5,13 +5,13 @@ import 'package:save_receipt/presentation/common/widgets/expendable/expandable_b
 class DataFieldValueTypeMenu extends StatefulWidget {
   const DataFieldValueTypeMenu({
     super.key,
-    required this.onSelected,
+    required this.onTypeChanged,
     required this.color,
     required this.type,
     required this.buttonColor,
   });
 
-  final Function(ReceiptObjectModelType) onSelected;
+  final Function(ReceiptObjectModelType) onTypeChanged;
   final Color color;
   final ReceiptObjectModelType type;
   final Color buttonColor;
@@ -65,9 +65,9 @@ class _DataFieldValueTypeMenuState extends State<DataFieldValueTypeMenu> {
 
     return PopupMenuButton<ReceiptObjectModelType>(
       key: buttonKey,
-      onSelected: (ReceiptObjectModelType value) => setState(() {
-        widget.onSelected(value);
-        type = value;
+      onSelected: (ReceiptObjectModelType newType) => setState(() {
+        type = newType;
+        widget.onTypeChanged(newType);
       }),
       itemBuilder: (context) => [
         getPopupMenuItem('product', ReceiptObjectModelType.product),

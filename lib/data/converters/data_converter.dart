@@ -1,5 +1,6 @@
 import 'package:save_receipt/data/models/document.dart';
 import 'package:save_receipt/data/models/database_entities.dart';
+import 'package:save_receipt/data/values.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
 
 class ReceiptDataConverter {
@@ -43,9 +44,8 @@ class ReceiptDataConverter {
     List<ReceiptObjectModel> dates = model.dates;
     List<ProductData> products =
         model.productObjs.map((e) => toProductData(e, receiptId)).toList();
-    List<InfoData> infos = model.infoStrObjs
-        .map((e) => ReceiptDataConverter.toInfoData(e, receiptId))
-        .toList();
+    List<InfoData> infoTexts =
+        model.infoObjs.map((e) => toInfoData(e, receiptId)).toList();
     ReceiptData receipt = ReceiptData(
         id: model.receiptId,
         shopId: -1,
@@ -53,7 +53,7 @@ class ReceiptDataConverter {
         imgPath: model.imgPath,
         date: dates.isNotEmpty ? dates[0].value ?? '' : '');
     return ReceiptDocumentData(
-        receipt: receipt, infos: infos, products: products, shop: shop);
+        receipt: receipt, infos: infoTexts, products: products, shop: shop);
   }
 
   static ReceiptDocumentData toDocumentDataForExistingReceipt(
@@ -72,12 +72,25 @@ class ReceiptDataConverter {
 
   static ReceiptObjectModel infoToReceiptObjectModel(InfoData info) =>
       ReceiptObjectModel(
-        type: ReceiptObjectModelType.infoText,
+        type: getInfoModelTypeBasedOnValue(info.value),
         dataId: info.id,
         text: info.name,
         value: info.value.isEmpty ? null : info.value,
         isEditing: false,
       );
+
+  static ReceiptObjectModelType getInfoModelTypeBasedOnValue(String value) {
+    if (isPrice(value)) {
+      return ReceiptObjectModelType.infoDouble;
+    }
+    if (isDate(value)) {
+      return ReceiptObjectModelType.infoDate;
+    }
+    if (isNumeric(value)) {
+      return ReceiptObjectModelType.infoNumeric;
+    }
+    return ReceiptObjectModelType.infoText;
+  }
 
   static ReceiptModel toReceiptModel(ReceiptDocumentData data) {
     List<ReceiptObjectModel> objects =

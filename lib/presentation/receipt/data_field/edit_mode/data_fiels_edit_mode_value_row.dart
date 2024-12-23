@@ -10,11 +10,13 @@ class DataFieldEditModeValueRow extends StatefulWidget {
     required this.colorScheme,
     required this.model,
     required this.onValueToFieldChange,
+    required this.onValueTypeChanged,
   });
 
   final DataFieldColorScheme colorScheme;
   final ReceiptObjectModel model;
   final Function() onValueToFieldChange;
+  final Function(ReceiptObjectModelType) onValueTypeChanged;
 
   @override
   State<DataFieldEditModeValueRow> createState() =>
@@ -37,8 +39,7 @@ class _DataFieldEditModeValueRowState extends State<DataFieldEditModeValueRow> {
           widget.model.value = '<no value>';
           expandedOptions = true;
         }),
-        onValueTypeChange: (ReceiptObjectModelType value) =>
-            widget.model.type = value,
+        onValueTypeChanged: widget.onValueTypeChanged,
         onCollapse: () => setState(() {
           expandedOptions = false;
         }),

@@ -31,8 +31,12 @@ class ReceiptModel {
   List<ReceiptObjectModel> get productObjs =>
       getObjects(ReceiptObjectModelType.product);
 
-  List<ReceiptObjectModel> get infoStrObjs =>
-      getObjects(ReceiptObjectModelType.infoText);
+  List<ReceiptObjectModel> get infoObjs => [
+        ...getObjects(ReceiptObjectModelType.infoText),
+        ...getObjects(ReceiptObjectModelType.infoDouble),
+        ...getObjects(ReceiptObjectModelType.infoNumeric),
+        ...getObjects(ReceiptObjectModelType.infoDate)
+      ];
 
   get prices => productObjs.map((e) => e.value!).toList();
   get dates => getObjects(ReceiptObjectModelType.infoDate);
