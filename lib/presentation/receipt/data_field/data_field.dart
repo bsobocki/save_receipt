@@ -123,11 +123,15 @@ class _DataFieldState extends State<DataField> {
         onDismissed: (direction) => widget.onItemDismissSwipe(),
         confirmDismiss: handleSwipe,
         background: getFieldSwipeBackground(
-            Icons.close, redToTransparentGradient, Alignment.centerLeft),
+          Icons.close,
+          redToTransparentGradient,
+          Alignment.centerLeft,
+        ),
         secondaryBackground: getFieldSwipeBackground(
-            widget.model.isEditing ? Icons.edit_off : Icons.edit,
-            transparentToGoldGradient,
-            Alignment.centerRight),
+          widget.model.isEditing ? Icons.edit_off : Icons.edit,
+          transparentToGoldGradient,
+          Alignment.centerRight,
+        ),
         child: dataFieldContent,
       );
 
@@ -139,11 +143,11 @@ class _DataFieldState extends State<DataField> {
         ),
         alignment: alignment,
         child: Padding(
-          padding: const EdgeInsets.only(
+          padding: EdgeInsets.only(
             left: 16.0,
             right: 16.0,
-            top: 8.0,
-            bottom: 8.0,
+            top: widget.model.value != null ? 8.0 : 0.0,
+            bottom: widget.model.value != null ? 8.0 : 0.0,
           ),
           child: Icon(iconData),
         ),
