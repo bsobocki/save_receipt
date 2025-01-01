@@ -11,7 +11,9 @@ import 'package:save_receipt/data/values.dart';
 class ReceiptModelController {
   String? _receiptImagePath;
   late AllReceiptValuesController _allValues;
-  List<ReceiptObjectModel> _receiptObjects = [];
+  List<ReceiptObjectModel> _infos = [];
+  List<ReceiptObjectModel> _products = [];
+  List<ReceiptObjectModel> _dates = [];
   final List<int> _deletedProductsIds = [];
   final List<int> _deletedInfoTextIds = [];
   final List<int> _deletedInfoDateIds = [];
@@ -21,9 +23,10 @@ class ReceiptModelController {
 
   ReceiptModelController(final ReceiptModel receipt) {
     _receiptImagePath = receipt.imgPath;
-    _receiptObjects = [];
     _allValues = AllReceiptValuesController.fromReceipt(receipt);
-    _receiptObjects = receipt.objects;
+    _products = receipt.products;
+    _infos = receipt.infos;
+    _dates = receipt.dates;
     receiptId = receipt.receiptId;
   }
 
@@ -67,38 +70,33 @@ class ReceiptModelController {
     await ReceiptDatabaseRepository.get.deleteReceipt(receiptId);
   }
 
-  void changeItemToValue(int index) {
-    if (indexExists(index)) {
-      _allValues.insertValue(_receiptObjects[index].text);
-      _receiptObjects.removeAt(index);
+  void changeInfoToValue(int index) {
+    if (infoIndexExists(index)) {
+      _allValues.insertValue(_infos[index].text);
+      _infos.removeAt(index);
     }
   }
 
-  void changeValueToItem(int index) {
-    if (indexExists(index) && dataFieldHasValue(index)) {
-      _allValues.removeValue(_receiptObjects[index].value!);
-      _receiptObjects.add(
+  void changeValueToInfo(int index) {
+    if (infoIndexExists(index) && infoHasValue(index)) {
+      _allValues.removeValue(_infos[index].value!);
+      _infos.add(
         ReceiptObjectModel(
           type: ReceiptObjectModelType.object,
-          text: _receiptObjects[index].value!,
+          text: _infos[index].value!,
           value: null,
         ),
       );
-      _receiptObjects[index].value = null;
+      _infos[index].value = null;
     }
   }
 
-  void changeValueType(ReceiptObjectModelType newType, int index) {
-    if (indexExists(index)) {
-      ReceiptObjectModelType oldType = _receiptObjects[index].type;
-      _receiptObjects[index].type = newType;
+  void changeInfoValueType(ReceiptObjectModelType newType, int index) {
+    if (infoIndexExists(index)) {
+      ReceiptObjectModelType oldType = _infos[index].type;
+      _infos[index].type = newType;
 
       switch (oldType) {
-        case ReceiptObjectModelType.object:
-          break;
-        case ReceiptObjectModelType.product:
-          _deletedProductsIds.add(index);
-          break;
         case ReceiptObjectModelType.infoText:
           _deletedInfoTextIds.add(index);
           break;
@@ -111,45 +109,71 @@ class ReceiptModelController {
         case ReceiptObjectModelType.infoDate:
           _deletedInfoDateIds.add(index);
           break;
+        default:
+          break;
       }
     }
   }
 
-  void toggleEditModeOfDataField(int index) {
-    if (indexExists(index)) {
-      _receiptObjects[index].isEditing = !_receiptObjects[index].isEditing;
+  void changeProductToInfoDouble(int index) {
+    if (productIndexExists(index)) {
+      _deletedProductsIds.add(index);
     }
   }
 
-  ReceiptObjectModel? dataFieldAt(int index) {
-    if (indexExists(index)) {
-      return _receiptObjects[index];
+  void toggleEditModeOfInfo(int index) {
+    if (infoIndexExists(index)) {
+      _infos[index].isEditing = !_infos[index].isEditing;
     }
-    return null;
+  }
+
+  ReceiptObjectModel? infoAt(int index) =>
+      infoIndexExists(index) ? _infos[index] : null;
+
+  ReceiptObjectModel? productAt(int index) =>
+      productIndexExists(index) ? _products[index] : null;
+
+  void removeInfo(int index) {
+    if (infoIndexExists(index)) {
+      int? id = _infos[index].dataId;
+      if (id != null) {
+        _deletedInfoTextIds.add(id);
+      }
+      _infos.removeAt(index);
+    }
   }
 
   void removeDataField(int index) {
-    if (indexExists(index)) {
-      int? id = _receiptObjects[index].dataId;
+    if (productIndexExists(index)) {
+      int? id = _products[index].dataId;
       if (id != null) {
-        ReceiptObjectModelType type = _receiptObjects[index].type;
-        if (type == ReceiptObjectModelType.product) {
-          _deletedProductsIds.add(id);
-        } else if (type == ReceiptObjectModelType.infoText) {
-          _deletedInfoTextIds.add(id);
-        }
+        _deletedProductsIds.add(id);
       }
-      _receiptObjects.removeAt(index);
+      _products.removeAt(index);
     }
   }
 
   AllValuesModel get allValuesModel => _allValues.model;
+
   String? get imgPath => _receiptImagePath;
-  List<ReceiptObjectModel> get objects => _receiptObjects;
+
+  List<ReceiptObjectModel> get objects => [
+        ..._products,
+        ..._infos,
+      ];
+
   ReceiptModel get model => ReceiptModel(
       receiptId: receiptId, objects: objects, imgPath: _receiptImagePath);
 
-  bool indexExists(int index) => index >= 0 && index < _receiptObjects.length;
-  bool dataFieldHasValue(int index) => _receiptObjects[index].value != null;
+  List<ReceiptObjectModel> get products => _products;
+
+  List<ReceiptObjectModel> get infos => _infos;
+
+  bool productIndexExists(int index) => index >= 0 && index < _products.length;
+
+  bool infoIndexExists(int index) => index >= 0 && index < _infos.length;
+
+  bool infoHasValue(int index) => _infos[index].value != null;
+
   bool get imgPathExists => imgPath != null;
 }

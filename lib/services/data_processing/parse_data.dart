@@ -27,11 +27,13 @@ List<ReceiptObjectModel> parseData(List<ConnectedTextLines> lines) {
             value: connectedStr,
             type: ReceiptObjectModelType.infoText));
       }
-    }
-
-    if (!isTwoPart) {
-      data.add(
-          ReceiptObjectModel(text: text, type: ReceiptObjectModelType.infoText));
+    } else {
+      if (isPrice(text)) {
+        data.add(ReceiptObjectModel(
+            text: '<no-value>', value: text, type: ReceiptObjectModelType.infoDouble));
+      }
+      data.add(ReceiptObjectModel(
+          text: text, type: ReceiptObjectModelType.infoText));
     }
   }
   return data;
