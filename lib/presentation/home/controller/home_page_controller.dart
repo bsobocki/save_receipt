@@ -44,7 +44,7 @@ class HomePageController {
     if (filePath != null) {
       List<TextLine> textLines = await processImage(filePath);
       List<ConnectedTextLines> connectedLines =
-          getConnectedTextLines(textLines, CheckLines.center);
+          getConnectedTextLines(textLines, RectArea.center);
       List<ReceiptObjectModel> parsedObjects = parseData(connectedLines);
       return ReceiptModel(
         imgPath: filePath,

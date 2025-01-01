@@ -4,7 +4,7 @@ import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart
 import 'package:save_receipt/domain/entities/connected_data.dart';
 import 'package:save_receipt/core/utils/coordinates.dart';
 
-enum CheckLines {
+enum RectArea {
   top,
   topLeft,
   topRight,
@@ -18,7 +18,7 @@ enum CheckLines {
 
 // O (n^2)
 List<ConnectedTextLines> getConnectedTextLines(
-    List<TextLine> lines, CheckLines check) {
+    List<TextLine> lines, RectArea check) {
   List<TextLine?> textLines = [...lines];
   List<ConnectedTextLines> connectedLines = [];
 
@@ -33,9 +33,9 @@ List<ConnectedTextLines> getConnectedTextLines(
       for (int j = i + 1; j < textLines.length; j++) {
         if (textLines[j] != null) {
           TextLine currentLine = textLines[j]!;
-          if (areInTheSameLine(startLine, currentLine, CheckLines.bottom) ||
-              areInTheSameLine(startLine, currentLine, CheckLines.center) ||
-              areInTheSameLine(startLine, currentLine, CheckLines.top)) {
+          if (areInTheSameLine(startLine, currentLine, RectArea.bottom) ||
+              areInTheSameLine(startLine, currentLine, RectArea.center) ||
+              areInTheSameLine(startLine, currentLine, RectArea.top)) {
             connectedLine = currentLine;
             textLines[j] = null;
             break;
@@ -61,39 +61,43 @@ List<ConnectedTextLines> getConnectedTextLines(
 */
 // List<ConnectedTextLines> getConnectedTextLines(List<TextLine> lines) {}
 
-bool areInTheSameLine(TextLine a, TextLine b, CheckLines check) {
-  bool result = false;
-  Offset aBottomCoords = getCoords(a.boundingBox, check);
-  Offset bBottomCoords = getCoords(b.boundingBox, check);
-  VerticalMargin marginBottomLeft =
-      VerticalMargin.calc(a.angle ?? 0.0, aBottomCoords, bBottomCoords.dx);
-  result = result || marginBottomLeft.inMargin(bBottomCoords.dy);
-  result = result &&
-      getCoords(b.boundingBox, CheckLines.centerLeft).dx >=
-          getCoords(a.boundingBox, CheckLines.centerRight).dx;
+bool areInTheSameLine(TextLine a, TextLine b, RectArea area) {
+  double angle = a.angle ?? 0.0;
+  Offset cordsA = getCoords(a.boundingBox, area);
+  Offset cordsB = getCoords(b.boundingBox, area);
 
-  return result;
+  VerticalMargin marginBottomLeft =
+      VerticalMargin.calc(angle, cordsA, cordsB.dx);
+
+  bool bYIsInVerticalMarginCalculatedWithRectA =
+      marginBottomLeft.inMargin(cordsB.dy);
+
+  bool bDoesNotIntersectOnTheXAxis =
+      getCoords(b.boundingBox, RectArea.centerLeft).dx >=
+          getCoords(a.boundingBox, RectArea.centerRight).dx;
+
+  return bYIsInVerticalMarginCalculatedWithRectA && bDoesNotIntersectOnTheXAxis;
 }
 
-Offset getCoords(Rect r, CheckLines check) {
-  switch (check) {
-    case CheckLines.top:
+Offset getCoords(Rect r, RectArea area) {
+  switch (area) {
+    case RectArea.top:
       return r.topCenter;
-    case CheckLines.bottom:
+    case RectArea.bottom:
       return r.bottomCenter;
-    case CheckLines.center:
+    case RectArea.center:
       return r.center;
-    case CheckLines.topLeft:
+    case RectArea.topLeft:
       return r.topLeft;
-    case CheckLines.topRight:
+    case RectArea.topRight:
       return r.topRight;
-    case CheckLines.bottomLeft:
+    case RectArea.bottomLeft:
       return r.bottomLeft;
-    case CheckLines.bottomRight:
+    case RectArea.bottomRight:
       return r.bottomRight;
-    case CheckLines.centerLeft:
+    case RectArea.centerLeft:
       return r.centerLeft;
-    case CheckLines.centerRight:
+    case RectArea.centerRight:
       return r.centerRight;
   }
 }
