@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
+import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/presentation/common/widgets/receipt_image.dart';
 import 'package:save_receipt/presentation/receipt/components/top_bar.dart';
 import 'package:save_receipt/presentation/receipt/data_field/data_field.dart';
@@ -9,9 +10,11 @@ import 'package:save_receipt/presentation/receipt/controller/receipt_controller.
 class ReceiptDataPage extends StatefulWidget {
   final String title = 'Fill Receipt Data';
   final ReceiptModel initialReceipt;
+  final AllValuesModel? allValuesModel;
 
   const ReceiptDataPage({
     required this.initialReceipt,
+    this.allValuesModel,
     super.key,
   });
 
@@ -50,7 +53,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   @override
   void initState() {
     super.initState();
-    modelController = ReceiptModelController(widget.initialReceipt);
+    modelController = ReceiptModelController(widget.initialReceipt, widget.allValuesModel);
   }
 
   Widget get productsList {

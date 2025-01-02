@@ -1,40 +1,70 @@
 import 'dart:core';
+import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/domain/entities/connected_data.dart';
 import 'package:save_receipt/data/values.dart';
 import 'package:save_receipt/domain/entities/receipt_object.dart';
 
-List<ReceiptObjectModel> parseData(List<ConnectedTextLines> lines) {
-  List<ReceiptObjectModel> data = [];
+class ProcessedDataModel {
+  List<ReceiptObjectModel> receiptObjectModels = [];
+  AllValuesModel allValuesModel;
 
-  for (ConnectedTextLines line in lines) {
-    bool isTwoPart = line.connectedLine != null;
-    String text = line.start.text;
+  ProcessedDataModel(
+      {required this.receiptObjectModels, required this.allValuesModel});
+}
 
-    if (isTwoPart) {
-      String connectedStr = line.connectedLine!.text;
-      if (isPrice(connectedStr)) {
-        String priceStr = getPriceStr(connectedStr);
-        data.add(ReceiptObjectModel(
-            text: text, value: priceStr, type: ReceiptObjectModelType.product));
-      } else if (isDate(connectedStr)) {
-        data.add(ReceiptObjectModel(
-            text: text,
-            value: connectedStr,
-            type: ReceiptObjectModelType.infoDate));
+class DataParser {
+  late ProcessedDataModel _processedDataModel;
+
+  DataParser.parseData(List<ConnectedTextLines> lines) {
+    List<ReceiptObjectModel> receiptObjectModels = [];
+    List<String> prices = [];
+    List<String> info = [];
+    List<String> dates = [];
+
+    for (ConnectedTextLines line in lines) {
+      bool isTwoPart = line.connectedLine != null;
+      String text = line.start.text;
+
+      if (isTwoPart) {
+        String connectedStr = line.connectedLine!.text;
+        if (isPrice(connectedStr)) {
+          String priceStr = getAllPricesFromStr(connectedStr).last;
+          receiptObjectModels.add(ReceiptObjectModel(
+              text: text,
+              value: priceStr,
+              type: ReceiptObjectModelType.product));
+          prices.add(priceStr);
+        } else if (isDate(connectedStr)) {
+          receiptObjectModels.add(ReceiptObjectModel(
+              text: text,
+              value: connectedStr,
+              type: ReceiptObjectModelType.infoDate));
+          dates.add(connectedStr);
+        } else {
+          receiptObjectModels.add(ReceiptObjectModel(
+              text: text,
+              value: connectedStr,
+              type: ReceiptObjectModelType.infoText));
+          info.add(connectedStr);
+        }
       } else {
-        data.add(ReceiptObjectModel(
-            text: text,
-            value: connectedStr,
-            type: ReceiptObjectModelType.infoText));
+        if (isPrice(text)) {
+          prices.add(getAllPricesFromStr(text).last);
+        } else {
+          receiptObjectModels.add(ReceiptObjectModel(
+              text: text, type: ReceiptObjectModelType.infoText));
+        }
       }
-    } else {
-      if (isPrice(text)) {
-        data.add(ReceiptObjectModel(
-            text: '<no-value>', value: text, type: ReceiptObjectModelType.infoDouble));
-      }
-      data.add(ReceiptObjectModel(
-          text: text, type: ReceiptObjectModelType.infoText));
     }
+    _processedDataModel = ProcessedDataModel(
+      receiptObjectModels: receiptObjectModels,
+      allValuesModel: AllValuesModel(
+        prices: prices,
+        info: info,
+        dates: dates,
+      ),
+    );
   }
-  return data;
+
+  ProcessedDataModel get processedDataModel => _processedDataModel;
 }

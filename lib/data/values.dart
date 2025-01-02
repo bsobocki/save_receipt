@@ -4,19 +4,18 @@ import 'package:save_receipt/domain/entities/receipt.dart';
 class AllReceiptValuesController {
   AllValuesModel model;
 
-  AllReceiptValuesController(
+  AllReceiptValuesController.fromValues(
       {required List<String> priceValues,
       required List<String> infoValues,
       required List<String> dateValues})
       : model = AllValuesModel(
             prices: priceValues, info: infoValues, dates: dateValues);
 
+  AllReceiptValuesController({required this.model});
+
   AllReceiptValuesController.fromReceipt(ReceiptModel receipt)
-      : this(
-          priceValues: receipt.prices,
-          dateValues: receipt.datesStr,
-          infoValues: receipt.infoStr,
-        );
+      : model = AllValuesModel(
+            prices: receipt.prices, info: receipt.infoStr, dates: receipt.datesStr);
 
   void insertValue(String value) {
     if (isPrice(value)) {
@@ -51,6 +50,14 @@ bool isPrice(String data) {
 String getPriceStr(String data) {
   RegExp regex = RegExp(r'([0-9]+[,\.]*[0-9]+)');
   return regex.firstMatch(data)?[0]?.replaceAll(RegExp(','), '.') ?? '';
+}
+
+List<String> getAllPricesFromStr(String data) {
+  RegExp regex = RegExp(r'([0-9]+[,\.]*[0-9]+)');
+  return regex
+      .allMatches(data)
+      .map((e) => e[0]?.replaceAll(RegExp(','), '.') ?? '')
+      .toList();
 }
 
 bool isDate(String data) {

@@ -4,6 +4,7 @@ import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/data/converters/data_converter.dart';
 import 'package:save_receipt/data/models/document.dart';
 import 'package:save_receipt/data/models/entities/product.dart';
+import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
 import 'package:save_receipt/presentation/effect/page_slide_animation.dart';
 import 'package:save_receipt/presentation/home/components/expandable_fab.dart';
@@ -14,6 +15,7 @@ import 'package:save_receipt/presentation/home/content/products/products.dart';
 import 'package:save_receipt/presentation/home/controller/home_page_controller.dart';
 import 'package:save_receipt/presentation/home/content/receipts/receipts.dart';
 import 'package:save_receipt/presentation/receipt/receipt_data_page.dart';
+import 'package:save_receipt/services/data_processing/parse_data.dart';
 
 enum ReceiptProcessingState {
   noAction,
@@ -21,7 +23,8 @@ enum ReceiptProcessingState {
   opening,
   processing,
   imageChoosing,
-  ready
+  ready,
+  error
 }
 
 class MyHomePage extends StatefulWidget {
@@ -55,12 +58,12 @@ class _MyHomePageState extends State<MyHomePage> {
   void setReceiptState(ReceiptProcessingState newState) =>
       setState(() => _processingState = newState);
 
-  void openReceiptPage(ReceiptModel? receipt) {
-    if (receipt != null) {
+  void openReceiptPage({ReceiptModel? receiptModel, AllValuesModel? allValuesModel}) {
+    if (receiptModel != null) {
       Navigator.push(
         context,
         SlidePageRoute(
-          page: ReceiptDataPage(initialReceipt: receipt),
+          page: ReceiptDataPage(initialReceipt: receiptModel, allValuesModel: allValuesModel),
         ),
       ).then(
         (value) {
@@ -123,9 +126,12 @@ class _MyHomePageState extends State<MyHomePage> {
             product.name.toLowerCase().contains(dataFilter.toLowerCase()));
       }).toList();
 
-      filteredProducts = productsList.where(
-        (product) => product.name.toLowerCase().contains(dataFilter.toLowerCase()),
-      ).toList();
+      filteredProducts = productsList
+          .where(
+            (product) =>
+                product.name.toLowerCase().contains(dataFilter.toLowerCase()),
+          )
+          .toList();
     }
 
     switch (_selectedPage) {
@@ -133,8 +139,9 @@ class _MyHomePageState extends State<MyHomePage> {
         return ReceiptsList(
           documentData: filteredData,
           onItemSelected: (index) {
-            openReceiptPage(
-                ReceiptDataConverter.toReceiptModel(dataList[index]));
+            ReceiptModel receiptModel =
+                ReceiptDataConverter.toReceiptModel(dataList[index]);
+            openReceiptPage(receiptModel: receiptModel);
           },
         );
       case NavigationPages.products:
@@ -146,6 +153,28 @@ class _MyHomePageState extends State<MyHomePage> {
         );
     }
   }
+
+  Future<void> processDataFromReceipt(Future<String?> Function() getDocumentPathCallback) async {
+          setReceiptState(ReceiptProcessingState.imageChoosing);
+          String? filePath = await getDocumentPathCallback();
+          setReceiptState(ReceiptProcessingState.processing);
+          ProcessedDataModel? processedDataModel =
+              await pageController.processImg(filePath);
+          if (processedDataModel != null) {
+            setReceiptState(ReceiptProcessingState.ready);
+            await Future.delayed(const Duration(milliseconds: 200));
+            openReceiptPage(
+              receiptModel: ReceiptModel(
+                  imgPath: filePath,
+                  objects: processedDataModel.receiptObjectModels),
+              allValuesModel: processedDataModel.allValuesModel,
+            );
+          } else {
+            setReceiptState(ReceiptProcessingState.error);
+            await Future.delayed(const Duration(milliseconds: 200));
+          }
+          setReceiptState(ReceiptProcessingState.noAction);
+        }
 
   @override
   Widget build(BuildContext context) {
@@ -171,26 +200,10 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButtonLocation: ExpandableFab.location,
       floatingActionButton: ExpandableFloatingActionButton(
         onDocumentScanning: () async {
-          setReceiptState(ReceiptProcessingState.imageChoosing);
-          String? filePath = await pageController.googleScanAndExtractRecipe();
-          setReceiptState(ReceiptProcessingState.processing);
-          ReceiptModel? receipt = await pageController.processImg(filePath);
-          setReceiptState(ReceiptProcessingState.ready);
-          await Future.delayed(const Duration(milliseconds: 200));
-          if (receipt != null) {
-            openReceiptPage(receipt);
-          }
+          await processDataFromReceipt(pageController.googleScanAndExtractRecipe);
         },
         onImageProcessing: () async {
-          setReceiptState(ReceiptProcessingState.imageChoosing);
-          String? filePath = await pageController.pickImage();
-          setReceiptState(ReceiptProcessingState.processing);
-          ReceiptModel? receipt = await pageController.processImg(filePath);
-          setReceiptState(ReceiptProcessingState.ready);
-          await Future.delayed(const Duration(milliseconds: 300));
-          if (receipt != null) {
-            openReceiptPage(receipt);
-          }
+          await processDataFromReceipt(pageController.pickImage);
         },
       ),
     );

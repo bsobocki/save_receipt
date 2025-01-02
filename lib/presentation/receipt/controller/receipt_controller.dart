@@ -21,9 +21,12 @@ class ReceiptModelController {
   final List<int> _deletedInfoNumericIds = [];
   int? receiptId;
 
-  ReceiptModelController(final ReceiptModel receipt) {
+  ReceiptModelController(
+      final ReceiptModel receipt, AllValuesModel? allValuesModel) {
     _receiptImagePath = receipt.imgPath;
-    _allValues = AllReceiptValuesController.fromReceipt(receipt);
+    _allValues = allValuesModel != null
+        ? AllReceiptValuesController(model: allValuesModel)
+        : AllReceiptValuesController.fromReceipt(receipt);
     _products = receipt.products;
     _infos = receipt.infos;
     _dates = receipt.dates;
@@ -168,6 +171,8 @@ class ReceiptModelController {
   List<ReceiptObjectModel> get products => _products;
 
   List<ReceiptObjectModel> get infos => _infos;
+
+  List<ReceiptObjectModel> get dates => _dates;
 
   bool productIndexExists(int index) => index >= 0 && index < _products.length;
 

@@ -8,7 +8,6 @@ import 'package:save_receipt/data/models/document.dart';
 import 'package:save_receipt/services/data_processing/parse_data.dart';
 import 'package:save_receipt/data/repositories/database_repository.dart';
 import 'package:save_receipt/domain/entities/connected_data.dart';
-import 'package:save_receipt/domain/entities/receipt.dart';
 import 'package:save_receipt/services/document/scan/google_read_text_from_image.dart';
 import 'package:save_receipt/services/document/scan/google_scan.dart';
 
@@ -40,16 +39,13 @@ class HomePageController {
     return await scanRecipe();
   }
 
-  Future<ReceiptModel?> processImg(String? filePath) async {
+  Future<ProcessedDataModel?> processImg(String? filePath) async {
     if (filePath != null) {
       List<TextLine> textLines = await processImage(filePath);
       List<ConnectedTextLines> connectedLines =
           getConnectedTextLines(textLines, RectArea.center);
-      List<ReceiptObjectModel> parsedObjects = parseData(connectedLines);
-      return ReceiptModel(
-        imgPath: filePath,
-        objects: parsedObjects,
-      );
+      DataParser parser = DataParser.parseData(connectedLines);
+      return parser.processedDataModel;
     }
     return null;
   }
