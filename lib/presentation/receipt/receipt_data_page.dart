@@ -148,6 +148,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
       );
 
   get productsEditor => Expanded(
+        flex: 2,
         child: Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: Container(
@@ -191,6 +192,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
       );
 
   get infoEditor => Expanded(
+        flex: 1,
         child: Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: Container(
