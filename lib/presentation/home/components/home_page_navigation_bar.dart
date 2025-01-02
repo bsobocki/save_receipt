@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/core/utils/enums.dart';
 
-enum NavigationPages {
-  receipts,
-  products
-}
+enum NavigationPages { receipts, products }
 
 extension NavigationPagesExtension on NavigationPages {
   String get label => enumLabel(this);
@@ -44,8 +41,9 @@ class _HomePageNavigationBarState extends State<HomePageNavigationBar> {
                 label: entry.key.label, icon: Icon(entry.value)),
           )
           .toList(),
+      type: BottomNavigationBarType.shifting,
       selectedItemColor: mainTheme.mainColor,
-      unselectedItemColor: mainTheme.unselectedColor,
+      unselectedItemColor: Colors.grey,
     );
   }
 }

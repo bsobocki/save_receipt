@@ -9,7 +9,7 @@ import 'package:save_receipt/domain/entities/receipt.dart';
 import 'package:save_receipt/presentation/effect/page_slide_animation.dart';
 import 'package:save_receipt/presentation/home/components/expandable_fab.dart';
 import 'package:save_receipt/presentation/home/components/loading_animation.dart';
-import 'package:save_receipt/presentation/home/components/navigation_bottom_bar.dart';
+import 'package:save_receipt/presentation/home/components/home_page_navigation_bar.dart';
 import 'package:save_receipt/presentation/home/components/topbar.dart';
 import 'package:save_receipt/presentation/home/content/products/products.dart';
 import 'package:save_receipt/presentation/home/controller/home_page_controller.dart';

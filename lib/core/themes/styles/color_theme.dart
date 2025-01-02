@@ -52,6 +52,15 @@ class ColorTheme {
   LinearGradient get reverseGradient => LinearGradient(
       begin: Alignment.bottomRight, end: Alignment.topLeft, colors: _colors);
 
+  List<Color> get _lighterColors => [
+        mainColor,
+        mainColor.moved(80),
+        mainColor.moved(160),
+      ];
+
+  LinearGradient get lighterGradient => LinearGradient(
+      begin: Alignment.topLeft, end: Alignment.bottomRight, colors: _lighterColors);
+
   ColorScheme get colorScheme => ColorScheme(
       brightness: Brightness.dark,
       primary: mainColor,
