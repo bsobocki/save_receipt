@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/presentation/home/components/menu.dart';
 
@@ -6,8 +7,9 @@ class HomepageTopbar extends PreferredSize {
   final String title;
   final VoidCallback onRefreshData;
   final Function(String) onSearchTextChanged;
+  final ThemeController themeController = Get.find();
 
-  const HomepageTopbar({
+  HomepageTopbar({
     required this.onSearchTextChanged,
     required this.onRefreshData,
     required this.title,
@@ -23,7 +25,7 @@ class HomepageTopbar extends PreferredSize {
       preferredSize: preferredSize,
       child: Container(
         decoration: BoxDecoration(
-          gradient: mainTheme.gradient,
+          gradient: themeController.theme.gradient,
           borderRadius: const BorderRadius.only(
             bottomLeft: Radius.circular(30),
           ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/presentation/common/widgets/expendable/expandable_button.dart';
 import 'package:save_receipt/presentation/common/widgets/expendable/expandable_option_panel.dart';
 
@@ -12,7 +11,7 @@ class DataFieldTextOptions extends StatefulWidget {
     required this.isExpanded,
     required this.onFieldToValueChanged,
     required this.buttonColor,
-    required this.foregroundColor,
+    required this.foregroundColor, required this.iconColor,
   });
 
   final VoidCallback onChangeToValue;
@@ -22,6 +21,7 @@ class DataFieldTextOptions extends StatefulWidget {
   final VoidCallback onFieldToValueChanged;
   final Color buttonColor;
   final Color foregroundColor;
+  final Color iconColor;
 
   @override
   State<DataFieldTextOptions> createState() => _DataFieldOptionsState();
@@ -56,7 +56,7 @@ class _DataFieldOptionsState extends State<DataFieldTextOptions> {
       onCollapse: widget.onCollapse,
       constraints: widget.constraints,
       isExpanded: isExpanded,
-      iconColor: mainTheme.mainColor,
+      iconColor: widget.iconColor,
       buttonColor: Colors.white,
     );
   }

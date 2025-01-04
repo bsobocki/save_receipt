@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
+import 'package:get/get.dart';
 export 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 
@@ -21,6 +22,7 @@ class ExpandableFloatingActionButton extends StatefulWidget {
 class _ExpandableFloatingActionButtonState
     extends State<ExpandableFloatingActionButton> {
   final _expandableFabKey = GlobalKey<ExpandableFabState>();
+  final ThemeController themeController = Get.find();
 
   void toggleFloatingActionButton() {
     if (_expandableFabKey.currentState != null) {
@@ -31,7 +33,7 @@ class _ExpandableFloatingActionButtonState
   @override
   Widget build(BuildContext context) {
     TextStyle buttonLabelsTextStyle =
-        TextStyle(color: mainTheme.mainColor, fontWeight: FontWeight.w800);
+        TextStyle(color: themeController.theme.mainColor, fontWeight: FontWeight.w800);
     return ExpandableFab(
       key: _expandableFabKey,
       // type: ExpandableFabType.fan,
@@ -41,19 +43,19 @@ class _ExpandableFloatingActionButtonState
       openCloseStackAlignment: Alignment.bottomCenter,
       overlayStyle: ExpandableFabOverlayStyle(
         blur: 1.0,
-        color: mainTheme.extraLightMainColor.withOpacity(0.2),
+        color: themeController.theme.extraLightMainColor.withOpacity(0.2),
       ),
       openButtonBuilder: RotateFloatingActionButtonBuilder(
         child: const Icon(Icons.receipt_sharp),
         fabSize: ExpandableFabSize.regular,
         foregroundColor: Colors.white,
-        backgroundColor: mainTheme.mainColor,
+        backgroundColor: themeController.theme.mainColor,
       ),
       closeButtonBuilder: RotateFloatingActionButtonBuilder(
         child: const Icon(Icons.close),
         fabSize: ExpandableFabSize.regular,
-        backgroundColor: mainTheme.extraLightMainColor,
-        foregroundColor: mainTheme.mainColor,
+        backgroundColor: themeController.theme.extraLightMainColor,
+        foregroundColor: themeController.theme.mainColor,
         shape: const CircleBorder(),
       ),
       children: [
@@ -61,7 +63,7 @@ class _ExpandableFloatingActionButtonState
           children: [
             FloatingActionButton.small(
               heroTag: null,
-              backgroundColor: mainTheme.mainColor,
+              backgroundColor: themeController.theme.mainColor,
               onPressed: () async {
                 toggleFloatingActionButton();
                 await widget.onDocumentScanning();
@@ -82,7 +84,7 @@ class _ExpandableFloatingActionButtonState
         Column(
           children: [
             FloatingActionButton.small(
-              backgroundColor: mainTheme.mainColor,
+              backgroundColor: themeController.theme.mainColor,
               heroTag: null,
               onPressed: () async {
                 toggleFloatingActionButton();
@@ -103,7 +105,7 @@ class _ExpandableFloatingActionButtonState
           children: [
             FloatingActionButton.small(
               heroTag: null,
-              backgroundColor: mainTheme.mainColor,
+              backgroundColor: themeController.theme.mainColor,
               onPressed: () async {
                 toggleFloatingActionButton();
                 print("Create new receipt!!!!!!!!!!");

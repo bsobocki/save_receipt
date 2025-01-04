@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 
 const dropdownmenuHeight = 300.0;
@@ -25,6 +26,7 @@ class _ValueFieldState extends State<ValueField> {
   bool showMenu = false;
   final TextEditingController menuController = TextEditingController();
   final TextEditingController textFieldController = TextEditingController();
+  final ThemeController themeController = Get.find();
   late final List<String> initialValues;
   late List<String> values;
 
@@ -64,7 +66,7 @@ class _ValueFieldState extends State<ValueField> {
           constraints: const BoxConstraints(maxWidth: 200.0, maxHeight: 30.0),
           isDense: true,
           contentPadding: EdgeInsets.zero,
-          suffixIconColor: mainTheme.mainColor,
+          suffixIconColor: themeController.theme.mainColor,
           border: InputBorder.none,
           enabledBorder: InputBorder.none,
           focusedBorder: InputBorder.none,
@@ -84,7 +86,7 @@ class _ValueFieldState extends State<ValueField> {
       );
 
   get menuStyle => MenuStyle(
-        backgroundColor: WidgetStatePropertyAll(mainTheme.mainColor),
+        backgroundColor: WidgetStatePropertyAll(themeController.theme.mainColor),
         shadowColor: const WidgetStatePropertyAll(
           Color.fromARGB(193, 0, 0, 0),
         ),

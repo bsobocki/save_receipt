@@ -1,12 +1,21 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/presentation/common/widgets/expendable/expandable_button.dart';
 import 'package:save_receipt/core/settings/receipt_data_page.dart';
 
 class ReceiptPageTopBar extends StatelessWidget {
-  const ReceiptPageTopBar({
+  final Function() onSaveReceipt;
+  final Function() onDeleteReceipt;
+  final VoidCallback onImageIconPress;
+  final String? receiptImgPath;
+  final String? barcodeImgPaht;
+
+  final ThemeController themeController = Get.find();
+
+  ReceiptPageTopBar({
     super.key,
     required this.onImageIconPress,
     this.receiptImgPath,
@@ -14,11 +23,6 @@ class ReceiptPageTopBar extends StatelessWidget {
     required this.onSaveReceipt,
     required this.onDeleteReceipt,
   });
-  final Function() onSaveReceipt;
-  final Function() onDeleteReceipt;
-  final VoidCallback onImageIconPress;
-  final String? receiptImgPath;
-  final String? barcodeImgPaht;
 
   get expandedPlaceholder => Expanded(child: Container());
 
@@ -76,7 +80,7 @@ class ReceiptPageTopBar extends StatelessWidget {
   }
 
   get popupMenu => PopupMenuButton<String>(
-        color: mainTheme.mainColor,
+        color: themeController.theme.mainColor,
         onSelected: (String value) {
           print("chosen: $value");
 
@@ -153,7 +157,7 @@ class ReceiptPageTopBar extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ExpandableButton(
-                          buttonColor: mainTheme.mainColor,
+                          buttonColor: themeController.theme.mainColor,
                           iconData: Icons.qr_code,
                           onPressed: () {},
                           label: 'Add barcode',
@@ -163,7 +167,7 @@ class ReceiptPageTopBar extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ExpandableButton(
-                          buttonColor: mainTheme.mainColor,
+                          buttonColor: themeController.theme.mainColor,
                           iconData: Icons.add,
                           onPressed: () {},
                           label: 'Add Item',

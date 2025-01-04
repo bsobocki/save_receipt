@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:save_receipt/core/themes/schemes/data_field_scheme.dart';
 import 'package:save_receipt/presentation/receipt/data_field/edit_mode/options/value/expandable_value_options.dart';
 import 'package:save_receipt/presentation/receipt/data_field/edit_mode/text/value_text.dart';
 import 'package:save_receipt/domain/entities/receipt_object.dart';
@@ -7,16 +6,16 @@ import 'package:save_receipt/domain/entities/receipt_object.dart';
 class DataFieldEditModeValueRow extends StatefulWidget {
   const DataFieldEditModeValueRow({
     super.key,
-    required this.colorScheme,
     required this.model,
     required this.onValueToFieldChange,
     required this.onValueTypeChanged,
+    required this.textColor,
   });
 
-  final DataFieldColorScheme colorScheme;
   final ReceiptObjectModel model;
   final Function() onValueToFieldChange;
   final Function(ReceiptObjectModelType) onValueTypeChanged;
+  final Color textColor;
 
   @override
   State<DataFieldEditModeValueRow> createState() =>
@@ -30,7 +29,6 @@ class _DataFieldEditModeValueRowState extends State<DataFieldEditModeValueRow> {
       ExpandableValueOptions(
         key: UniqueKey(),
         constraints: constraints,
-        colors: widget.colorScheme,
         onRemoveValue: () => setState(() {
           widget.model.value = null;
           expandedOptions = true;
@@ -64,7 +62,7 @@ class _DataFieldEditModeValueRowState extends State<DataFieldEditModeValueRow> {
             key: UniqueKey(),
             fontWeight: FontWeight.normal,
             text: widget.model.value ?? '',
-            textColor: widget.colorScheme.textColor),
+            textColor: widget.textColor),
       ),
     ]);
   }

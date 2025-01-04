@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/presentation/home/home_page.dart';
 
 class LoadingAnimation extends StatelessWidget {
   final ReceiptProcessingState processingState;
-  const LoadingAnimation({super.key, required this.processingState});
+  final ThemeController themeController = Get.find();
+
+  LoadingAnimation({super.key, required this.processingState});
 
   get choosingContent => Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           LoadingAnimationWidget.dotsTriangle(
-              color: mainTheme.mainColor, size: 100.0),
+              color: themeController.theme.mainColor, size: 100.0),
           Text("Choose Image to process",
-              style: TextStyle(color: mainTheme.mainColor))
+              style: TextStyle(color: themeController.theme.mainColor))
         ],
       );
 
@@ -21,8 +24,8 @@ class LoadingAnimation extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.check_circle_outlined,
-              color: mainTheme.mainColor, size: 100.0),
-          Text("Ready!", style: TextStyle(color: mainTheme.mainColor))
+              color: themeController.theme.mainColor, size: 100.0),
+          Text("Ready!", style: TextStyle(color: themeController.theme.mainColor))
         ],
       );
 
@@ -30,9 +33,9 @@ class LoadingAnimation extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           LoadingAnimationWidget.staggeredDotsWave(
-              color: mainTheme.mainColor, size: 100.0),
+              color: themeController.theme.mainColor, size: 100.0),
           Text('Processing Image...',
-              style: TextStyle(color: mainTheme.mainColor)),
+              style: TextStyle(color: themeController.theme.mainColor)),
         ],
       );
 

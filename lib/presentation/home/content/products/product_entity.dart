@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/data/models/database_entities.dart';
 
@@ -19,7 +20,7 @@ class ProductEntity extends StatelessWidget {
     // Image img = data.receipt.imgPath != null
     //     ? Image.file(File(data.receipt.imgPath!))
     //     : Image.asset('assets/no_image.jpg');
-
+    final ThemeController themeController = Get.find();
     return GestureDetector(
       onTap: onPressed,
       child: Container(
@@ -28,7 +29,7 @@ class ProductEntity extends StatelessWidget {
           borderRadius: BorderRadius.circular(0.0),
           boxShadow: [
             BoxShadow(
-              color: mainTheme.mainColor.withOpacity(0.2), // Shadow color
+              color: themeController.theme.mainColor.withOpacity(0.2), // Shadow color
               spreadRadius: 5, // How much the shadow spreads
               blurRadius: 5, // How blurry the shadow is
               offset: const Offset(
@@ -45,11 +46,11 @@ class ProductEntity extends StatelessWidget {
               Text(
                 data.name,
                 style: TextStyle(
-                    fontWeight: FontWeight.bold, color: mainTheme.mainColor),
+                    fontWeight: FontWeight.bold, color: themeController.theme.mainColor),
                 overflow: TextOverflow.ellipsis,
               ),
               Text(data.price.toString(),
-                  style: TextStyle(color: mainTheme.mainColor)),
+                  style: TextStyle(color: themeController.theme.mainColor)),
             ],
           ),
         ),

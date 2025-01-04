@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:save_receipt/core/themes/schemes/data_field_scheme.dart';
+import 'package:get/get.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
+import 'package:save_receipt/core/themes/styles/colors.dart';
 import 'package:save_receipt/domain/entities/receipt_object.dart';
 import 'package:save_receipt/presentation/common/widgets/expendable/expandable_button.dart';
 import 'package:save_receipt/presentation/common/widgets/expendable/expandable_option_panel.dart';
@@ -12,7 +13,6 @@ const double iconButtonSize = 48;
 class ExpandableValueOptions extends StatefulWidget {
   const ExpandableValueOptions({
     super.key,
-    required this.colors,
     required this.onRemoveValue,
     required this.onAddValue,
     required this.onCollapse,
@@ -24,7 +24,6 @@ class ExpandableValueOptions extends StatefulWidget {
     this.isExpanded = false,
   });
 
-  final DataFieldColorScheme colors;
   final VoidCallback onRemoveValue;
   final VoidCallback onAddValue;
   final VoidCallback onCollapse;
@@ -40,6 +39,7 @@ class ExpandableValueOptions extends StatefulWidget {
 }
 
 class _ExpandableValueOptionsState extends State<ExpandableValueOptions> {
+  final ThemeController themeController = Get.find();
   late bool isExpanded;
   get separator => const SizedBox(width: 16);
 
@@ -54,18 +54,18 @@ class _ExpandableValueOptionsState extends State<ExpandableValueOptions> {
       separator,
       DataFieldAddRemoveValueButton(
         valueExists: widget.valueExists,
-        removeButtonForegroundColor: widget.colors.redButtonColor,
-        addButtonForegroundColor: widget.colors.greenButtonColor,
+        removeButtonForegroundColor: redButtonColor,
+        addButtonForegroundColor: greenButtonColor,
         onRemoveValue: widget.onRemoveValue,
         onAddValue: widget.onAddValue,
-        buttonColor: mainTheme.mainColor,
+        buttonColor: themeController.theme.mainColor,
       ),
       separator,
       DataFieldValueTypeMenu(
-        color: widget.colors.goldButtonColor,
+        color: goldButtonColor,
         type: widget.initType,
         onTypeChanged: widget.onValueTypeChanged,
-        buttonColor: mainTheme.mainColor,
+        buttonColor: themeController.theme.mainColor,
       ),
       separator,
     ];
@@ -76,8 +76,8 @@ class _ExpandableValueOptionsState extends State<ExpandableValueOptions> {
           label: 'Value As New Item',
           textColor: Colors.white,
           iconData: Icons.swap_horiz_outlined,
-          iconColor: widget.colors.greyButtonColor,
-          buttonColor: mainTheme.mainColor,
+          iconColor: greyButtonColor,
+          buttonColor: themeController.theme.mainColor,
           onPressed: widget.onValueToFieldChange,
         ),
         separator,
@@ -95,7 +95,7 @@ class _ExpandableValueOptionsState extends State<ExpandableValueOptions> {
       onCollapse: widget.onCollapse,
       constraints: widget.constraints,
       isExpanded: isExpanded,
-      iconColor: mainTheme.mainColor,
+      iconColor: themeController.theme.mainColor,
       buttonColor: Colors.white,
     );
   }

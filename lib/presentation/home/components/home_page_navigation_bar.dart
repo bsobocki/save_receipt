@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/core/utils/enums.dart';
 
@@ -19,6 +20,7 @@ class HomePageNavigationBar extends StatefulWidget {
 
 class _HomePageNavigationBarState extends State<HomePageNavigationBar> {
   int _currentIndex = 0;
+  final ThemeController themeController = Get.find();
 
   final Map<NavigationPages, IconData> itemsDatas = {
     NavigationPages.receipts: Icons.receipt_long,
@@ -42,7 +44,7 @@ class _HomePageNavigationBarState extends State<HomePageNavigationBar> {
           )
           .toList(),
       type: BottomNavigationBarType.shifting,
-      selectedItemColor: mainTheme.mainColor,
+      selectedItemColor: themeController.theme.mainColor,
       unselectedItemColor: Colors.grey,
     );
   }

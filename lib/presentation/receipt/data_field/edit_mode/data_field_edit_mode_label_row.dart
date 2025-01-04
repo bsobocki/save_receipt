@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:save_receipt/core/themes/schemes/data_field_scheme.dart';
+import 'package:get/get.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
+import 'package:save_receipt/core/themes/styles/colors.dart';
 import 'package:save_receipt/presentation/receipt/data_field/edit_mode/options/label/expandable_text_options.dart';
 import 'package:save_receipt/presentation/receipt/data_field/edit_mode/text/label_text.dart';
 import 'package:save_receipt/domain/entities/receipt_object.dart';
@@ -8,12 +9,11 @@ import 'package:save_receipt/domain/entities/receipt_object.dart';
 class DataFieldEditModeTextRow extends StatefulWidget {
   const DataFieldEditModeTextRow({
     super.key,
-    required this.colorScheme,
     required this.model,
-    required this.onFieldToValueChanged,
+    required this.onFieldToValueChanged, required this.textColor,
   });
 
-  final DataFieldColorScheme colorScheme;
+  final Color textColor;
   final ReceiptObjectModel model;
   final VoidCallback onFieldToValueChanged;
 
@@ -23,6 +23,7 @@ class DataFieldEditModeTextRow extends StatefulWidget {
 }
 
 class _DataFieldEditModeTextRowState extends State<DataFieldEditModeTextRow> {
+  final ThemeController themeController = Get.find();
   bool expandedOptions = false;
 
   Widget expandableOptionsButtons(BoxConstraints constraints) =>
@@ -33,8 +34,9 @@ class _DataFieldEditModeTextRowState extends State<DataFieldEditModeTextRow> {
         isExpanded: expandedOptions,
         onChangeToValue: widget.onFieldToValueChanged,
         onCollapse: () {},
-        buttonColor: mainTheme.mainColor,
-        foregroundColor: widget.colorScheme.greyButtonColor,
+        buttonColor: themeController.theme.mainColor,
+        foregroundColor: greyButtonColor,
+        iconColor: themeController.theme.mainColor,
       );
 
   @override
@@ -47,7 +49,7 @@ class _DataFieldEditModeTextRowState extends State<DataFieldEditModeTextRow> {
             padding: const EdgeInsets.only(left: 16.0),
             child: DataFieldEditModeText(
                 text: widget.model.text,
-                textColor: widget.colorScheme.textColor),
+                textColor: widget.textColor),
           ),
         Expanded(
           child: LayoutBuilder(

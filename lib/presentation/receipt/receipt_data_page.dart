@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/presentation/common/widgets/receipt_image.dart';
@@ -25,6 +26,7 @@ class ReceiptDataPage extends StatefulWidget {
 class _ReceiptDataPageState extends State<ReceiptDataPage> {
   bool _showFullScreenReceiptImage = false;
   final ScrollController _scrollController = ScrollController();
+  final ThemeController themeController = Get.find();
   late ReceiptModelController modelController;
 
   void changeInfoToValue(int index) => setState(() {
@@ -109,7 +111,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         Container(
           height: 320,
           decoration: BoxDecoration(
-            gradient: mainTheme.gradient,
+            gradient: themeController.theme.gradient,
           ),
         ),
         Expanded(child: Container()),
@@ -168,7 +170,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    color: mainTheme.mainColor,
+                    color: themeController.theme.mainColor,
                     borderRadius:
                         const BorderRadius.vertical(top: Radius.circular(15.0)),
                   ),
@@ -212,7 +214,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    color: mainTheme.mainColor,
+                    color: themeController.theme.mainColor,
                     borderRadius:
                         const BorderRadius.vertical(top: Radius.circular(15.0)),
                   ),

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/data/models/document.dart';
 
@@ -13,6 +14,7 @@ class ReceiptEntity extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeController themeController = Get.find();
     String title = "Receipt from ${data.receipt.date}";
     String product1 = "";
     String product2 = "";
@@ -32,7 +34,7 @@ class ReceiptEntity extends StatelessWidget {
           color: color,
           boxShadow: [
             BoxShadow(
-              color: mainTheme.mainColor.withOpacity(0.2), // Shadow color
+              color: themeController.theme.mainColor.withOpacity(0.2), // Shadow color
               spreadRadius: 5, // How much the shadow spreads
               blurRadius: 5, // How blurry the shadow is
               offset: const Offset(
@@ -48,7 +50,7 @@ class ReceiptEntity extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   border: Border.all(
-                      color: mainTheme.extraLightMainColor.withOpacity(0.3)),
+                      color: themeController.theme.extraLightMainColor.withOpacity(0.3)),
                   borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
                     image: img,
@@ -69,16 +71,16 @@ class ReceiptEntity extends StatelessWidget {
                       title,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: mainTheme.mainColor),
+                          color: themeController.theme.mainColor),
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       product1,
-                      style: TextStyle(color: mainTheme.mainColor),
+                      style: TextStyle(color: themeController.theme.mainColor),
                     ),
                     Text(
                       product2,
-                      style: TextStyle(color: mainTheme.mainColor),
+                      style: TextStyle(color: themeController.theme.mainColor),
                     ),
                   ],
                 ),

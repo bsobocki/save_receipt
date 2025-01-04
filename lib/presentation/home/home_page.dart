@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/data/converters/data_converter.dart';
@@ -38,6 +39,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final HomePageController pageController = HomePageController();
+  final ThemeController themeController = Get.find();
   String dataFilter = "";
   final String noContentText = "Nothing here yet.";
   final String tipText =
@@ -58,12 +60,14 @@ class _MyHomePageState extends State<MyHomePage> {
   void setReceiptState(ReceiptProcessingState newState) =>
       setState(() => _processingState = newState);
 
-  void openReceiptPage({ReceiptModel? receiptModel, AllValuesModel? allValuesModel}) {
+  void openReceiptPage(
+      {ReceiptModel? receiptModel, AllValuesModel? allValuesModel}) {
     if (receiptModel != null) {
       Navigator.push(
         context,
         SlidePageRoute(
-          page: ReceiptDataPage(initialReceipt: receiptModel, allValuesModel: allValuesModel),
+          page: ReceiptDataPage(
+              initialReceipt: receiptModel, allValuesModel: allValuesModel),
         ),
       ).then(
         (value) {
@@ -79,11 +83,11 @@ class _MyHomePageState extends State<MyHomePage> {
         children: <Widget>[
           Text(
             noContentText,
-            style: TextStyle(color: mainTheme.mainColor),
+            style: TextStyle(color: themeController.theme.mainColor),
           ),
           Text(
             tipText,
-            style: TextStyle(color: mainTheme.mainColor),
+            style: TextStyle(color: themeController.theme.mainColor),
             textAlign: TextAlign.center,
           ),
         ],
@@ -103,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (snapshot.connectionState == ConnectionState.waiting) {
       return Center(
         child: LoadingAnimationWidget.newtonCradle(
-          color: mainTheme.mainColor,
+          color: themeController.theme.mainColor,
           size: 100.0,
         ),
       );
@@ -154,27 +158,27 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> processDataFromReceipt(Future<String?> Function() getDocumentPathCallback) async {
-          setReceiptState(ReceiptProcessingState.imageChoosing);
-          String? filePath = await getDocumentPathCallback();
-          setReceiptState(ReceiptProcessingState.processing);
-          ProcessedDataModel? processedDataModel =
-              await pageController.processImg(filePath);
-          if (processedDataModel != null) {
-            setReceiptState(ReceiptProcessingState.ready);
-            await Future.delayed(const Duration(milliseconds: 200));
-            openReceiptPage(
-              receiptModel: ReceiptModel(
-                  imgPath: filePath,
-                  objects: processedDataModel.receiptObjectModels),
-              allValuesModel: processedDataModel.allValuesModel,
-            );
-          } else {
-            setReceiptState(ReceiptProcessingState.error);
-            await Future.delayed(const Duration(milliseconds: 200));
-          }
-          setReceiptState(ReceiptProcessingState.noAction);
-        }
+  Future<void> processDataFromReceipt(
+      Future<String?> Function() getDocumentPathCallback) async {
+    setReceiptState(ReceiptProcessingState.imageChoosing);
+    String? filePath = await getDocumentPathCallback();
+    setReceiptState(ReceiptProcessingState.processing);
+    ProcessedDataModel? processedDataModel =
+        await pageController.processImg(filePath);
+    if (processedDataModel != null) {
+      setReceiptState(ReceiptProcessingState.ready);
+      await Future.delayed(const Duration(milliseconds: 200));
+      openReceiptPage(
+        receiptModel: ReceiptModel(
+            imgPath: filePath, objects: processedDataModel.receiptObjectModels),
+        allValuesModel: processedDataModel.allValuesModel,
+      );
+    } else {
+      setReceiptState(ReceiptProcessingState.error);
+      await Future.delayed(const Duration(milliseconds: 200));
+    }
+    setReceiptState(ReceiptProcessingState.noAction);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -200,7 +204,8 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButtonLocation: ExpandableFab.location,
       floatingActionButton: ExpandableFloatingActionButton(
         onDocumentScanning: () async {
-          await processDataFromReceipt(pageController.googleScanAndExtractRecipe);
+          await processDataFromReceipt(
+              pageController.googleScanAndExtractRecipe);
         },
         onImageProcessing: () async {
           await processDataFromReceipt(pageController.pickImage);

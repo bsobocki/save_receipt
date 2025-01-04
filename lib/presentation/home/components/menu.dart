@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/data/repositories/database_repository.dart';
 
 class Menu extends StatelessWidget {
-  const Menu({super.key, required this.onRefreshData});
-
+  final ThemeController themeController = Get.find();
   final VoidCallback onRefreshData;
+
+  Menu({super.key, required this.onRefreshData});
 
   IconData getIconByOption(String text) {
     switch (text) {
@@ -38,7 +40,7 @@ class Menu extends StatelessWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Delete Database Confirmation'),
-          backgroundColor: mainTheme.mainColor,
+          backgroundColor: themeController.theme.mainColor,
           shadowColor: Colors.black,
           content: const Text(
             'Do you want to delete database?\n',
@@ -78,7 +80,7 @@ class Menu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
-      color: mainTheme.mainColor,
+      color: themeController.theme.mainColor,
       onSelected: (String value) async {
         switch (value) {
           case 'delete database':

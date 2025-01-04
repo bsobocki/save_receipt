@@ -1,44 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:save_receipt/core/themes/styles/color.dart';
 
-extension ColorBrightness on Color {
-  Color moved([int value = 20]) {
-    int r = red + value;
-    r = r > 255 ? 255 : r;
-    r = r < 0 ? 0 : r;
-
-    int g = green + value;
-    g = g > 255 ? 255 : g;
-    g = g < 0 ? 0 : g;
-
-    int b = blue + value;
-    b = b > 255 ? 255 : b;
-    b = b < 0 ? 0 : b;
-    return Color.fromARGB(alpha, r, g, b);
-  }
-}
 
 class ColorTheme {
-  final Color mainColor;
-  late final Color ligtherMainColor;
-  late final Color extraLightMainColor;
-  late final Color darkerMainColor;
-  late final Color extraDarkMainColor;
-  late final Color unselectedColor;
+  static const int _lighter = 40;
+  static const int _darker = -40;
 
-  ColorTheme({
-    required this.mainColor,
-  }) {
-    const int lighter = 40;
-    const int darker = -40;
+  Color _mainColor;
 
-    ligtherMainColor = mainColor.moved(lighter);
-    extraLightMainColor = ligtherMainColor.moved(lighter);
+  void setMainColor(Color newColor) => _mainColor = newColor;
 
-    darkerMainColor = mainColor.moved(darker);
-    extraDarkMainColor = darkerMainColor.moved(darker);
+  Color get mainColor => _mainColor;
+  Color get ligtherMainColor => _mainColor.moved(_lighter);
+  Color get extraLightMainColor => _mainColor.moved(_lighter * 2);
+  Color get darkerMainColor => _mainColor.moved(_darker);
+  Color get extraDarkMainColor => _mainColor.moved(_darker * 2);
+  Color get unselectedColor => extraLightMainColor;
 
-    unselectedColor = extraLightMainColor;
-  }
+  ColorTheme(Color mainColor) : _mainColor = mainColor;
 
   List<Color> get _colors => [
         mainColor.moved(-80),
@@ -59,7 +38,9 @@ class ColorTheme {
       ];
 
   LinearGradient get lighterGradient => LinearGradient(
-      begin: Alignment.topLeft, end: Alignment.bottomRight, colors: _lighterColors);
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: _lighterColors);
 
   ColorScheme get colorScheme => ColorScheme(
       brightness: Brightness.dark,

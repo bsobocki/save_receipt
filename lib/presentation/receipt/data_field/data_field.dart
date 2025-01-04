@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:save_receipt/core/themes/gradients/main_gradients.dart';
-import 'package:save_receipt/core/themes/schemes/data_field_scheme.dart';
+import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/presentation/receipt/data_field/edit_mode/data_field_edit_mode_label_row.dart';
 import 'package:save_receipt/presentation/receipt/data_field/edit_mode/data_fiels_edit_mode_value_row.dart';
@@ -39,7 +40,9 @@ class DataField extends StatefulWidget {
 
 class _DataFieldState extends State<DataField> {
   TextEditingController textController = TextEditingController();
-  late final DataFieldColorScheme colorScheme;
+  final ThemeController themeController = Get.find();
+  late Color backgroundColor;
+  late Color textColor;
 
   List<String> allValuesForType(ReceiptObjectModelType type) {
     switch (type) {
@@ -67,7 +70,14 @@ class _DataFieldState extends State<DataField> {
   void initState() {
     super.initState();
     textController.text = widget.model.text;
-    colorScheme = DataFieldColorScheme(widget.isDarker, widget.model.isEditing);
+    if (widget.model.isEditing) {
+      backgroundColor = themeController.theme.ligtherMainColor;
+      textColor = Colors.white.withOpacity(0.6);
+    } else {
+      textColor = Colors.black;
+      backgroundColor =
+          themeController.theme.mainColor.withOpacity(widget.isDarker ? 0.04 : 0.0);
+    }
   }
 
   @override
@@ -77,7 +87,7 @@ class _DataFieldState extends State<DataField> {
   }
 
   get valueField => ValueField(
-      textColor: colorScheme.textColor,
+      textColor: textColor,
       initValue: widget.model.value ?? '',
       values: allValuesForType(widget.model.type),
       onValueChanged: (String? value) => widget.model.value = value);
@@ -88,21 +98,21 @@ class _DataFieldState extends State<DataField> {
     if (widget.model.isEditing) {
       columnContent = [
         DataFieldEditModeTextRow(
-            colorScheme: colorScheme,
-            model: widget.model,
-            onFieldToValueChanged: widget.onChangeToValue),
+          model: widget.model,
+          onFieldToValueChanged: widget.onChangeToValue,
+          textColor: themeController.theme.extraLightMainColor,
+        ),
         DataFieldEditModeValueRow(
           model: widget.model,
-          colorScheme: colorScheme,
           onValueToFieldChange: widget.onValueToFieldChange,
           onValueTypeChanged: widget.onValueTypeChanged,
+          textColor: themeController.theme.extraLightMainColor,
         ),
       ];
     } else {
       columnContent = [
         DataTextField(
           editMode: widget.model.isEditing,
-          textColor: colorScheme.textColor,
           textController: textController,
           onChanged: (String value) => widget.model.text = value,
         ),
@@ -111,7 +121,7 @@ class _DataFieldState extends State<DataField> {
     }
 
     Widget dataFieldWidget = Container(
-      color: colorScheme.backgroundColor,
+      color: backgroundColor,
       child: Column(children: columnContent),
     );
 
