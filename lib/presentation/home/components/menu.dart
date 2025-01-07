@@ -17,6 +17,8 @@ class Menu extends StatelessWidget {
         return Icons.refresh;
       case 'print database':
         return Icons.text_snippet_sharp;
+      case 'change theme':
+        return Icons.color_lens;
       default:
         return Icons.keyboard_option_key;
     }
@@ -77,6 +79,60 @@ class Menu extends StatelessWidget {
     );
   }
 
+  Future<void> changeThemeDialogBuilder(BuildContext context) async {
+    return await showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Choose theme you want to change'),
+          backgroundColor: themeController.theme.mainColor,
+          shadowColor: Colors.black,
+          content: SizedBox(
+            width: 300,
+            height: 300,
+            child: ListView.builder(
+              itemCount: themeController.availableColors.length,
+              itemBuilder: (context, index) => Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                      color: themeController.availableColors[index],
+                      borderRadius: BorderRadius.circular(30.0),
+                      boxShadow: const [
+                        BoxShadow(
+                            color: Colors.white,
+                            blurRadius: 5,
+                            spreadRadius: 1,
+                            offset: Offset(1, 2))
+                      ]),
+                  child: GestureDetector(onTap: () {
+                    themeController.changeMainColor(
+                        themeController.availableColors[index]);
+                    onRefreshData();
+                    Navigator.of(context).pop();
+                  }),
+                ),
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                textStyle: const TextStyle(fontSize: 18.0),
+              ),
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
@@ -92,11 +148,17 @@ class Menu extends StatelessWidget {
           case 'print database':
             await ReceiptDatabaseRepository.get.printDatabase();
             break;
+          case 'change theme':
+            await changeThemeDialogBuilder(context);
+            break;
         }
       },
-      itemBuilder: (context) => ['delete database', 'refresh', 'print database']
-          .map((text) => getPopupMenuItem(text))
-          .toList(),
+      itemBuilder: (context) => [
+        'delete database',
+        'refresh',
+        'print database',
+        'change theme'
+      ].map((text) => getPopupMenuItem(text)).toList(),
       child: const Icon(Icons.menu),
     );
   }
