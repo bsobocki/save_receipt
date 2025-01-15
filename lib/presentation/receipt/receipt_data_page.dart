@@ -28,10 +28,11 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   final ScrollController _scrollController = ScrollController();
   final ThemeController themeController = Get.find();
   late ReceiptModelController modelController;
+  bool isProductsListExpanded = true;
 
   void changeInfoToValue(int index) =>
       setState(() => modelController.changeInfoToValue(index));
-  
+
   void changeProductToValue(int index) =>
       setState(() => modelController.changeProductToValue(index));
 
@@ -60,7 +61,6 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   void initState() {
     super.initState();
     modelController =
-    
         ReceiptModelController(widget.initialReceipt, widget.allValuesModel);
   }
 
@@ -152,7 +152,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
       );
 
   get productsEditor => Expanded(
-        flex: 2,
+        flex: isProductsListExpanded ? 3 : 1,
         child: Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: Container(
@@ -178,14 +178,26 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
                   ),
                   width: double.infinity,
                   height: 30.0,
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 8.0, top: 4.0),
-                    child: Text(
-                      "Products:",
-                      style: TextStyle(
-                        color: Colors.white,
+                  child: Row(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(left: 8.0, top: 4.0),
+                        child: Text(
+                          "Products:",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
-                    ),
+                      Expanded(child: Container()),
+                      IconButton(
+                        onPressed: () => setState(() =>
+                            isProductsListExpanded = !isProductsListExpanded),
+                        icon: Icon(isProductsListExpanded
+                            ? Icons.remove
+                            : Icons.arrow_drop_down),
+                      ),
+                    ],
                   ),
                 ),
                 productsList,
@@ -196,7 +208,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
       );
 
   get infoEditor => Expanded(
-        flex: 1,
+        flex: isProductsListExpanded ? 1 : 3,
         child: Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: Container(
@@ -222,14 +234,26 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
                   ),
                   width: double.infinity,
                   height: 30.0,
-                  child: const Padding(
-                    padding: const EdgeInsets.only(left: 8.0, top: 4.0),
-                    child: const Text(
-                      "Additional Info:",
-                      style: TextStyle(
-                        color: Colors.white,
+                  child: Row(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(left: 8.0, top: 4.0),
+                        child: Text(
+                          "Additional Info:",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
-                    ),
+                      Expanded(child: Container()),
+                      IconButton(
+                        onPressed: () => setState(() =>
+                            isProductsListExpanded = !isProductsListExpanded),
+                        icon: Icon(isProductsListExpanded
+                            ? Icons.arrow_drop_up
+                            : Icons.remove),
+                      ),
+                    ],
                   ),
                 ),
                 infosList,
