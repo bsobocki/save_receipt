@@ -11,14 +11,15 @@ class DataFieldTextOptions extends StatefulWidget {
     required this.isExpanded,
     required this.onFieldToValueChanged,
     required this.buttonColor,
-    required this.foregroundColor, required this.iconColor,
+    required this.foregroundColor,
+    required this.iconColor,
   });
 
-  final VoidCallback onChangeToValue;
+  final VoidCallback? onChangeToValue;
   final VoidCallback onCollapse;
   final BoxConstraints constraints;
   final bool isExpanded;
-  final VoidCallback onFieldToValueChanged;
+  final VoidCallback? onFieldToValueChanged;
   final Color buttonColor;
   final Color foregroundColor;
   final Color iconColor;
@@ -37,16 +38,22 @@ class _DataFieldOptionsState extends State<DataFieldTextOptions> {
     isExpanded = widget.isExpanded;
   }
 
-  List<Widget> get options => [
-        separator,
+  List<Widget> get options {
+    List<Widget> opts = [separator];
+    if (widget.onChangeToValue != null) {
+      opts += [
         ExpandableButton(
-          onPressed: widget.onChangeToValue,
+          onPressed: widget.onChangeToValue!,
           iconData: Icons.transform,
           iconColor: widget.foregroundColor,
           buttonColor: widget.buttonColor,
           label: 'Item To Value',
         ),
+        separator,
       ];
+    }
+    return opts;
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -27,8 +27,8 @@ class ExpandableValueOptions extends StatefulWidget {
   final VoidCallback onRemoveValue;
   final VoidCallback onAddValue;
   final VoidCallback onCollapse;
-  final VoidCallback onValueToFieldChange;
-  final Function(ReceiptObjectModelType) onValueTypeChanged;
+  final VoidCallback? onValueToFieldChange;
+  final Function(ReceiptObjectModelType)? onValueTypeChanged;
   final ReceiptObjectModelType initType;
   final BoxConstraints constraints;
   final bool valueExists;
@@ -61,16 +61,21 @@ class _ExpandableValueOptionsState extends State<ExpandableValueOptions> {
         buttonColor: themeController.theme.mainColor,
       ),
       separator,
-      DataFieldValueTypeMenu(
-        color: goldButtonColor,
-        type: widget.initType,
-        onTypeChanged: widget.onValueTypeChanged,
-        buttonColor: themeController.theme.mainColor,
-      ),
-      separator,
     ];
 
-    if (widget.valueExists) {
+    if (widget.onValueTypeChanged != null) {
+      optionButtons += [
+        DataFieldValueTypeMenu(
+          color: goldButtonColor,
+          type: widget.initType,
+          onTypeChanged: widget.onValueTypeChanged,
+          buttonColor: themeController.theme.mainColor,
+        ),
+        separator,
+      ];
+    }
+
+    if (widget.valueExists && widget.onValueToFieldChange != null) {
       optionButtons += [
         ExpandableButton(
           label: 'Value As New Item',
@@ -78,7 +83,7 @@ class _ExpandableValueOptionsState extends State<ExpandableValueOptions> {
           iconData: Icons.swap_horiz_outlined,
           iconColor: greyButtonColor,
           buttonColor: themeController.theme.mainColor,
-          onPressed: widget.onValueToFieldChange,
+          onPressed: widget.onValueToFieldChange!,
         ),
         separator,
       ];

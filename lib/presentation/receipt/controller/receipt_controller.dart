@@ -80,6 +80,20 @@ class ReceiptModelController {
     }
   }
 
+  void changeProductToValue(int index) {
+    if (productIndexExists(index)) {
+      _allValues.insertValue(_products[index].text);
+      _products.removeAt(index);
+    }
+  }
+
+  void changeInfoToProduct(int index) {
+    if (infoIndexExists(index)) {
+      _products.add(_infos[index]);
+      _infos.removeAt(index);
+    }
+  }
+
   void changeValueToInfo(int index) {
     if (infoIndexExists(index) && infoHasValue(index)) {
       _allValues.removeValue(_infos[index].value!);
@@ -98,6 +112,11 @@ class ReceiptModelController {
     if (infoIndexExists(index)) {
       ReceiptObjectModelType oldType = _infos[index].type;
       _infos[index].type = newType;
+
+      if (newType == ReceiptObjectModelType.product) {
+        _products.add(_infos[index]);
+        _infos.removeAt(index);
+      }
 
       switch (oldType) {
         case ReceiptObjectModelType.infoText:
@@ -121,6 +140,11 @@ class ReceiptModelController {
   void changeProductToInfoDouble(int index) {
     if (productIndexExists(index)) {
       _deletedProductsIds.add(index);
+      _infos.add(ReceiptObjectModel(
+          type: ReceiptObjectModelType.infoDouble,
+          text: _products[index].text,
+          value: _products[index].value));
+      _products.removeAt(index);
     }
   }
 
@@ -130,11 +154,11 @@ class ReceiptModelController {
     }
   }
 
-  ReceiptObjectModel? infoAt(int index) =>
-      infoIndexExists(index) ? _infos[index] : null;
-
-  ReceiptObjectModel? productAt(int index) =>
-      productIndexExists(index) ? _products[index] : null;
+  void toggleEditModeOfProduct(int index) {
+    if (productIndexExists(index)) {
+      _products[index].isEditing = !_products[index].isEditing;
+    }
+  }
 
   void removeInfo(int index) {
     if (infoIndexExists(index)) {
@@ -146,7 +170,7 @@ class ReceiptModelController {
     }
   }
 
-  void removeDataField(int index) {
+  void removeProduct(int index) {
     if (productIndexExists(index)) {
       int? id = _products[index].dataId;
       if (id != null) {
@@ -179,6 +203,12 @@ class ReceiptModelController {
   bool infoIndexExists(int index) => index >= 0 && index < _infos.length;
 
   bool infoHasValue(int index) => _infos[index].value != null;
+
+  ReceiptObjectModel? infoAt(int index) =>
+      infoIndexExists(index) ? _infos[index] : null;
+
+  ReceiptObjectModel? productAt(int index) =>
+      productIndexExists(index) ? _products[index] : null;
 
   bool get imgPathExists => imgPath != null;
 }

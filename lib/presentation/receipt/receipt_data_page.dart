@@ -29,33 +29,39 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   final ThemeController themeController = Get.find();
   late ReceiptModelController modelController;
 
-  void changeInfoToValue(int index) => setState(() {
-        modelController.changeInfoToValue(index);
-      });
+  void changeInfoToValue(int index) =>
+      setState(() => modelController.changeInfoToValue(index));
+  
+  void changeProductToValue(int index) =>
+      setState(() => modelController.changeProductToValue(index));
 
-  void changeValueToInfo(int index) => setState(() {
-        modelController.changeValueToInfo(index);
-      });
+  void changeInfoToProduct(int index) =>
+      setState(() => modelController.changeInfoToValue(index));
 
-  void handleItemSwipe(
-      BuildContext context, DismissDirection direction, int index) {
-    if (direction == DismissDirection.endToStart) {
-      handleInfoEditMode(index);
-    } else if (direction == DismissDirection.startToEnd) {
-      handleInfoDismiss(context, index);
-    }
-  }
+  void changeProductToInfo(int index) =>
+      setState(() => modelController.changeProductToInfoDouble(index));
 
-  void handleInfoEditMode(int index) =>
+  void changeValueToInfo(int index) =>
+      setState(() => modelController.changeValueToInfo(index));
+
+  void handleInfoEditModeToggle(int index) =>
       setState(() => modelController.toggleEditModeOfInfo(index));
 
-  void handleInfoDismiss(BuildContext context, int index) =>
-      setState(() => modelController.removeDataField(index));
+  void handleProductEditModeToggle(int index) =>
+      setState(() => modelController.toggleEditModeOfProduct(index));
+
+  void handleInfoDismiss(int index) =>
+      setState(() => modelController.removeInfo(index));
+
+  void handleProductDismiss(int index) =>
+      setState(() => modelController.removeProduct(index));
 
   @override
   void initState() {
     super.initState();
-    modelController = ReceiptModelController(widget.initialReceipt, widget.allValuesModel);
+    modelController =
+    
+        ReceiptModelController(widget.initialReceipt, widget.allValuesModel);
   }
 
   Widget get productsList {
@@ -69,11 +75,9 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             model: modelController.productAt(index)!,
             allValuesData: modelController.allValuesModel,
             isDarker: (index % 2 == 0),
-            onItemDismissSwipe: () {},
-            onItemEditModeSwipe: () {},
-            onChangeToValue: () {},
-            onValueToFieldChange: () {},
-            onValueTypeChanged: (ReceiptObjectModelType type) {},
+            onItemDismissSwipe: () => handleProductDismiss(index),
+            onItemEditModeSwipe: () => handleProductEditModeToggle(index),
+            onChangeToValue: () => changeProductToValue(index),
           );
         },
       ),
@@ -91,10 +95,8 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             model: modelController.infoAt(index)!,
             allValuesData: modelController.allValuesModel,
             isDarker: (index % 2 == 0),
-            onItemDismissSwipe: () =>
-                handleItemSwipe(context, DismissDirection.startToEnd, index),
-            onItemEditModeSwipe: () =>
-                handleItemSwipe(context, DismissDirection.endToStart, index),
+            onItemDismissSwipe: () => handleInfoDismiss(index),
+            onItemEditModeSwipe: () => handleInfoEditModeToggle(index),
             onChangeToValue: () => changeInfoToValue(index),
             onValueToFieldChange: () => changeValueToInfo(index),
             onValueTypeChanged: (ReceiptObjectModelType type) =>

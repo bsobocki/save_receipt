@@ -15,7 +15,7 @@ class DataFieldEditModeTextRow extends StatefulWidget {
 
   final Color textColor;
   final ReceiptObjectModel model;
-  final VoidCallback onFieldToValueChanged;
+  final VoidCallback? onFieldToValueChanged;
 
   @override
   State<DataFieldEditModeTextRow> createState() =>

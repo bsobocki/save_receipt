@@ -13,8 +13,8 @@ class DataFieldEditModeValueRow extends StatefulWidget {
   });
 
   final ReceiptObjectModel model;
-  final Function() onValueToFieldChange;
-  final Function(ReceiptObjectModelType) onValueTypeChanged;
+  final VoidCallback? onValueToFieldChange;
+  final Function(ReceiptObjectModelType)? onValueTypeChanged;
   final Color textColor;
 
   @override

@@ -11,7 +11,7 @@ class DataFieldValueTypeMenu extends StatefulWidget {
     required this.buttonColor,
   });
 
-  final Function(ReceiptObjectModelType) onTypeChanged;
+  final Function(ReceiptObjectModelType)? onTypeChanged;
   final Color color;
   final ReceiptObjectModelType type;
   final Color buttonColor;
@@ -67,7 +67,7 @@ class _DataFieldValueTypeMenuState extends State<DataFieldValueTypeMenu> {
       key: buttonKey,
       onSelected: (ReceiptObjectModelType newType) => setState(() {
         type = newType;
-        widget.onTypeChanged(newType);
+        widget.onTypeChanged??(newType);
       }),
       itemBuilder: (context) => [
         getPopupMenuItem('product', ReceiptObjectModelType.product),

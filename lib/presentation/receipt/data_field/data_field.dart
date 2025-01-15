@@ -16,21 +16,26 @@ class DataField extends StatefulWidget {
   final Function() onItemDismissSwipe;
   final Function() onItemEditModeSwipe;
   final Function(DismissDirection direction)? onItemSwipe;
-  final Function() onChangeToValue;
-  final Function() onValueToFieldChange;
-  final Function(ReceiptObjectModelType) onValueTypeChanged;
+  final Function()? onChangeToValue;
+  final Function()? onChangeToProduct;
+  final Function()? onChangeToInfo;
+  final Function()? onValueToFieldChange;
+  final Function(ReceiptObjectModelType)? onValueTypeChanged;
 
-  const DataField(
-      {super.key,
-      required this.model,
-      required this.allValuesData,
-      required this.isDarker,
-      required this.onItemDismissSwipe,
-      required this.onItemEditModeSwipe,
-      required this.onChangeToValue,
-      this.onItemSwipe,
-      required this.onValueToFieldChange,
-      required this.onValueTypeChanged});
+  const DataField({
+    super.key,
+    required this.model,
+    required this.allValuesData,
+    required this.isDarker,
+    required this.onItemDismissSwipe,
+    required this.onItemEditModeSwipe,
+    this.onChangeToValue,
+    this.onItemSwipe,
+    this.onValueToFieldChange,
+    this.onValueTypeChanged,
+    this.onChangeToProduct,
+    this.onChangeToInfo,
+  });
 
   get text => null;
 
@@ -75,8 +80,8 @@ class _DataFieldState extends State<DataField> {
       textColor = Colors.white.withOpacity(0.6);
     } else {
       textColor = Colors.black;
-      backgroundColor =
-          themeController.theme.mainColor.withOpacity(widget.isDarker ? 0.04 : 0.0);
+      backgroundColor = themeController.theme.mainColor
+          .withOpacity(widget.isDarker ? 0.04 : 0.0);
     }
   }
 
