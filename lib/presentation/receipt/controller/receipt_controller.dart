@@ -48,7 +48,7 @@ class ReceiptModelController {
     }
 
     // because of conflictAlgorithm: ConflictAlgorithm.replace
-    // inserting of existing object will work similar to update
+    // existing object insertion will work similar to update
     for (ProductData prod in data.products) {
       await dbRepo.insertProduct(prod);
     }
@@ -65,6 +65,15 @@ class ReceiptModelController {
     for (int id in _deletedInfoTextIds) {
       await dbRepo.deleteInfo(id);
     }
+    for (int id in _deletedInfoDateIds) {
+      await dbRepo.deleteInfo(id);
+    }
+    for (int id in _deletedInfoDoubleIds) {
+      await dbRepo.deleteInfo(id);
+    }
+    for (int id in _deletedInfoNumericIds) {
+      await dbRepo.deleteInfo(id);
+    }
 
     return receiptId;
   }
@@ -76,21 +85,22 @@ class ReceiptModelController {
   void changeInfoToValue(int index) {
     if (infoIndexExists(index)) {
       _allValues.insertValue(_infos[index].text);
-      _infos.removeAt(index);
+      removeInfo(index);
     }
   }
 
   void changeProductToValue(int index) {
     if (productIndexExists(index)) {
       _allValues.insertValue(_products[index].text);
-      _products.removeAt(index);
+      removeProduct(index);
     }
   }
 
   void changeInfoToProduct(int index) {
     if (infoIndexExists(index)) {
+      toggleEditModeOfInfo(index);
       _products.add(_infos[index]);
-      _infos.removeAt(index);
+      removeInfo(index);
     }
   }
 
@@ -110,41 +120,44 @@ class ReceiptModelController {
 
   void changeInfoValueType(ReceiptObjectModelType newType, int index) {
     if (infoIndexExists(index)) {
+      print("I AM CHANGING IT BABYYY!!!!");
       ReceiptObjectModelType oldType = _infos[index].type;
       _infos[index].type = newType;
+      int? id = _infos[index].dataId;
 
       if (newType == ReceiptObjectModelType.product) {
+        toggleEditModeOfInfo(index);
         _products.add(_infos[index]);
         _infos.removeAt(index);
       }
 
-      switch (oldType) {
-        case ReceiptObjectModelType.infoText:
-          _deletedInfoTextIds.add(index);
-          break;
-        case ReceiptObjectModelType.infoDouble:
-          _deletedInfoDoubleIds.add(index);
-          break;
-        case ReceiptObjectModelType.infoNumeric:
-          _deletedInfoNumericIds.add(index);
-          break;
-        case ReceiptObjectModelType.infoDate:
-          _deletedInfoDateIds.add(index);
-          break;
-        default:
-          break;
+      if (id != null) {
+        switch (oldType) {
+          case ReceiptObjectModelType.infoText:
+            _deletedInfoTextIds.add(id);
+            break;
+          case ReceiptObjectModelType.infoDouble:
+            _deletedInfoDoubleIds.add(id);
+            break;
+          case ReceiptObjectModelType.infoNumeric:
+            _deletedInfoNumericIds.add(id);
+            break;
+          case ReceiptObjectModelType.infoDate:
+            _deletedInfoDateIds.add(id);
+            break;
+          default:
+            break;
+        }
       }
     }
   }
 
   void changeProductToInfoDouble(int index) {
     if (productIndexExists(index)) {
-      _deletedProductsIds.add(index);
-      _infos.add(ReceiptObjectModel(
-          type: ReceiptObjectModelType.infoDouble,
-          text: _products[index].text,
-          value: _products[index].value));
-      _products.removeAt(index);
+      toggleEditModeOfProduct(index);
+      _products[index].type = ReceiptObjectModelType.infoDouble;
+      _infos.add(_products[index]);
+      removeProduct(index);
     }
   }
 
@@ -164,7 +177,22 @@ class ReceiptModelController {
     if (infoIndexExists(index)) {
       int? id = _infos[index].dataId;
       if (id != null) {
-        _deletedInfoTextIds.add(id);
+        switch (_infos[index].type) {
+          case ReceiptObjectModelType.infoText:
+            _deletedInfoTextIds.add(id);
+            break;
+          case ReceiptObjectModelType.infoDouble:
+            _deletedInfoDoubleIds.add(id);
+            break;
+          case ReceiptObjectModelType.infoNumeric:
+            _deletedInfoNumericIds.add(id);
+            break;
+          case ReceiptObjectModelType.infoDate:
+            _deletedInfoDateIds.add(id);
+            break;
+          default:
+            break;
+        }
       }
       _infos.removeAt(index);
     }

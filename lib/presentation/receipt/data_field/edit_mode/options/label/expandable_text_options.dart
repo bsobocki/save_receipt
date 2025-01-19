@@ -5,21 +5,21 @@ import 'package:save_receipt/presentation/common/widgets/expendable/expandable_o
 class DataFieldTextOptions extends StatefulWidget {
   const DataFieldTextOptions({
     super.key,
-    required this.onChangeToValue,
+    required this.onChangedToValue,
     required this.onCollapse,
     required this.constraints,
     required this.isExpanded,
-    required this.onFieldToValueChanged,
     required this.buttonColor,
     required this.foregroundColor,
     required this.iconColor,
+    this.onChangedToInfo,
   });
 
-  final VoidCallback? onChangeToValue;
+  final VoidCallback? onChangedToValue;
+  final VoidCallback? onChangedToInfo;
   final VoidCallback onCollapse;
   final BoxConstraints constraints;
   final bool isExpanded;
-  final VoidCallback? onFieldToValueChanged;
   final Color buttonColor;
   final Color foregroundColor;
   final Color iconColor;
@@ -40,14 +40,26 @@ class _DataFieldOptionsState extends State<DataFieldTextOptions> {
 
   List<Widget> get options {
     List<Widget> opts = [separator];
-    if (widget.onChangeToValue != null) {
+    if (widget.onChangedToValue != null) {
       opts += [
         ExpandableButton(
-          onPressed: widget.onChangeToValue!,
+          onPressed: widget.onChangedToValue!,
           iconData: Icons.transform,
           iconColor: widget.foregroundColor,
           buttonColor: widget.buttonColor,
-          label: 'Item To Value',
+          label: 'To Value',
+        ),
+        separator,
+      ];
+    }
+    if (widget.onChangedToInfo != null) {
+      opts += [
+        ExpandableButton(
+          onPressed: widget.onChangedToInfo!,
+          iconData: Icons.info_outline,
+          iconColor: widget.foregroundColor,
+          buttonColor: widget.buttonColor,
+          label: 'To Info',
         ),
         separator,
       ];

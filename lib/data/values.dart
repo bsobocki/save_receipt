@@ -62,7 +62,7 @@ List<String> getAllPricesFromStr(String data) {
 
 bool isDate(String data) {
   RegExp regex =
-      RegExp(r'([0-9]+:[0-9]+)+|[ \t]*([0-9]+[\-\\/][0-9]+[\-\\/][0-9]+)');
+      RegExp(r'([0-9]+:[0-9]+)+|[ \t]*([0-9]+[\-\\/][0-9]+[\-\\/][0-9]+).*');
   return regex.hasMatch(data);
 }
 

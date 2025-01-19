@@ -30,6 +30,9 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   late ReceiptModelController modelController;
   bool isProductsListExpanded = true;
 
+  void changeInfoValueType(ReceiptObjectModelType type, int index) =>
+      setState(() => modelController.changeInfoValueType(type, index));
+
   void changeInfoToValue(int index) =>
       setState(() => modelController.changeInfoToValue(index));
 
@@ -77,7 +80,8 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             isDarker: (index % 2 == 0),
             onItemDismissSwipe: () => handleProductDismiss(index),
             onItemEditModeSwipe: () => handleProductEditModeToggle(index),
-            onChangeToValue: () => changeProductToValue(index),
+            onChangedToValue: () => changeProductToValue(index),
+            onChangedToInfo: () => changeProductToInfo(index),
           );
         },
       ),
@@ -97,10 +101,10 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             isDarker: (index % 2 == 0),
             onItemDismissSwipe: () => handleInfoDismiss(index),
             onItemEditModeSwipe: () => handleInfoEditModeToggle(index),
-            onChangeToValue: () => changeInfoToValue(index),
-            onValueToFieldChange: () => changeValueToInfo(index),
+            onChangedToValue: () => changeInfoToValue(index),
+            onValueToFieldChanged: () => changeValueToInfo(index),
             onValueTypeChanged: (ReceiptObjectModelType type) =>
-                modelController.changeInfoValueType(type, index),
+                changeInfoValueType(type, index),
           );
         },
       ),

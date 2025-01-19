@@ -10,12 +10,15 @@ class DataFieldEditModeTextRow extends StatefulWidget {
   const DataFieldEditModeTextRow({
     super.key,
     required this.model,
-    required this.onFieldToValueChanged, required this.textColor,
+    required this.onFieldToValueChanged,
+    required this.textColor,
+    this.onChangedToInfo,
   });
 
   final Color textColor;
   final ReceiptObjectModel model;
   final VoidCallback? onFieldToValueChanged;
+  final VoidCallback? onChangedToInfo;
 
   @override
   State<DataFieldEditModeTextRow> createState() =>
@@ -30,9 +33,9 @@ class _DataFieldEditModeTextRowState extends State<DataFieldEditModeTextRow> {
       DataFieldTextOptions(
         key: UniqueKey(),
         constraints: constraints,
-        onFieldToValueChanged: widget.onFieldToValueChanged,
         isExpanded: expandedOptions,
-        onChangeToValue: widget.onFieldToValueChanged,
+        onChangedToValue: widget.onFieldToValueChanged,
+        onChangedToInfo: widget.onChangedToInfo,
         onCollapse: () {},
         buttonColor: themeController.theme.mainColor,
         foregroundColor: greyButtonColor,
@@ -48,8 +51,7 @@ class _DataFieldEditModeTextRowState extends State<DataFieldEditModeTextRow> {
           Padding(
             padding: const EdgeInsets.only(left: 16.0),
             child: DataFieldEditModeText(
-                text: widget.model.text,
-                textColor: widget.textColor),
+                text: widget.model.text, textColor: widget.textColor),
           ),
         Expanded(
           child: LayoutBuilder(

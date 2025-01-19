@@ -46,16 +46,16 @@ class _DataFieldValueTypeMenuState extends State<DataFieldValueTypeMenu> {
     switch (type) {
       case ReceiptObjectModelType.object:
         return Icons.question_mark_sharp;
-      case ReceiptObjectModelType.product:
+      case ReceiptObjectModelType.infoDouble:
         return Icons.price_change;
       case ReceiptObjectModelType.infoText:
         return Icons.text_fields_sharp;
       case ReceiptObjectModelType.infoDate:
         return Icons.calendar_month;
-      case ReceiptObjectModelType.infoDouble:
-        return Icons.wallet_rounded;
       case ReceiptObjectModelType.infoNumeric:
         return Icons.looks_one_outlined;
+      default:
+        return Icons.question_mark_outlined;
     }
   }
 
@@ -67,10 +67,9 @@ class _DataFieldValueTypeMenuState extends State<DataFieldValueTypeMenu> {
       key: buttonKey,
       onSelected: (ReceiptObjectModelType newType) => setState(() {
         type = newType;
-        widget.onTypeChanged??(newType);
+        widget.onTypeChanged?.call(newType);
       }),
       itemBuilder: (context) => [
-        getPopupMenuItem('product', ReceiptObjectModelType.product),
         getPopupMenuItem('text', ReceiptObjectModelType.infoText),
         getPopupMenuItem('date', ReceiptObjectModelType.infoDate),
         getPopupMenuItem('price', ReceiptObjectModelType.infoDouble),

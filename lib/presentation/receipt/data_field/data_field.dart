@@ -16,10 +16,10 @@ class DataField extends StatefulWidget {
   final Function() onItemDismissSwipe;
   final Function() onItemEditModeSwipe;
   final Function(DismissDirection direction)? onItemSwipe;
-  final Function()? onChangeToValue;
-  final Function()? onChangeToProduct;
-  final Function()? onChangeToInfo;
-  final Function()? onValueToFieldChange;
+  final Function()? onChangedToValue;
+  final Function()? onChangedToProduct;
+  final Function()? onChangedToInfo;
+  final Function()? onValueToFieldChanged;
   final Function(ReceiptObjectModelType)? onValueTypeChanged;
 
   const DataField({
@@ -29,12 +29,12 @@ class DataField extends StatefulWidget {
     required this.isDarker,
     required this.onItemDismissSwipe,
     required this.onItemEditModeSwipe,
-    this.onChangeToValue,
+    this.onChangedToValue,
     this.onItemSwipe,
-    this.onValueToFieldChange,
+    this.onValueToFieldChanged,
     this.onValueTypeChanged,
-    this.onChangeToProduct,
-    this.onChangeToInfo,
+    this.onChangedToProduct,
+    this.onChangedToInfo,
   });
 
   get text => null;
@@ -104,12 +104,13 @@ class _DataFieldState extends State<DataField> {
       columnContent = [
         DataFieldEditModeTextRow(
           model: widget.model,
-          onFieldToValueChanged: widget.onChangeToValue,
+          onFieldToValueChanged: widget.onChangedToValue,
           textColor: themeController.theme.extraLightMainColor,
+          onChangedToInfo: widget.onChangedToInfo,
         ),
         DataFieldEditModeValueRow(
           model: widget.model,
-          onValueToFieldChange: widget.onValueToFieldChange,
+          onValueToFieldChanged: widget.onValueToFieldChanged,
           onValueTypeChanged: widget.onValueTypeChanged,
           textColor: themeController.theme.extraLightMainColor,
         ),
