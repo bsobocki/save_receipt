@@ -52,6 +52,7 @@ class _DataFieldState extends State<DataField> {
   List<String> allValuesForType(ReceiptObjectModelType type) {
     switch (type) {
       case ReceiptObjectModelType.product:
+      case ReceiptObjectModelType.infoDouble:
         return widget.allValuesData.prices;
       case ReceiptObjectModelType.infoDate:
         return widget.allValuesData.dates;
@@ -91,12 +92,6 @@ class _DataFieldState extends State<DataField> {
     super.dispose();
   }
 
-  get valueField => ValueField(
-      textColor: textColor,
-      initValue: widget.model.value ?? '',
-      values: allValuesForType(widget.model.type),
-      onValueChanged: (String? value) => widget.model.value = value);
-
   get dataFieldContent {
     List<Widget> columnContent = [];
 
@@ -122,7 +117,13 @@ class _DataFieldState extends State<DataField> {
           textController: textController,
           onChanged: (String value) => widget.model.text = value,
         ),
-        if (widget.model.value != null) valueField,
+        if (widget.model.value != null)
+          ValueField(
+            textColor: textColor,
+            initValue: widget.model.value ?? '',
+            values: allValuesForType(widget.model.type),
+            onValueChanged: (String? value) => widget.model.value = value,
+          ),
       ];
     }
 
