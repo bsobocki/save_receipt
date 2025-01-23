@@ -161,6 +161,15 @@ class ReceiptModelController {
     }
   }
 
+  void changeInfoDoubleToProduct(int index) {
+    if (infoIndexExists(index)) {
+      toggleEditModeOfInfo(index);
+      _infos[index].type = ReceiptObjectModelType.product;
+      _products.add(_infos[index]);
+      removeInfo(index);
+    }
+  }
+
   void toggleEditModeOfInfo(int index) {
     if (infoIndexExists(index)) {
       _infos[index].isEditing = !_infos[index].isEditing;

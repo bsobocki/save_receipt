@@ -13,12 +13,14 @@ class DataFieldEditModeTextRow extends StatefulWidget {
     required this.onFieldToValueChanged,
     required this.textColor,
     this.onChangedToInfo,
+    this.onChangedToProduct,
   });
 
   final Color textColor;
   final ReceiptObjectModel model;
   final VoidCallback? onFieldToValueChanged;
   final VoidCallback? onChangedToInfo;
+  final VoidCallback? onChangedToProduct;
 
   @override
   State<DataFieldEditModeTextRow> createState() =>
@@ -40,6 +42,7 @@ class _DataFieldEditModeTextRowState extends State<DataFieldEditModeTextRow> {
         buttonColor: themeController.theme.mainColor,
         foregroundColor: greyButtonColor,
         iconColor: themeController.theme.mainColor,
+        onChangedToProduct: widget.onChangedToProduct,
       );
 
   @override

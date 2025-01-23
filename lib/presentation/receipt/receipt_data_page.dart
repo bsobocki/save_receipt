@@ -45,6 +45,9 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   void changeProductToInfo(int index) =>
       setState(() => modelController.changeProductToInfoDouble(index));
 
+  void changeInfoDoubleToProduct(int index) =>
+      setState(() => modelController.changeInfoDoubleToProduct(index));
+
   void changeValueToInfo(int index) =>
       setState(() => modelController.changeValueToInfo(index));
 
@@ -94,6 +97,12 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         itemCount: modelController.infos.length,
         controller: _scrollController,
         itemBuilder: (context, index) {
+          ReceiptObjectModelType type = modelController.infoAt(index)!.type;
+          VoidCallback? onChangedToProduct;
+          if (type == ReceiptObjectModelType.infoDouble) {
+            onChangedToProduct = () => changeInfoDoubleToProduct(index);
+            print("EEEELOEEOEOEOEOEOE!!!");
+          }
           return DataField(
             key: UniqueKey(),
             model: modelController.infoAt(index)!,
@@ -105,6 +114,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             onValueToFieldChanged: () => changeValueToInfo(index),
             onValueTypeChanged: (ReceiptObjectModelType type) =>
                 changeInfoValueType(type, index),
+            onChangedToProduct: onChangedToProduct,
           );
         },
       ),

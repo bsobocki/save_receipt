@@ -102,6 +102,7 @@ class _DataFieldState extends State<DataField> {
           onFieldToValueChanged: widget.onChangedToValue,
           textColor: themeController.theme.extraLightMainColor,
           onChangedToInfo: widget.onChangedToInfo,
+          onChangedToProduct: widget.onChangedToProduct,
         ),
         DataFieldEditModeValueRow(
           model: widget.model,

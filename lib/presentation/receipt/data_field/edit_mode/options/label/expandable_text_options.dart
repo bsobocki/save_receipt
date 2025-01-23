@@ -13,10 +13,12 @@ class DataFieldTextOptions extends StatefulWidget {
     required this.foregroundColor,
     required this.iconColor,
     this.onChangedToInfo,
+    this.onChangedToProduct,
   });
 
   final VoidCallback? onChangedToValue;
   final VoidCallback? onChangedToInfo;
+  final VoidCallback? onChangedToProduct;
   final VoidCallback onCollapse;
   final BoxConstraints constraints;
   final bool isExpanded;
@@ -64,6 +66,19 @@ class _DataFieldOptionsState extends State<DataFieldTextOptions> {
         separator,
       ];
     }
+    if (widget.onChangedToProduct != null) {
+      opts += [
+        ExpandableButton(
+          onPressed: widget.onChangedToProduct!,
+          iconData: Icons.price_change_outlined,
+          iconColor: widget.foregroundColor,
+          buttonColor: widget.buttonColor,
+          label: 'To Product',
+        ),
+        separator,
+      ];
+    }
+
     return opts;
   }
 
