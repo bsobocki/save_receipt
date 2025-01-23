@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/presentation/common/widgets/receipt_image.dart';
+import 'package:save_receipt/presentation/receipt/components/data_editor_top_bar.dart';
 import 'package:save_receipt/presentation/receipt/components/top_bar.dart';
 import 'package:save_receipt/presentation/receipt/data_field/data_field.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
@@ -62,6 +63,9 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
 
   void handleProductDismiss(int index) =>
       setState(() => modelController.removeProduct(index));
+
+  void toggleEditorsHeights() =>
+      setState(() => isProductsListExpanded = !isProductsListExpanded);
 
   @override
   void initState() {
@@ -183,35 +187,11 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             ),
             child: Column(
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: themeController.theme.mainColor,
-                    borderRadius:
-                        const BorderRadius.vertical(top: Radius.circular(15.0)),
-                  ),
-                  width: double.infinity,
-                  height: 30.0,
-                  child: Row(
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(left: 8.0, top: 4.0),
-                        child: Text(
-                          "Products:",
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      Expanded(child: Container()),
-                      IconButton(
-                        onPressed: () => setState(() =>
-                            isProductsListExpanded = !isProductsListExpanded),
-                        icon: Icon(isProductsListExpanded
-                            ? Icons.remove
-                            : Icons.arrow_drop_down),
-                      ),
-                    ],
-                  ),
+                DataEditorTopBar(
+                  isExpanded: isProductsListExpanded,
+                  onResizeButtonPressed: toggleEditorsHeights,
+                  background: themeController.theme.mainColor,
+                  title: "Products",
                 ),
                 productsList,
               ],
@@ -239,35 +219,11 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             ),
             child: Column(
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: themeController.theme.mainColor,
-                    borderRadius:
-                        const BorderRadius.vertical(top: Radius.circular(15.0)),
-                  ),
-                  width: double.infinity,
-                  height: 30.0,
-                  child: Row(
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(left: 8.0, top: 4.0),
-                        child: Text(
-                          "Additional Info:",
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      Expanded(child: Container()),
-                      IconButton(
-                        onPressed: () => setState(() =>
-                            isProductsListExpanded = !isProductsListExpanded),
-                        icon: Icon(isProductsListExpanded
-                            ? Icons.arrow_drop_up
-                            : Icons.remove),
-                      ),
-                    ],
-                  ),
+                DataEditorTopBar(
+                  isExpanded: !isProductsListExpanded,
+                  onResizeButtonPressed: toggleEditorsHeights,
+                  background: themeController.theme.mainColor,
+                  title: "Additional Info:",
                 ),
                 infosList,
               ],
