@@ -67,7 +67,6 @@ class ReceiptDataConverter {
         dataId: prod.id,
         text: prod.name,
         value: prod.price.toString(),
-        isEditing: false,
       );
 
   static ReceiptObjectModel infoToReceiptObjectModel(InfoData info) =>
@@ -76,7 +75,6 @@ class ReceiptDataConverter {
         dataId: info.id,
         text: info.name,
         value: info.value.isEmpty ? null : info.value,
-        isEditing: false,
       );
 
   static ReceiptObjectModelType getInfoModelTypeBasedOnValue(String value) {

@@ -12,6 +12,7 @@ import 'package:save_receipt/domain/entities/receipt_object.dart';
 class DataField extends StatefulWidget {
   final ReceiptObjectModel model;
   final AllValuesModel allValuesData;
+  final bool isInEditMode;
   final bool isDarker;
   final Function() onItemDismissSwipe;
   final Function() onItemEditModeSwipe;
@@ -26,6 +27,7 @@ class DataField extends StatefulWidget {
     super.key,
     required this.model,
     required this.allValuesData,
+    required this.isInEditMode,
     required this.isDarker,
     required this.onItemDismissSwipe,
     required this.onItemEditModeSwipe,
@@ -76,7 +78,7 @@ class _DataFieldState extends State<DataField> {
   void initState() {
     super.initState();
     textController.text = widget.model.text;
-    if (widget.model.isEditing) {
+    if (widget.isInEditMode) {
       backgroundColor = themeController.theme.ligtherMainColor;
       textColor = Colors.white.withOpacity(0.6);
     } else {
@@ -95,7 +97,7 @@ class _DataFieldState extends State<DataField> {
   get dataFieldContent {
     List<Widget> columnContent = [];
 
-    if (widget.model.isEditing) {
+    if (widget.isInEditMode) {
       columnContent = [
         DataFieldEditModeTextRow(
           model: widget.model,
@@ -114,7 +116,7 @@ class _DataFieldState extends State<DataField> {
     } else {
       columnContent = [
         DataTextField(
-          editMode: widget.model.isEditing,
+          editMode: widget.isInEditMode,
           textController: textController,
           onChanged: (String value) => widget.model.text = value,
         ),
@@ -146,7 +148,7 @@ class _DataFieldState extends State<DataField> {
           Alignment.centerLeft,
         ),
         secondaryBackground: getFieldSwipeBackground(
-          widget.model.isEditing ? Icons.edit_off : Icons.edit,
+          widget.isInEditMode ? Icons.edit_off : Icons.edit,
           transparentToGoldGradient,
           Alignment.centerRight,
         ),

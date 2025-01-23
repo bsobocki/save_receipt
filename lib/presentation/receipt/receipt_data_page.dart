@@ -29,7 +29,6 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   final ScrollController _scrollController = ScrollController();
   final ThemeController themeController = Get.find();
   late ReceiptModelController modelController;
-  bool isProductsListExpanded = true;
 
   void changeInfoValueType(ReceiptObjectModelType type, int index) =>
       setState(() => modelController.changeInfoValueType(type, index));
@@ -52,11 +51,11 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   void changeValueToInfo(int index) =>
       setState(() => modelController.changeValueToInfo(index));
 
-  void handleInfoEditModeToggle(int index) =>
-      setState(() => modelController.toggleEditModeOfInfo(index));
+  void setEditModeForInfo(int index) =>
+      setState(() => modelController.setEditModeForInfo(index));
 
-  void handleProductEditModeToggle(int index) =>
-      setState(() => modelController.toggleEditModeOfProduct(index));
+  void setEditModeForProduct(int index) =>
+      setState(() => modelController.setEditModeForProduct(index));
 
   void handleInfoDismiss(int index) =>
       setState(() => modelController.removeInfo(index));
@@ -64,8 +63,8 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   void handleProductDismiss(int index) =>
       setState(() => modelController.removeProduct(index));
 
-  void toggleEditorsHeights() =>
-      setState(() => isProductsListExpanded = !isProductsListExpanded);
+  void toggleObjectsEditing() =>
+      setState(() => modelController.toggleObjectsEditing());
 
   @override
   void initState() {
@@ -86,9 +85,10 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             allValuesData: modelController.allValuesModel,
             isDarker: (index % 2 == 0),
             onItemDismissSwipe: () => handleProductDismiss(index),
-            onItemEditModeSwipe: () => handleProductEditModeToggle(index),
+            onItemEditModeSwipe: () => setEditModeForProduct(index),
             onChangedToValue: () => changeProductToValue(index),
             onChangedToInfo: () => changeProductToInfo(index),
+            isInEditMode: modelController.isProductInEditMode(index),
           );
         },
       ),
@@ -112,12 +112,13 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             allValuesData: modelController.allValuesModel,
             isDarker: (index % 2 == 0),
             onItemDismissSwipe: () => handleInfoDismiss(index),
-            onItemEditModeSwipe: () => handleInfoEditModeToggle(index),
+            onItemEditModeSwipe: () => setEditModeForInfo(index),
             onChangedToValue: () => changeInfoToValue(index),
             onValueToFieldChanged: () => changeValueToInfo(index),
             onValueTypeChanged: (ReceiptObjectModelType type) =>
                 changeInfoValueType(type, index),
             onChangedToProduct: onChangedToProduct,
+            isInEditMode: modelController.isInfoInEditMode(index),
           );
         },
       ),
@@ -169,7 +170,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
       );
 
   get productsEditor => Expanded(
-        flex: isProductsListExpanded ? 3 : 1,
+        flex: modelController.areProductsEdited ? 3 : 1,
         child: Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: Container(
@@ -188,8 +189,8 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             child: Column(
               children: [
                 DataEditorTopBar(
-                  isExpanded: isProductsListExpanded,
-                  onResizeButtonPressed: toggleEditorsHeights,
+                  isExpanded: modelController.areProductsEdited,
+                  onResizeButtonPressed: toggleObjectsEditing,
                   background: themeController.theme.mainColor,
                   title: "Products",
                 ),
@@ -201,7 +202,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
       );
 
   get infoEditor => Expanded(
-        flex: isProductsListExpanded ? 1 : 3,
+        flex: modelController.areProductsEdited ? 1 : 3,
         child: Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: Container(
@@ -220,8 +221,8 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             child: Column(
               children: [
                 DataEditorTopBar(
-                  isExpanded: !isProductsListExpanded,
-                  onResizeButtonPressed: toggleEditorsHeights,
+                  isExpanded: !modelController.areProductsEdited,
+                  onResizeButtonPressed: toggleObjectsEditing,
                   background: themeController.theme.mainColor,
                   title: "Additional Info:",
                 ),

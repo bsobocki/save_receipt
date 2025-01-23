@@ -19,6 +19,8 @@ class ReceiptModelController {
   final List<int> _deletedInfoDateIds = [];
   final List<int> _deletedInfoDoubleIds = [];
   final List<int> _deletedInfoNumericIds = [];
+  bool _areProductsEdited = true;
+  int _editingObjectField = -1;
   int? receiptId;
 
   ReceiptModelController(
@@ -98,7 +100,7 @@ class ReceiptModelController {
 
   void changeInfoToProduct(int index) {
     if (infoIndexExists(index)) {
-      toggleEditModeOfInfo(index);
+      resetEditModeIndex();
       _products.add(_infos[index]);
       removeInfo(index);
     }
@@ -125,7 +127,7 @@ class ReceiptModelController {
       int? id = _infos[index].dataId;
 
       if (newType == ReceiptObjectModelType.product) {
-        toggleEditModeOfInfo(index);
+        resetEditModeIndex();
         _products.add(_infos[index]);
         _infos.removeAt(index);
       }
@@ -153,7 +155,6 @@ class ReceiptModelController {
 
   void changeProductToInfoDouble(int index) {
     if (productIndexExists(index)) {
-      toggleEditModeOfProduct(index);
       _products[index].type = ReceiptObjectModelType.infoDouble;
       _infos.add(_products[index]);
       removeProduct(index);
@@ -162,22 +163,9 @@ class ReceiptModelController {
 
   void changeInfoDoubleToProduct(int index) {
     if (infoIndexExists(index)) {
-      toggleEditModeOfInfo(index);
       _infos[index].type = ReceiptObjectModelType.product;
       _products.add(_infos[index]);
       removeInfo(index);
-    }
-  }
-
-  void toggleEditModeOfInfo(int index) {
-    if (infoIndexExists(index)) {
-      _infos[index].isEditing = !_infos[index].isEditing;
-    }
-  }
-
-  void toggleEditModeOfProduct(int index) {
-    if (productIndexExists(index)) {
-      _products[index].isEditing = !_products[index].isEditing;
     }
   }
 
@@ -216,6 +204,33 @@ class ReceiptModelController {
     }
   }
 
+  void toggleObjectsEditing() {
+    _areProductsEdited = !_areProductsEdited;
+    resetEditModeIndex();
+  }
+
+  void resetEditModeIndex() => _editingObjectField = -1;
+
+  void setEditModeForInfo(int index) {
+    if (!_areProductsEdited && infoIndexExists(index)) {
+      if (_editingObjectField != index) {
+      _editingObjectField = index;
+      } else {
+        resetEditModeIndex();
+      }
+    }
+  }
+
+  void setEditModeForProduct(int index) {
+    if (_areProductsEdited && productIndexExists(index)) {
+      if (_editingObjectField != index) {
+      _editingObjectField = index;
+      } else {
+        resetEditModeIndex();
+      }
+    }
+  }
+
   AllValuesModel get allValuesModel => _allValues.model;
 
   String? get imgPath => _receiptImagePath;
@@ -247,4 +262,16 @@ class ReceiptModelController {
       productIndexExists(index) ? _products[index] : null;
 
   bool get imgPathExists => imgPath != null;
+
+  bool get areProductsEdited => _areProductsEdited;
+
+  bool isProductInEditMode(int index) =>
+      _areProductsEdited &&
+      productIndexExists(index) &&
+      index == _editingObjectField;
+
+  bool isInfoInEditMode(int index) =>
+      !_areProductsEdited &&
+      infoIndexExists(index) &&
+      index == _editingObjectField;
 }
