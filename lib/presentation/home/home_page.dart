@@ -143,16 +143,28 @@ class _MyHomePageState extends State<MyHomePage> {
         return ReceiptsList(
           documentData: filteredData,
           onItemSelected: (index) {
-            ReceiptModel receiptModel =
-                ReceiptDataConverter.toReceiptModel(dataList[index]);
-            openReceiptPage(receiptModel: receiptModel);
+            openReceiptPage(
+              receiptModel:
+                  ReceiptDataConverter.toReceiptModel(dataList[index]),
+            );
           },
         );
+
       case NavigationPages.products:
         return ProductsList(
           productsData: filteredProducts,
           onItemSelected: (index) {
-            print('Selected product: ${productsList[index]}');
+            int receiptId = productsList[index].receiptId;
+            print(
+                'Selected product: ${productsList[index].name} from: $receiptId');
+
+            ReceiptDocumentData? data = dataList
+                .firstWhereOrNull((element) => element.receipt.id == receiptId);
+            if (data != null) {
+              openReceiptPage(
+                receiptModel: ReceiptDataConverter.toReceiptModel(data),
+              );
+            }
           },
         );
     }

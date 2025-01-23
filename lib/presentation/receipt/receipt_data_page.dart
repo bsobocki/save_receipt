@@ -101,7 +101,6 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
           VoidCallback? onChangedToProduct;
           if (type == ReceiptObjectModelType.infoDouble) {
             onChangedToProduct = () => changeInfoDoubleToProduct(index);
-            print("EEEELOEEOEOEOEOEOE!!!");
           }
           return DataField(
             key: UniqueKey(),

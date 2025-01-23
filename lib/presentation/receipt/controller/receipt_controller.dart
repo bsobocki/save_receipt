@@ -120,7 +120,6 @@ class ReceiptModelController {
 
   void changeInfoValueType(ReceiptObjectModelType newType, int index) {
     if (infoIndexExists(index)) {
-      print("I AM CHANGING IT BABYYY!!!!");
       ReceiptObjectModelType oldType = _infos[index].type;
       _infos[index].type = newType;
       int? id = _infos[index].dataId;
