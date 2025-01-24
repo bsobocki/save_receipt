@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/presentation/common/widgets/receipt_image.dart';
-import 'package:save_receipt/presentation/receipt/components/data_editor_top_bar.dart';
+import 'package:save_receipt/presentation/receipt/components/data_editor.dart';
 import 'package:save_receipt/presentation/receipt/components/top_bar.dart';
 import 'package:save_receipt/presentation/receipt/data_field/data_field.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
@@ -169,68 +169,20 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         },
       );
 
-  get productsEditor => Expanded(
+  get productsEditor => ReceiptDataEditor(
         flex: modelController.areProductsEdited ? 3 : 1,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(15.0)),
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: const Offset(0, 3), // changes position of shadow
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                DataEditorTopBar(
-                  isExpanded: modelController.areProductsEdited,
-                  onResizeButtonPressed: toggleObjectsEditing,
-                  background: themeController.theme.mainColor,
-                  title: "Products",
-                ),
-                productsList,
-              ],
-            ),
-          ),
-        ),
+        title: "Products",
+        isExpanded: modelController.areProductsEdited,
+        objectsList: productsList,
+        onResizeButtonPressed: toggleObjectsEditing,
       );
 
-  get infoEditor => Expanded(
+  get infoEditor => ReceiptDataEditor(
         flex: modelController.areProductsEdited ? 1 : 3,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(15.0)),
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: const Offset(0, 3), // changes position of shadow
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                DataEditorTopBar(
-                  isExpanded: !modelController.areProductsEdited,
-                  onResizeButtonPressed: toggleObjectsEditing,
-                  background: themeController.theme.mainColor,
-                  title: "Additional Info:",
-                ),
-                infosList,
-              ],
-            ),
-          ),
-        ),
+        title: "Info",
+        isExpanded: !modelController.areProductsEdited,
+        objectsList: infosList,
+        onResizeButtonPressed: toggleObjectsEditing,
       );
 
   void openFullImageMode() {
