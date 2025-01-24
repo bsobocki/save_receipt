@@ -143,9 +143,10 @@ class _MyHomePageState extends State<MyHomePage> {
         return ReceiptsList(
           documentData: filteredData,
           onItemSelected: (index) {
+            dataFilter = "";
             openReceiptPage(
               receiptModel:
-                  ReceiptDataConverter.toReceiptModel(dataList[index]),
+                  ReceiptDataConverter.toReceiptModel(filteredData[index]),
             );
           },
         );
@@ -161,6 +162,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ReceiptDocumentData? data = dataList
                 .firstWhereOrNull((element) => element.receipt.id == receiptId);
             if (data != null) {
+              dataFilter = "";
               openReceiptPage(
                 receiptModel: ReceiptDataConverter.toReceiptModel(data),
               );
