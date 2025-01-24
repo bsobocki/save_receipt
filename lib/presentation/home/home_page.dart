@@ -38,14 +38,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final HomePageController pageController = HomePageController();
-  final ThemeController themeController = Get.find();
-  String dataFilter = "";
   final String noContentText = "Nothing here yet.";
+  final ThemeController themeController = Get.find();
+  final HomePageController pageController = HomePageController();
+  final TextEditingController searchingTextController = TextEditingController();
   final String tipText =
       "Select an image from gallery or scan a new one\nto start processing.";
-  ReceiptProcessingState _processingState = ReceiptProcessingState.noAction;
   NavigationPages _selectedPage = NavigationPages.receipts;
+  ReceiptProcessingState _processingState = ReceiptProcessingState.noAction;
 
   void refreshDocumentData() => setState(() {
         pageController.fetchData();
@@ -56,6 +56,9 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     pageController.fetchData();
   }
+
+  void setSearchingText(final String newText) =>
+      searchingTextController.text = newText;
 
   void setReceiptState(ReceiptProcessingState newState) =>
       setState(() => _processingState = newState);
@@ -124,6 +127,8 @@ class _MyHomePageState extends State<MyHomePage> {
     List<ReceiptDocumentData> filteredData = dataList;
     List<ProductData> filteredProducts = productsList;
 
+    String dataFilter = searchingTextController.text;
+
     if (dataFilter.isNotEmpty) {
       filteredData = dataList.where((data) {
         return data.products.any((product) =>
@@ -131,10 +136,8 @@ class _MyHomePageState extends State<MyHomePage> {
       }).toList();
 
       filteredProducts = productsList
-          .where(
-            (product) =>
-                product.name.toLowerCase().contains(dataFilter.toLowerCase()),
-          )
+          .where((product) =>
+              product.name.toLowerCase().contains(dataFilter.toLowerCase()))
           .toList();
     }
 
@@ -143,7 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
         return ReceiptsList(
           documentData: filteredData,
           onItemSelected: (index) {
-            dataFilter = "";
+            setSearchingText("");
             openReceiptPage(
               receiptModel:
                   ReceiptDataConverter.toReceiptModel(filteredData[index]),
@@ -162,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ReceiptDocumentData? data = dataList
                 .firstWhereOrNull((element) => element.receipt.id == receiptId);
             if (data != null) {
-              dataFilter = "";
+              setSearchingText("");
               openReceiptPage(
                 receiptModel: ReceiptDataConverter.toReceiptModel(data),
               );
@@ -200,10 +203,9 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: HomepageTopbar(
         onRefreshData: refreshDocumentData,
         title: widget.title,
-        onSearchTextChanged: (String newValue) {
-          print("searching: $newValue");
-          setState(() => dataFilter = newValue);
-        },
+        onSearchTextChanged: (String filter) =>
+            setState(() => setSearchingText(filter)),
+        searchingTextController: searchingTextController,
       ),
       body: Center(
         child: body,

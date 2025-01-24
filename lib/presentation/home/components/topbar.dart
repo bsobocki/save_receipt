@@ -7,12 +7,14 @@ class HomepageTopbar extends PreferredSize {
   final String title;
   final VoidCallback onRefreshData;
   final Function(String) onSearchTextChanged;
+  final TextEditingController searchingTextController;
   final ThemeController themeController = Get.find();
 
   HomepageTopbar({
-    required this.onSearchTextChanged,
-    required this.onRefreshData,
     required this.title,
+    required this.onRefreshData,
+    required this.onSearchTextChanged,
+    required this.searchingTextController,
     super.key,
   }) : super(
           child: const SizedBox(),
@@ -69,6 +71,7 @@ class HomepageTopbar extends PreferredSize {
                             hintText: 'Search Products',
                           ),
                           onChanged: onSearchTextChanged,
+                          controller: searchingTextController,
                         ),
                       ),
                       const SizedBox(width: 16),
