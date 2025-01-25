@@ -8,7 +8,7 @@ class ReceiptDataEditor extends StatelessWidget {
   final String title;
   final bool isExpanded;
   final Widget objectsList;
-  final VoidCallback onResizeButtonPressed;
+  final VoidCallback onResized;
   final ThemeController themeController = Get.find();
 
   ReceiptDataEditor({
@@ -17,12 +17,12 @@ class ReceiptDataEditor extends StatelessWidget {
     required this.title,
     required this.isExpanded,
     required this.objectsList,
-    required this.onResizeButtonPressed,
+    required this.onResized,
   });
 
   Widget get topBar => DataEditorTopBar(
         isExpanded: isExpanded,
-        onResizeButtonPressed: onResizeButtonPressed,
+        onResized: onResized,
         background: themeController.theme.mainColor,
         title: title,
       );

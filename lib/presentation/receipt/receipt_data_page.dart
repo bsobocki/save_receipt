@@ -63,8 +63,11 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   void handleProductDismiss(int index) =>
       setState(() => modelController.removeProduct(index));
 
-  void toggleObjectsEditing() =>
-      setState(() => modelController.toggleObjectsEditing());
+  void setProductsEditing() =>
+      setState(() => modelController.setProductsEditing());
+
+  void setInfoEditing() =>
+      setState(() => modelController.setInfoEditing());
 
   @override
   void initState() {
@@ -174,7 +177,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         title: "Products",
         isExpanded: modelController.areProductsEdited,
         objectsList: productsList,
-        onResizeButtonPressed: toggleObjectsEditing,
+        onResized: setProductsEditing,
       );
 
   get infoEditor => ReceiptDataEditor(
@@ -182,7 +185,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         title: "Info",
         isExpanded: !modelController.areProductsEdited,
         objectsList: infosList,
-        onResizeButtonPressed: toggleObjectsEditing,
+        onResized: setInfoEditing,
       );
 
   void openFullImageMode() {

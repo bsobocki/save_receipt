@@ -204,9 +204,12 @@ class ReceiptModelController {
     }
   }
 
-  void toggleObjectsEditing() {
-    _areProductsEdited = !_areProductsEdited;
-    resetEditModeIndex();
+  void setProductsEditing() {
+    _areProductsEdited = true;
+  }
+
+  void setInfoEditing() {
+    _areProductsEdited = false;
   }
 
   void resetEditModeIndex() => _editingObjectField = -1;
@@ -214,7 +217,7 @@ class ReceiptModelController {
   void setEditModeForInfo(int index) {
     if (!_areProductsEdited && infoIndexExists(index)) {
       if (_editingObjectField != index) {
-      _editingObjectField = index;
+        _editingObjectField = index;
       } else {
         resetEditModeIndex();
       }
@@ -224,7 +227,7 @@ class ReceiptModelController {
   void setEditModeForProduct(int index) {
     if (_areProductsEdited && productIndexExists(index)) {
       if (_editingObjectField != index) {
-      _editingObjectField = index;
+        _editingObjectField = index;
       } else {
         resetEditModeIndex();
       }
