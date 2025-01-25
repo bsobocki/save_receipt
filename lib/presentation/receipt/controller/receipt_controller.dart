@@ -20,7 +20,7 @@ class ReceiptModelController {
   final List<int> _deletedInfoDoubleIds = [];
   final List<int> _deletedInfoNumericIds = [];
   bool _areProductsEdited = true;
-  int _editingObjectField = -1;
+  int _editingObjectFieldIndex = -1;
   int? receiptId;
 
   ReceiptModelController(
@@ -206,18 +206,20 @@ class ReceiptModelController {
 
   void setProductsEditing() {
     _areProductsEdited = true;
+    resetEditModeIndex();
   }
 
   void setInfoEditing() {
     _areProductsEdited = false;
+    resetEditModeIndex();
   }
 
-  void resetEditModeIndex() => _editingObjectField = -1;
+  void resetEditModeIndex() => _editingObjectFieldIndex = -1;
 
   void setEditModeForInfo(int index) {
     if (!_areProductsEdited && infoIndexExists(index)) {
-      if (_editingObjectField != index) {
-        _editingObjectField = index;
+      if (_editingObjectFieldIndex != index) {
+        _editingObjectFieldIndex = index;
       } else {
         resetEditModeIndex();
       }
@@ -226,8 +228,8 @@ class ReceiptModelController {
 
   void setEditModeForProduct(int index) {
     if (_areProductsEdited && productIndexExists(index)) {
-      if (_editingObjectField != index) {
-        _editingObjectField = index;
+      if (_editingObjectFieldIndex != index) {
+        _editingObjectFieldIndex = index;
       } else {
         resetEditModeIndex();
       }
@@ -271,10 +273,10 @@ class ReceiptModelController {
   bool isProductInEditMode(int index) =>
       _areProductsEdited &&
       productIndexExists(index) &&
-      index == _editingObjectField;
+      index == _editingObjectFieldIndex;
 
   bool isInfoInEditMode(int index) =>
       !_areProductsEdited &&
       infoIndexExists(index) &&
-      index == _editingObjectField;
+      index == _editingObjectFieldIndex;
 }
