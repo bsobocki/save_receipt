@@ -43,7 +43,7 @@ class DataEditorTopBar extends StatelessWidget {
               iconSize: 18,
               onPressed: !isExpanded ? null : onAddObject,
               icon: Icon(
-                isExpanded ? Icons.radio_button_on : Icons.radio_button_off,
+                isExpanded ? Icons.add : Icons.radio_button_off,
               ),
             ),
           ],
