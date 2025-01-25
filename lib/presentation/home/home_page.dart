@@ -5,6 +5,7 @@ import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/data/converters/data_converter.dart';
 import 'package:save_receipt/data/models/document.dart';
 import 'package:save_receipt/data/models/entities/product.dart';
+import 'package:save_receipt/data/models/entities/receipt.dart';
 import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
 import 'package:save_receipt/presentation/effect/page_slide_animation.dart';
@@ -151,6 +152,13 @@ class _MyHomePageState extends State<MyHomePage> {
               receiptModel:
                   ReceiptDataConverter.toReceiptModel(filteredData[index]),
             );
+          },
+          onItemDeleted: (index) async {
+            ReceiptData receipt = filteredData[index].receipt;
+            if (receipt.id != null) {
+              await pageController.deleteReceipt(receipt.id!);
+              //refreshDocumentData();
+            }
           },
         );
 

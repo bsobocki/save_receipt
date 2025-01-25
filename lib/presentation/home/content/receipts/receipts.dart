@@ -5,11 +5,13 @@ import 'package:save_receipt/presentation/home/content/receipts/receipt_entity.d
 class ReceiptsList extends StatefulWidget {
   final List<ReceiptDocumentData> documentData;
   final Function(int) onItemSelected;
+  final Function(int) onItemDeleted;
 
   const ReceiptsList({
     super.key,
     required this.documentData,
     required this.onItemSelected,
+    required this.onItemDeleted,
   });
 
   @override
@@ -29,6 +31,9 @@ class _ReceiptsListState extends State<ReceiptsList> {
             data: widget.documentData[index],
             onPressed: () {
               widget.onItemSelected(index);
+            },
+            onRemoved: () {
+              widget.onItemDeleted(index);
             },
           ),
         );

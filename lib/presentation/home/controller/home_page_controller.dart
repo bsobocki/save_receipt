@@ -30,6 +30,10 @@ class HomePageController {
     _documentData = ReceiptDatabaseRepository.get.getAllDocumentDatas();
   }
 
+  Future<void> deleteReceipt(int id) async {
+    ReceiptDatabaseRepository.get.deleteReceipt(id);
+  }
+
   Future<String?> pickImage() async {
     final XFile? file = await picker.pickImage(source: ImageSource.gallery);
     return file?.path;
