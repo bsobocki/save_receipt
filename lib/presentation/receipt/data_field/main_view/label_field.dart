@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 class DataTextField extends StatefulWidget {
-  final TextEditingController textController;
+  final bool enabled;
   final Color? textColor;
-  final bool editMode;
   final Function(String) onChanged;
+  final TextEditingController textController;
 
   const DataTextField({
-    required this.textController,
-    required this.editMode,
-    Color? textColor,
     super.key,
+    Color? textColor,
+    required this.enabled,
     required this.onChanged,
+    required this.textController,
   }) : textColor = textColor ?? Colors.black;
 
   @override
@@ -30,7 +30,7 @@ class _DataTextFieldState extends State<DataTextField> {
           bottom: 0.0,
         ),
         child: TextField(
-          enabled: !widget.editMode,
+          enabled: widget.enabled,
           controller: widget.textController,
           onChanged: widget.onChanged,
           style: TextStyle(

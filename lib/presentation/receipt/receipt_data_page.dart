@@ -84,6 +84,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         itemBuilder: (context, index) {
           return DataField(
             key: UniqueKey(),
+            enabled: modelController.areProductsEdited,
             model: modelController.productAt(index)!,
             allValuesData: modelController.allValuesModel,
             isDarker: (index % 2 == 0),
@@ -111,6 +112,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
           }
           return DataField(
             key: UniqueKey(),
+            enabled: !modelController.areProductsEdited,
             model: modelController.infoAt(index)!,
             allValuesData: modelController.allValuesModel,
             isDarker: (index % 2 == 0),

@@ -14,6 +14,7 @@ class DataField extends StatefulWidget {
   final AllValuesModel allValuesData;
   final bool isInEditMode;
   final bool isDarker;
+  final bool enabled;
   final Function() onItemDismissSwipe;
   final Function() onItemEditModeSwipe;
   final Function(DismissDirection direction)? onItemSwipe;
@@ -29,6 +30,7 @@ class DataField extends StatefulWidget {
     required this.allValuesData,
     required this.isInEditMode,
     required this.isDarker,
+    required this.enabled,
     required this.onItemDismissSwipe,
     required this.onItemEditModeSwipe,
     this.onChangedToValue,
@@ -116,12 +118,13 @@ class _DataFieldState extends State<DataField> {
     } else {
       columnContent = [
         DataTextField(
-          editMode: widget.isInEditMode,
+          enabled: widget.enabled,
           textController: textController,
           onChanged: (String value) => widget.model.text = value,
         ),
         if (widget.model.value != null)
           ValueField(
+            enabled: widget.enabled,
             textColor: textColor,
             initValue: widget.model.value ?? '',
             values: allValuesForType(widget.model.type),

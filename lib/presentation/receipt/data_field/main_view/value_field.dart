@@ -11,12 +11,14 @@ class ValueField extends StatefulWidget {
     required this.values,
     required this.onValueChanged,
     required this.textColor,
+    required this.enabled,
   });
 
   final String initValue;
   final List<dynamic> values;
   final Function(String? value) onValueChanged;
   final Color textColor;
+  final bool enabled;
 
   @override
   State<ValueField> createState() => _ValueFieldState();
@@ -56,6 +58,7 @@ class _ValueFieldState extends State<ValueField> {
   }
 
   get dropdownMenu => DropdownMenu<dynamic>(
+        enabled: widget.enabled,
         menuHeight: dropdownmenuHeight,
         enableSearch: true,
         requestFocusOnTap: true,
@@ -86,7 +89,8 @@ class _ValueFieldState extends State<ValueField> {
       );
 
   get menuStyle => MenuStyle(
-        backgroundColor: WidgetStatePropertyAll(themeController.theme.mainColor),
+        backgroundColor:
+            WidgetStatePropertyAll(themeController.theme.mainColor),
         shadowColor: const WidgetStatePropertyAll(
           Color.fromARGB(193, 0, 0, 0),
         ),
