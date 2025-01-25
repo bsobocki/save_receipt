@@ -7,12 +7,14 @@ import 'package:save_receipt/core/themes/main_theme.dart';
 class ExpandableFloatingActionButton extends StatefulWidget {
   const ExpandableFloatingActionButton({
     super.key,
-    required this.onDocumentScanning,
+    required this.onNewReceiptAdding,
     required this.onImageProcessing,
+    required this.onDocumentScanning,
   });
 
-  final Function() onDocumentScanning;
-  final Function() onImageProcessing;
+  final VoidCallback onNewReceiptAdding;
+  final Future<void> Function() onImageProcessing;
+  final Future<void> Function() onDocumentScanning;
 
   @override
   State<ExpandableFloatingActionButton> createState() =>
@@ -32,8 +34,8 @@ class _ExpandableFloatingActionButtonState
 
   @override
   Widget build(BuildContext context) {
-    TextStyle buttonLabelsTextStyle =
-        TextStyle(color: themeController.theme.mainColor, fontWeight: FontWeight.w800);
+    TextStyle buttonLabelsTextStyle = TextStyle(
+        color: themeController.theme.mainColor, fontWeight: FontWeight.w800);
     return ExpandableFab(
       key: _expandableFabKey,
       // type: ExpandableFabType.fan,
@@ -108,7 +110,7 @@ class _ExpandableFloatingActionButtonState
               backgroundColor: themeController.theme.mainColor,
               onPressed: () async {
                 toggleFloatingActionButton();
-                print("Create new receipt!!!!!!!!!!");
+                widget.onNewReceiptAdding();
               },
               shape: const CircleBorder(),
               child: const Icon(Icons.add),

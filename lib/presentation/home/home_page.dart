@@ -234,6 +234,11 @@ class _MyHomePageState extends State<MyHomePage> {
         onImageProcessing: () async {
           await processDataFromReceipt(pageController.pickImage);
         },
+        onNewReceiptAdding: () {
+          openReceiptPage(
+            receiptModel: const ReceiptModel(objects: []),
+          );
+        },
       ),
     );
   }
