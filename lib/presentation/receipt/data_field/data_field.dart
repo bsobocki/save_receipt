@@ -178,6 +178,6 @@ class _DataFieldState extends State<DataField> {
 
   @override
   Widget build(BuildContext context) {
-    return swipableDataFieldContent;
+    return widget.enabled ? swipableDataFieldContent : dataFieldContent;
   }
 }
