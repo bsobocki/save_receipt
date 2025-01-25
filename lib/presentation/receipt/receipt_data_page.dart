@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/presentation/common/widgets/receipt_image.dart';
-import 'package:save_receipt/presentation/receipt/components/data_editor.dart';
+import 'package:save_receipt/presentation/receipt/components/data_editing/data_editor.dart';
 import 'package:save_receipt/presentation/receipt/components/top_bar.dart';
 import 'package:save_receipt/presentation/receipt/data_field/data_field.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
@@ -26,8 +26,9 @@ class ReceiptDataPage extends StatefulWidget {
 
 class _ReceiptDataPageState extends State<ReceiptDataPage> {
   bool _showFullScreenReceiptImage = false;
-  final ScrollController _scrollController = ScrollController();
   final ThemeController themeController = Get.find();
+  final ScrollController _productsScrollController = ScrollController();
+  final ScrollController _infoScrollController = ScrollController();
   late ReceiptModelController modelController;
 
   void changeInfoValueType(ReceiptObjectModelType type, int index) =>
@@ -66,8 +67,29 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   void setProductsEditing() =>
       setState(() => modelController.setProductsEditing());
 
-  void setInfoEditing() =>
-      setState(() => modelController.setInfoEditing());
+  void setInfoEditing() => setState(() => modelController.setInfoEditing());
+
+  void addEmptyProduct() {
+    setState(() => modelController.addEmptyProduct());
+    _scrollToBottom(_productsScrollController);
+  }
+
+  void addEmptyInfo() {
+    setState(() => modelController.addEmptyInfo());
+    _scrollToBottom(_infoScrollController);
+  }
+
+  void _scrollToBottom(ScrollController controller) {
+    if (controller.hasClients) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        controller.animateTo(
+          controller.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -80,7 +102,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     return Expanded(
       child: ListView.builder(
         itemCount: modelController.products.length,
-        controller: _scrollController,
+        controller: _productsScrollController,
         itemBuilder: (context, index) {
           return DataField(
             key: UniqueKey(),
@@ -103,7 +125,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     return Expanded(
       child: ListView.builder(
         itemCount: modelController.infos.length,
-        controller: _scrollController,
+        controller: _infoScrollController,
         itemBuilder: (context, index) {
           ReceiptObjectModelType type = modelController.infoAt(index)!.type;
           VoidCallback? onChangedToProduct;
@@ -180,6 +202,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         isExpanded: modelController.areProductsEdited,
         objectsList: productsList,
         onResized: setProductsEditing,
+        onAddObject: addEmptyProduct,
       );
 
   get infoEditor => ReceiptDataEditor(
@@ -188,6 +211,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         isExpanded: !modelController.areProductsEdited,
         objectsList: infosList,
         onResized: setInfoEditing,
+        onAddObject: addEmptyInfo,
       );
 
   void openFullImageMode() {

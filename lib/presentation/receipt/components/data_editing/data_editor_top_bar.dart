@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class DataEditorTopBar extends StatelessWidget {
   final bool isExpanded;
   final VoidCallback onResized;
+  final VoidCallback onAddObject;
   final Color background;
   final String title;
 
@@ -12,6 +13,7 @@ class DataEditorTopBar extends StatelessWidget {
     required this.onResized,
     required this.background,
     required this.title,
+    required this.onAddObject,
   });
 
   @override
@@ -37,11 +39,11 @@ class DataEditorTopBar extends StatelessWidget {
               ),
             ),
             Expanded(child: Container()),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
+            IconButton(
+              iconSize: 18,
+              onPressed: !isExpanded ? null : onAddObject,
+              icon: Icon(
                 isExpanded ? Icons.radio_button_on : Icons.radio_button_off,
-                size: 18,
               ),
             ),
           ],

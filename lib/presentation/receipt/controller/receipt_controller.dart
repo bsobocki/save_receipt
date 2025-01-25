@@ -161,6 +161,25 @@ class ReceiptModelController {
     }
   }
 
+  void addEmptyProduct() {
+    _products.add(
+      ReceiptObjectModel(
+        type: ReceiptObjectModelType.product,
+        text: "<new-product>",
+        value: "0.0",
+      ),
+    );
+  }
+
+  void addEmptyInfo() {
+    _infos.add(
+      ReceiptObjectModel(
+        type: ReceiptObjectModelType.infoText,
+        text: "<new-info-text>",
+      ),
+    );
+  }
+
   void changeInfoDoubleToProduct(int index) {
     if (infoIndexExists(index)) {
       _infos[index].type = ReceiptObjectModelType.product;
