@@ -126,12 +126,6 @@ class ReceiptModelController {
       _infos[index].type = newType;
       int? id = _infos[index].dataId;
 
-      if (newType == ReceiptObjectModelType.product) {
-        resetEditModeIndex();
-        _products.add(_infos[index]);
-        _infos.removeAt(index);
-      }
-
       if (id != null) {
         switch (oldType) {
           case ReceiptObjectModelType.infoText:
@@ -209,6 +203,9 @@ class ReceiptModelController {
             break;
         }
       }
+      if (_editingObjectFieldIndex == index) {
+        resetEditModeIndex();
+      }
       _infos.removeAt(index);
     }
   }
@@ -218,6 +215,9 @@ class ReceiptModelController {
       int? id = _products[index].dataId;
       if (id != null) {
         _deletedProductsIds.add(id);
+      }
+      if (_editingObjectFieldIndex == index) {
+        resetEditModeIndex();
       }
       _products.removeAt(index);
     }
