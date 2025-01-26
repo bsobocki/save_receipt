@@ -67,6 +67,7 @@ class HomepageTopbar extends PreferredSize {
                             color: Colors.white,
                           ),
                           decoration: const InputDecoration(
+                            isDense: true,
                             border: InputBorder.none,
                             hintText: 'Search Products',
                           ),
