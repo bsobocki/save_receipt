@@ -31,7 +31,7 @@ class DataParser {
           String priceStr = getAllPricesFromStr(connectedStr).last;
           receiptObjectModels.add(
             ReceiptObjectModel(
-                text: text,
+                text: getProductTextWithoutPrice(text),
                 value: priceStr,
                 type: ReceiptObjectModelType.product),
           );
@@ -57,14 +57,14 @@ class DataParser {
         if (isProductWithPrice(text)) {
           receiptObjectModels.add(
             ReceiptObjectModel(
-              text: text,
+              text: getProductTextWithoutPrice(text),
               value: getAllPricesFromStr(text).last,
               type: ReceiptObjectModelType.product,
             ),
           );
           prices.add(getAllPricesFromStr(text).last);
         }
-        if (isPrice(text)) {
+        else if (isPrice(text)) {
           prices.add(getAllPricesFromStr(text).last);
         } else {
           receiptObjectModels.add(
@@ -73,7 +73,6 @@ class DataParser {
               type: ReceiptObjectModelType.infoText,
             ),
           );
-          print("-----------ADED: $text ---------");
         }
       }
     }
