@@ -24,7 +24,7 @@ class ExpandableValueOptions extends StatefulWidget {
     this.isExpanded = false,
   });
 
-  final VoidCallback onRemoveValue;
+  final VoidCallback? onRemoveValue;
   final VoidCallback onAddValue;
   final VoidCallback onCollapse;
   final VoidCallback? onValueToFieldChange;
@@ -50,18 +50,21 @@ class _ExpandableValueOptionsState extends State<ExpandableValueOptions> {
   }
 
   get options {
-    List<Widget> optionButtons = [
-      separator,
-      DataFieldAddRemoveValueButton(
-        valueExists: widget.valueExists,
-        removeButtonForegroundColor: redButtonColor,
-        addButtonForegroundColor: greenButtonColor,
-        onRemoveValue: widget.onRemoveValue,
-        onAddValue: widget.onAddValue,
-        buttonColor: themeController.theme.mainColor,
-      ),
-      separator,
-    ];
+    List<Widget> optionButtons = [separator];
+
+    if (widget.onRemoveValue != null) {
+      optionButtons += [
+        DataFieldAddRemoveValueButton(
+          valueExists: widget.valueExists,
+          removeButtonForegroundColor: redButtonColor,
+          addButtonForegroundColor: greenButtonColor,
+          onRemoveValue: widget.onRemoveValue!,
+          onAddValue: widget.onAddValue,
+          buttonColor: themeController.theme.mainColor,
+        ),
+        separator,
+      ];
+    }
 
     if (widget.onValueTypeChanged != null) {
       optionButtons += [

@@ -29,10 +29,12 @@ class _DataFieldEditModeValueRowState extends State<DataFieldEditModeValueRow> {
       ExpandableValueOptions(
         key: UniqueKey(),
         constraints: constraints,
-        onRemoveValue: () => setState(() {
-          widget.model.value = null;
-          expandedOptions = true;
-        }),
+        onRemoveValue: widget.model.type == ReceiptObjectModelType.product
+            ? null
+            : () => setState(() {
+                  widget.model.value = null;
+                  expandedOptions = true;
+                }),
         onAddValue: () => setState(() {
           widget.model.value = '<no value>';
           expandedOptions = true;
