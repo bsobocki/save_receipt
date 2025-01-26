@@ -29,30 +29,51 @@ class DataParser {
         String connectedStr = line.connectedLine!.text;
         if (isPrice(connectedStr)) {
           String priceStr = getAllPricesFromStr(connectedStr).last;
-          receiptObjectModels.add(ReceiptObjectModel(
-              text: text,
-              value: priceStr,
-              type: ReceiptObjectModelType.product));
+          receiptObjectModels.add(
+            ReceiptObjectModel(
+                text: text,
+                value: priceStr,
+                type: ReceiptObjectModelType.product),
+          );
           prices.add(priceStr);
         } else if (isDate(connectedStr)) {
-          receiptObjectModels.add(ReceiptObjectModel(
-              text: text,
-              value: connectedStr,
-              type: ReceiptObjectModelType.infoDate));
+          receiptObjectModels.add(
+            ReceiptObjectModel(
+                text: text,
+                value: connectedStr,
+                type: ReceiptObjectModelType.infoDate),
+          );
           dates.add(connectedStr);
         } else {
-          receiptObjectModels.add(ReceiptObjectModel(
-              text: text,
-              value: connectedStr,
-              type: ReceiptObjectModelType.infoText));
+          receiptObjectModels.add(
+            ReceiptObjectModel(
+                text: text,
+                value: connectedStr,
+                type: ReceiptObjectModelType.infoText),
+          );
           info.add(connectedStr);
         }
       } else {
+        if (isProductWithPrice(text)) {
+          receiptObjectModels.add(
+            ReceiptObjectModel(
+              text: text,
+              value: getAllPricesFromStr(text).last,
+              type: ReceiptObjectModelType.product,
+            ),
+          );
+          prices.add(getAllPricesFromStr(text).last);
+        }
         if (isPrice(text)) {
           prices.add(getAllPricesFromStr(text).last);
         } else {
-          receiptObjectModels.add(ReceiptObjectModel(
-              text: text, type: ReceiptObjectModelType.infoText));
+          receiptObjectModels.add(
+            ReceiptObjectModel(
+              text: text,
+              type: ReceiptObjectModelType.infoText,
+            ),
+          );
+          print("-----------ADED: $text ---------");
         }
       }
     }

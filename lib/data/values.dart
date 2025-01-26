@@ -15,7 +15,9 @@ class AllReceiptValuesController {
 
   AllReceiptValuesController.fromReceipt(ReceiptModel receipt)
       : model = AllValuesModel(
-            prices: receipt.prices, info: receipt.infoStr, dates: receipt.datesStr);
+            prices: receipt.prices,
+            info: receipt.infoStr,
+            dates: receipt.datesStr);
 
   void insertValue(String value) {
     if (isPrice(value)) {
@@ -40,6 +42,11 @@ class AllReceiptValuesController {
 
 bool isNumeric(String data) {
   return false;
+}
+
+bool isProductWithPrice(String data) {
+  RegExp regex = RegExp(r'[a-zA-Z]+[ \t][0-9]+[,\.][0-9]+[a-zA-Z]*');
+  return regex.hasMatch(data) && isPrice(regex.allMatches(data).last.input);
 }
 
 bool isPrice(String data) {
