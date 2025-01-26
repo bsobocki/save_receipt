@@ -157,7 +157,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ReceiptData receipt = filteredData[index].receipt;
             if (receipt.id != null) {
               await pageController.deleteReceipt(receipt.id!);
-              //refreshDocumentData();
+              refreshDocumentData();
             }
           },
         );
