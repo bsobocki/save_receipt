@@ -106,6 +106,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         itemBuilder: (context, index) {
           return DataField(
             key: UniqueKey(),
+            onChangedData: modelController.trackChange,
             enabled: modelController.areProductsEdited,
             model: modelController.productAt(index)!,
             allValuesData: modelController.allValuesModel,
@@ -134,6 +135,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
           }
           return DataField(
             key: UniqueKey(),
+            onChangedData: modelController.trackChange,
             enabled: !modelController.areProductsEdited,
             model: modelController.infoAt(index)!,
             allValuesData: modelController.allValuesModel,
@@ -167,7 +169,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   }
 
   get topBar => ReceiptPageTopBar(
-        dataChanged: modelController.dataChanged,
+        dataChanged: modelController.dataChangedNotifier,
         onImageIconPress: openFullImageMode,
         receiptImgPath: modelController.imgPath,
         //barcodeImgPaht: _receipt.barcodePath,

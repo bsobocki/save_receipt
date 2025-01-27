@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:save_receipt/data/converters/data_converter.dart';
 import 'package:save_receipt/data/models/document.dart';
 import 'package:save_receipt/data/models/entities/info.dart';
@@ -19,7 +20,7 @@ class ReceiptModelController {
   final List<int> _deletedInfoDateIds = [];
   final List<int> _deletedInfoDoubleIds = [];
   final List<int> _deletedInfoNumericIds = [];
-  bool _dataChanged = false;
+  final ValueNotifier<bool> _dataChangedNotifier = ValueNotifier<bool>(false);
   bool _areProductsEdited = true;
   int _editingObjectFieldIndex = -1;
   int? receiptId;
@@ -37,11 +38,11 @@ class ReceiptModelController {
   }
 
   void trackChange() {
-    _dataChanged = true;
+    _dataChangedNotifier.value = true;
   }
 
   void resetChangesTracking() {
-    _dataChanged = false;
+    _dataChangedNotifier.value = false;
   }
 
   Future<int> saveReceipt(ReceiptModel model) async {
@@ -127,7 +128,7 @@ class ReceiptModelController {
           value: null,
         ),
       );
-    trackChange();
+      trackChange();
       _infos[index].value = null;
     }
   }
@@ -306,7 +307,9 @@ class ReceiptModelController {
 
   bool get areProductsEdited => _areProductsEdited;
 
-  bool get dataChanged => _dataChanged;
+  bool get dataChanged => _dataChangedNotifier.value;
+
+  ValueNotifier<bool> get dataChangedNotifier => _dataChangedNotifier;
 
   bool isProductInEditMode(int index) =>
       _areProductsEdited &&

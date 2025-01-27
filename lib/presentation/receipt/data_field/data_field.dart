@@ -23,6 +23,7 @@ class DataField extends StatefulWidget {
   final Function()? onChangedToInfo;
   final Function()? onValueToFieldChanged;
   final Function(ReceiptObjectModelType)? onValueTypeChanged;
+  final VoidCallback? onChangedData;
 
   const DataField({
     super.key,
@@ -39,6 +40,7 @@ class DataField extends StatefulWidget {
     this.onValueTypeChanged,
     this.onChangedToProduct,
     this.onChangedToInfo,
+    this.onChangedData,
   });
 
   get text => null;
@@ -118,18 +120,22 @@ class _DataFieldState extends State<DataField> {
     } else {
       columnContent = [
         DataTextField(
-          enabled: widget.enabled,
-          textController: textController,
-          onChanged: (String value) => widget.model.text = value,
-        ),
+            enabled: widget.enabled,
+            textController: textController,
+            onChanged: (String value) {
+              widget.model.text = value;
+              widget.onChangedData?.call();
+            }),
         if (widget.model.value != null)
           ValueField(
-            enabled: widget.enabled,
-            textColor: textColor,
-            initValue: widget.model.value ?? '',
-            values: allValuesForType(widget.model.type),
-            onValueChanged: (String? value) => widget.model.value = value,
-          ),
+              enabled: widget.enabled,
+              textColor: textColor,
+              initValue: widget.model.value ?? '',
+              values: allValuesForType(widget.model.type),
+              onValueChanged: (String? value) {
+                widget.model.value = value;
+                widget.onChangedData?.call();
+              }),
       ];
     }
 

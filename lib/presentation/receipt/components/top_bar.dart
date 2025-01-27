@@ -12,7 +12,7 @@ class ReceiptPageTopBar extends StatelessWidget {
   final VoidCallback onImageIconPress;
   final String? receiptImgPath;
   final String? barcodeImgPaht;
-  final bool dataChanged;
+  final ValueNotifier<bool> dataChanged;
 
   final ThemeController themeController = Get.find();
 
@@ -115,10 +115,13 @@ class ReceiptPageTopBar extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: Badge(
-                  isLabelVisible: dataChanged,
-                  backgroundColor: Colors.white,
-                  child: const Icon(Icons.chevron_left_outlined),
+                icon: ValueListenableBuilder(
+                  valueListenable: dataChanged,
+                  builder: (context, value, child) => Badge(
+                    isLabelVisible: value,
+                    backgroundColor: themeController.theme.extraLightMainColor,
+                    child: const Icon(Icons.chevron_left_outlined),
+                  ),
                 ),
               ),
               expandedPlaceholder,
