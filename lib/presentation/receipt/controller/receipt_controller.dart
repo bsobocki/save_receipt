@@ -19,6 +19,7 @@ class ReceiptModelController {
   final List<int> _deletedInfoDateIds = [];
   final List<int> _deletedInfoDoubleIds = [];
   final List<int> _deletedInfoNumericIds = [];
+  bool _dataChanged = false;
   bool _areProductsEdited = true;
   int _editingObjectFieldIndex = -1;
   int? receiptId;
@@ -33,6 +34,14 @@ class ReceiptModelController {
     _infos = receipt.infos;
     _dates = receipt.dates;
     receiptId = receipt.receiptId;
+  }
+
+  void trackChange() {
+    _dataChanged = true;
+  }
+
+  void resetChangesTracking() {
+    _dataChanged = false;
   }
 
   Future<int> saveReceipt(ReceiptModel model) async {
@@ -77,6 +86,8 @@ class ReceiptModelController {
       await dbRepo.deleteInfo(id);
     }
 
+    resetChangesTracking();
+
     return receiptId;
   }
 
@@ -116,6 +127,7 @@ class ReceiptModelController {
           value: null,
         ),
       );
+    trackChange();
       _infos[index].value = null;
     }
   }
@@ -144,6 +156,7 @@ class ReceiptModelController {
             break;
         }
       }
+      trackChange();
     }
   }
 
@@ -163,6 +176,7 @@ class ReceiptModelController {
         value: "0.0",
       ),
     );
+    trackChange();
   }
 
   void addEmptyInfo() {
@@ -172,6 +186,7 @@ class ReceiptModelController {
         text: "<new-info-text>",
       ),
     );
+    trackChange();
   }
 
   void changeInfoDoubleToProduct(int index) {
@@ -207,6 +222,7 @@ class ReceiptModelController {
         resetEditModeIndex();
       }
       _infos.removeAt(index);
+      trackChange();
     }
   }
 
@@ -220,6 +236,7 @@ class ReceiptModelController {
         resetEditModeIndex();
       }
       _products.removeAt(index);
+      trackChange();
     }
   }
 
@@ -288,6 +305,8 @@ class ReceiptModelController {
   bool get imgPathExists => imgPath != null;
 
   bool get areProductsEdited => _areProductsEdited;
+
+  bool get dataChanged => _dataChanged;
 
   bool isProductInEditMode(int index) =>
       _areProductsEdited &&

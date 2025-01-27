@@ -167,6 +167,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   }
 
   get topBar => ReceiptPageTopBar(
+        dataChanged: modelController.dataChanged,
         onImageIconPress: openFullImageMode,
         receiptImgPath: modelController.imgPath,
         //barcodeImgPaht: _receipt.barcodePath,
