@@ -91,6 +91,12 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     }
   }
 
+  void saveReceipt() async {
+    int receiptId = await modelController.saveReceipt(modelController.model);
+    modelController.receiptId ??= receiptId;
+    modelController.resetChangesTracking();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -168,16 +174,35 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     );
   }
 
-  get topBar => ReceiptPageTopBar(
+  Widget topBar(BuildContext context) => ReceiptPageTopBar(
         dataChanged: modelController.dataChangedNotifier,
         onImageIconPress: openFullImageMode,
         receiptImgPath: modelController.imgPath,
         //barcodeImgPaht: _receipt.barcodePath,
-        onSaveReceipt: () async {
-          int receiptId =
-              await modelController.saveReceipt(modelController.model);
-          modelController.receiptId ??= receiptId;
-        },
+        onReturn: () async => await showDialog<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+                title: Text("Save Receipt",
+                    style: TextStyle(color: themeController.theme.mainColor)),
+                content: Text("Do you want to save receipt?",
+                    style: TextStyle(color: themeController.theme.mainColor)),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      saveReceipt();
+                      Navigator.pop(context);
+                    },
+                    child: const Text("Yes"),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("No"),
+                  )
+                ]);
+          },
+        ),
+        onSaveReceipt: saveReceipt,
         onDeleteReceipt: () async {
           try {
             if (modelController.receiptId != null) {
@@ -227,7 +252,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     }
   }
 
-  get content => Center(
+  Widget content(BuildContext context) => Center(
         child: Padding(
           padding: const EdgeInsets.only(
             top: 32.0,
@@ -237,7 +262,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
           ),
           child: Column(
             children: [
-              topBar,
+              topBar(context),
               productsEditor,
               infoEditor,
             ],
@@ -249,7 +274,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   Widget build(BuildContext context) {
     List<Widget> screenElements = [
       background,
-      content,
+      content(context),
     ];
 
     if (_showFullScreenReceiptImage) {

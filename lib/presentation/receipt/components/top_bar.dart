@@ -13,6 +13,7 @@ class ReceiptPageTopBar extends StatelessWidget {
   final String? receiptImgPath;
   final String? barcodeImgPaht;
   final ValueNotifier<bool> dataChanged;
+  final Future<void> Function() onReturn;
 
   final ThemeController themeController = Get.find();
 
@@ -24,6 +25,7 @@ class ReceiptPageTopBar extends StatelessWidget {
     required this.onSaveReceipt,
     required this.onDeleteReceipt,
     required this.dataChanged,
+    required this.onReturn,
   });
 
   get expandedPlaceholder => Expanded(child: Container());
@@ -113,11 +115,14 @@ class ReceiptPageTopBar extends StatelessWidget {
           height: ReceiptEditorSettings.topBarNavigationBarHeight,
           child: Row(
             children: [
-              IconButton(
-                onPressed: () => Navigator.pop(context),
-                icon: ValueListenableBuilder(
-                  valueListenable: dataChanged,
-                  builder: (context, value, child) => Badge(
+              ValueListenableBuilder(
+                valueListenable: dataChanged,
+                builder: (context, value, child) => IconButton(
+                  onPressed: () async {
+                    if (value) await onReturn();
+                    Navigator.pop(context);
+                  },
+                  icon: Badge(
                     isLabelVisible: value,
                     backgroundColor: themeController.theme.extraLightMainColor,
                     child: const Icon(Icons.chevron_left_outlined),
