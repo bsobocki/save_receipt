@@ -106,95 +106,103 @@ class ReceiptPageTopBar extends StatelessWidget {
         child: const Icon(Icons.menu),
       );
 
+  Widget get returnButton => ValueListenableBuilder(
+      valueListenable: dataChanged,
+      builder: (context, value, child) {
+        return IconButton(
+          onPressed: () async {
+            if (value) await onReturn();
+            if (context.mounted) Navigator.pop(context);
+          },
+          icon: Badge(
+            isLabelVisible: value,
+            backgroundColor: themeController.theme.extraLightMainColor,
+            child: const Icon(Icons.chevron_left_outlined),
+          ),
+        );
+      });
+
+  Widget get optionTopBar => SizedBox(
+        height: ReceiptEditorSettings.topBarNavigationBarHeight,
+        child: Row(
+          children: [
+            returnButton,
+            expandedPlaceholder,
+            popupMenu,
+          ],
+        ),
+      );
+
+  Widget get emptyVerticalSpace =>
+      const SizedBox(height: ReceiptEditorSettings.topBarSpaceHeight);
+
+  List<Widget> get additionalOptions => [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ExpandableButton(
+            buttonColor: themeController.theme.mainColor,
+            iconData: Icons.qr_code,
+            onPressed: () {},
+            label: 'Add barcode',
+            wrapText: true,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ExpandableButton(
+            buttonColor: themeController.theme.mainColor,
+            iconData: Icons.add,
+            onPressed: () {},
+            label: 'Add Item',
+            wrapText: true,
+          ),
+        ),
+      ];
+
+  Widget get panel => SizedBox(
+        height: ReceiptEditorSettings.topBarMainContentHeight,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            expandedPlaceholder,
+            Expanded(
+              child: Column(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: GestureDetector(
+                      onTap: onImageIconPress,
+                      child: receiptIcon(receiptImgPath, Icons.image),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: GestureDetector(
+                      onTap: () {},
+                      child: receiptIcon(barcodeImgPaht, Icons.qr_code),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: additionalOptions,
+              ),
+            ),
+          ],
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(
-          height: ReceiptEditorSettings.topBarNavigationBarHeight,
-          child: Row(
-            children: [
-              ValueListenableBuilder(
-                valueListenable: dataChanged,
-                builder: (context, value, child) => IconButton(
-                  onPressed: () async {
-                    if (value) await onReturn();
-                    Navigator.pop(context);
-                  },
-                  icon: Badge(
-                    isLabelVisible: value,
-                    backgroundColor: themeController.theme.extraLightMainColor,
-                    child: const Icon(Icons.chevron_left_outlined),
-                  ),
-                ),
-              ),
-              expandedPlaceholder,
-              popupMenu,
-            ],
-          ),
-        ),
-        const SizedBox(height: ReceiptEditorSettings.topBarSpaceHeight),
-        SizedBox(
-          height: ReceiptEditorSettings.topBarMainContentHeight,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              expandedPlaceholder,
-              Expanded(
-                child: LayoutBuilder(
-                  builder: (context, constraints) => Column(
-                    children: [
-                      SizedBox(
-                        height: constraints.maxHeight * 2 / 3,
-                        child: GestureDetector(
-                          onTap: onImageIconPress,
-                          child: receiptIcon(receiptImgPath, Icons.image),
-                        ),
-                      ),
-                      SizedBox(
-                        height: constraints.maxHeight / 3,
-                        child: GestureDetector(
-                          onTap: () {},
-                          child: receiptIcon(barcodeImgPaht, Icons.qr_code),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ExpandableButton(
-                          buttonColor: themeController.theme.mainColor,
-                          iconData: Icons.qr_code,
-                          onPressed: () {},
-                          label: 'Add barcode',
-                          wrapText: true,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ExpandableButton(
-                          buttonColor: themeController.theme.mainColor,
-                          iconData: Icons.add,
-                          onPressed: () {},
-                          label: 'Add Item',
-                          wrapText: true,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+        optionTopBar,
+        emptyVerticalSpace,
+        panel,
       ],
     );
   }
