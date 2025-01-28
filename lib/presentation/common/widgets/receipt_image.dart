@@ -33,6 +33,34 @@ class _ReceiptImageViewerState extends State<ReceiptImageViewer> {
     }
   }
 
+  Widget get imageViewer => Stack(
+        children: [
+          InteractiveViewer(
+            minScale: 0.5,
+            maxScale: 4.0,
+            transformationController: _controller,
+            child: GestureDetector(
+              onDoubleTapDown: _handleDoubleTapDown,
+              onDoubleTap: _handleDoubleTap,
+              child: Image.file(
+                File(widget.imagePath),
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+          Positioned(
+            top: 0,
+            right: 0,
+            child: IconButton(
+              onPressed: widget.onExit,
+              icon: const Icon(
+                Icons.cancel,
+              ),
+            ),
+          ),
+        ],
+      );
+
   @override
   Widget build(BuildContext context) {
     return AnimatedOpacity(
@@ -49,19 +77,7 @@ class _ReceiptImageViewerState extends State<ReceiptImageViewer> {
                 onTap: () {},
                 child: SizedBox(
                   width: double.infinity,
-                  child: InteractiveViewer(
-                    minScale: 0.5,
-                    maxScale: 4.0,
-                    transformationController: _controller,
-                    child: GestureDetector(
-                      onDoubleTapDown: _handleDoubleTapDown,
-                      onDoubleTap: _handleDoubleTap,
-                      child: Image.file(
-                        File(widget.imagePath),
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
+                  child: imageViewer,
                 ),
               ),
             ),
