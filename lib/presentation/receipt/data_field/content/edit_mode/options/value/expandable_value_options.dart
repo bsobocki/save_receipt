@@ -97,14 +97,17 @@ class _ExpandableValueOptionsState extends State<ExpandableValueOptions> {
 
   @override
   Widget build(BuildContext context) {
-    return ExpandableOptionsPanel(
-      alignment: MainAxisAlignment.start,
-      options: options,
-      onCollapse: widget.onCollapse,
-      constraints: widget.constraints,
-      isExpanded: isExpanded,
-      iconColor: themeController.theme.mainColor,
-      buttonColor: Colors.white,
-    );
+    List<Widget> optionsList = options;
+    return optionsList.length == 1
+        ? Expanded(child: Container(height: 32))
+        : ExpandableOptionsPanel(
+            alignment: MainAxisAlignment.start,
+            options: options,
+            onCollapse: widget.onCollapse,
+            constraints: widget.constraints,
+            isExpanded: isExpanded,
+            iconColor: themeController.theme.mainColor,
+            buttonColor: Colors.white,
+          );
   }
 }
