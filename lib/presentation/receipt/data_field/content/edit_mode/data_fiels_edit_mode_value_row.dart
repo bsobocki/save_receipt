@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:save_receipt/presentation/receipt/data_field/edit_mode/options/value/expandable_value_options.dart';
-import 'package:save_receipt/presentation/receipt/data_field/edit_mode/text/value_text.dart';
+import 'package:save_receipt/presentation/receipt/data_field/content/edit_mode/options/value/expandable_value_options.dart';
+import 'package:save_receipt/presentation/receipt/data_field/content/edit_mode/text/value_text.dart';
 import 'package:save_receipt/domain/entities/receipt_object.dart';
 
 class DataFieldEditModeValueRow extends StatefulWidget {
   const DataFieldEditModeValueRow({
     super.key,
     required this.model,
-    required this.onValueToFieldChanged,
-    required this.onValueTypeChanged,
+    this.onValueToFieldChanged,
+    this.onValueTypeChanged,
     required this.textColor,
   });
 

@@ -5,9 +5,10 @@ import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/presentation/common/widgets/receipt_image.dart';
 import 'package:save_receipt/presentation/receipt/components/data_editing/data_editor.dart';
 import 'package:save_receipt/presentation/receipt/components/top_bar.dart';
-import 'package:save_receipt/presentation/receipt/data_field/data_field.dart';
+import 'package:save_receipt/presentation/receipt/data_field/info_data_field.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
 import 'package:save_receipt/presentation/receipt/controller/receipt_controller.dart';
+import 'package:save_receipt/presentation/receipt/data_field/product_data_field.dart';
 
 class ReceiptDataPage extends StatefulWidget {
   final String title = 'Fill Receipt Data';
@@ -110,7 +111,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         itemCount: modelController.products.length,
         controller: _productsScrollController,
         itemBuilder: (context, index) {
-          return DataField(
+          return ProductDataField(
             key: UniqueKey(),
             onChangedData: modelController.trackChange,
             enabled: modelController.areProductsEdited,
@@ -139,7 +140,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
           if (type == ReceiptObjectModelType.infoDouble) {
             onChangedToProduct = () => changeInfoDoubleToProduct(index);
           }
-          return DataField(
+          return InfoDataField(
             key: UniqueKey(),
             onChangedData: modelController.trackChange,
             enabled: !modelController.areProductsEdited,
