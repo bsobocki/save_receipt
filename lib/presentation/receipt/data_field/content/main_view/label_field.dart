@@ -21,29 +21,27 @@ class DataTextField extends StatefulWidget {
 class _DataTextFieldState extends State<DataTextField> {
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) => Padding(
-        padding: const EdgeInsets.only(
-          right: 24,
-          left: 8.0,
-          top: 4.0,
-          bottom: 0.0,
+    return Padding(
+      padding: const EdgeInsets.only(
+        right: 24,
+        left: 8.0,
+        top: 4.0,
+        bottom: 0.0,
+      ),
+      child: TextField(
+        enabled: widget.enabled,
+        controller: widget.textController,
+        onChanged: widget.onChanged,
+        style: TextStyle(
+          color: widget.textColor,
+          fontWeight: FontWeight.w600,
+          fontSize: 14.0,
         ),
-        child: TextField(
-          enabled: widget.enabled,
-          controller: widget.textController,
-          onChanged: widget.onChanged,
-          style: TextStyle(
-            color: widget.textColor,
-            fontWeight: FontWeight.w600,
-            fontSize: 14.0,
-          ),
-          textAlign: TextAlign.left,
-          decoration: const InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-            isDense: true,
-            border: InputBorder.none,
-          ),
+        textAlign: TextAlign.left,
+        decoration: const InputDecoration(
+          contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+          isDense: true,
+          border: InputBorder.none,
         ),
       ),
     );

@@ -122,7 +122,7 @@ class ReceiptPageTopBar extends StatelessWidget {
         );
       });
 
-  Widget get optionTopBar => SizedBox(
+  Widget get navigationTopBar => SizedBox(
         height: ReceiptEditorSettings.topBarNavigationBarHeight,
         child: Row(
           children: [
@@ -200,7 +200,7 @@ class ReceiptPageTopBar extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        optionTopBar,
+        navigationTopBar,
         emptyVerticalSpace,
         panel,
       ],

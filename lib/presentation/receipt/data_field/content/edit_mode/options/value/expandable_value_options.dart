@@ -99,7 +99,7 @@ class _ExpandableValueOptionsState extends State<ExpandableValueOptions> {
   Widget build(BuildContext context) {
     List<Widget> optionsList = options;
     return optionsList.length == 1
-        ? Expanded(child: Container(height: 32))
+        ? Container(height: 32)
         : ExpandableOptionsPanel(
             alignment: MainAxisAlignment.start,
             options: options,

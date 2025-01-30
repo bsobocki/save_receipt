@@ -26,11 +26,11 @@ class DataEditorTopBar extends StatelessWidget {
           borderRadius: const BorderRadius.vertical(top: Radius.circular(15.0)),
         ),
         width: double.infinity,
-        height: 30.0,
+        //height: 30.0,
         child: Row(
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 8.0, top: 4.0),
+              padding: const EdgeInsets.only(left: 16.0, top: 4.0),
               child: Text(
                 title,
                 style: const TextStyle(
