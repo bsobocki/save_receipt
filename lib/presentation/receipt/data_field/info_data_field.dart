@@ -117,6 +117,7 @@ class _InfoDataFieldState extends State<InfoDataField> {
         onValueToFieldChanged: widget.onValueToFieldChanged,
         onValueTypeChanged: widget.onValueTypeChanged,
         textColor: themeController.theme.extraLightMainColor,
+        onValueStateChanged: widget.onChangedData,
       ),
     ]),
     );

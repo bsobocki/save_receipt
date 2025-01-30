@@ -7,15 +7,17 @@ class DataFieldEditModeValueRow extends StatefulWidget {
   const DataFieldEditModeValueRow({
     super.key,
     required this.model,
-    this.onValueToFieldChanged,
-    this.onValueTypeChanged,
     required this.textColor,
+    this.onValueToFieldChanged,
+    this.onValueStateChanged,
+    this.onValueTypeChanged,
   });
 
   final ReceiptObjectModel model;
-  final VoidCallback? onValueToFieldChanged;
-  final Function(ReceiptObjectModelType)? onValueTypeChanged;
   final Color textColor;
+  final VoidCallback? onValueToFieldChanged;
+  final VoidCallback? onValueStateChanged;
+  final Function(ReceiptObjectModelType)? onValueTypeChanged;
 
   @override
   State<DataFieldEditModeValueRow> createState() =>
@@ -34,10 +36,12 @@ class _DataFieldEditModeValueRowState extends State<DataFieldEditModeValueRow> {
             : () => setState(() {
                   widget.model.value = null;
                   expandedOptions = true;
+                  widget.onValueStateChanged?.call();
                 }),
         onAddValue: () => setState(() {
           widget.model.value = '<no value>';
           expandedOptions = true;
+          widget.onValueStateChanged?.call();
         }),
         onValueTypeChanged: widget.onValueTypeChanged,
         onCollapse: () => setState(() {
