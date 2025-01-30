@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:save_receipt/core/settings/receipt_data_page.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/presentation/common/widgets/receipt_image.dart';
@@ -165,7 +166,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     return Column(
       children: [
         Container(
-          height: 320,
+          height: ReceiptEditorSettings.backgroundGradientHeigth,
           decoration: BoxDecoration(
             gradient: themeController.theme.gradient,
           ),

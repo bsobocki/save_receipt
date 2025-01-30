@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:save_receipt/core/themes/styles/color.dart';
 
-
 class ColorTheme {
   static const int _lighter = 40;
   static const int _darker = -40;
@@ -22,7 +21,8 @@ class ColorTheme {
   List<Color> get _colors => [
         mainColor.moved(-80),
         mainColor,
-        mainColor.moved(80),
+        mainColor.moved(60),
+        mainColor.moved(100),
       ];
 
   LinearGradient get gradient => LinearGradient(
