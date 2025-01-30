@@ -19,9 +19,8 @@ class ColorTheme {
   ColorTheme(Color mainColor) : _mainColor = mainColor;
 
   List<Color> get _colors => [
-        mainColor.moved(-80),
+        mainColor.moved(-100),
         mainColor,
-        mainColor.moved(60),
         mainColor.moved(100),
       ];
 
