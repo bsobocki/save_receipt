@@ -12,7 +12,7 @@ class DataFieldEditModeText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: const BoxConstraints(maxWidth: 150),
+      constraints: const BoxConstraints(maxWidth: 72),
       child: Text(
         text,
         style: TextStyle(color: textColor, fontWeight: FontWeight.w600),
