@@ -226,8 +226,8 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         receiptImgPath: modelController.imgPath,
         //barcodeImgPaht: _receipt.barcodePath,
         onReturnAfterChanges: handleReturnAfterChanges,
-        onSaveReceipt: saveReceipt,
-        onDeleteReceipt: handleReceiptDeleted,
+        onSaveReceiptOptionPress: saveReceipt,
+        onDeleteReceiptOptionPress: handleReceiptDeleted,
       );
 
   get productsEditor => ReceiptDataEditor(

@@ -7,8 +7,8 @@ import 'package:save_receipt/presentation/common/widgets/expendable/expandable_b
 import 'package:save_receipt/core/settings/receipt_data_page.dart';
 
 class ReceiptPageTopBar extends StatelessWidget {
-  final Function() onSaveReceipt;
-  final Function() onDeleteReceipt;
+  final Function() onSaveReceiptOptionPress;
+  final Function() onDeleteReceiptOptionPress;
   final VoidCallback onImageIconPress;
   final String? receiptImgPath;
   final String? barcodeImgPaht;
@@ -22,8 +22,8 @@ class ReceiptPageTopBar extends StatelessWidget {
     required this.onImageIconPress,
     this.receiptImgPath,
     this.barcodeImgPaht,
-    required this.onSaveReceipt,
-    required this.onDeleteReceipt,
+    required this.onSaveReceiptOptionPress,
+    required this.onDeleteReceiptOptionPress,
     required this.dataChanged,
     required this.onReturnAfterChanges,
   });
@@ -86,14 +86,12 @@ class ReceiptPageTopBar extends StatelessWidget {
   get popupMenu => PopupMenuButton<String>(
         color: themeController.theme.mainColor,
         onSelected: (String value) {
-          print("chosen: $value");
-
           switch (value) {
             case 'save receipt':
-              onSaveReceipt();
+              onSaveReceiptOptionPress();
               break;
             case 'delete receipt':
-              onDeleteReceipt();
+              onDeleteReceiptOptionPress();
               break;
           }
         },
