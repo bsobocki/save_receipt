@@ -225,7 +225,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         onImageIconPress: openFullImageMode,
         receiptImgPath: modelController.imgPath,
         //barcodeImgPaht: _receipt.barcodePath,
-        onReturn: handleReturnAfterChanges,
+        onReturnAfterChanges: handleReturnAfterChanges,
         onSaveReceipt: saveReceipt,
         onDeleteReceipt: handleReceiptDeleted,
       );
