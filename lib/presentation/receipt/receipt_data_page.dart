@@ -99,6 +99,50 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     modelController.resetChangesTracking();
   }
 
+  Future<void> handleReceiptDeleted() async {
+    try {
+      if (modelController.receiptId != null) {
+        await modelController.deleteReceipt(modelController.receiptId!);
+      }
+      if (mounted) {
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to delete receipt: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> handleReturnAfterChanges() async => await showDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: Text("Save Receipt",
+                  style: TextStyle(color: themeController.theme.mainColor)),
+              content: Text("Do you want to save receipt?",
+                  style: TextStyle(color: themeController.theme.mainColor)),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    saveReceipt();
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Yes"),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text("No"),
+                )
+              ]);
+        },
+      );
+
   @override
   void initState() {
     super.initState();
@@ -181,49 +225,9 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         onImageIconPress: openFullImageMode,
         receiptImgPath: modelController.imgPath,
         //barcodeImgPaht: _receipt.barcodePath,
-        onReturn: () async => await showDialog<void>(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-                title: Text("Save Receipt",
-                    style: TextStyle(color: themeController.theme.mainColor)),
-                content: Text("Do you want to save receipt?",
-                    style: TextStyle(color: themeController.theme.mainColor)),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      saveReceipt();
-                      Navigator.pop(context);
-                    },
-                    child: const Text("Yes"),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text("No"),
-                  )
-                ]);
-          },
-        ),
+        onReturn: handleReturnAfterChanges,
         onSaveReceipt: saveReceipt,
-        onDeleteReceipt: () async {
-          try {
-            if (modelController.receiptId != null) {
-              await modelController.deleteReceipt(modelController.receiptId!);
-            }
-            if (mounted) {
-              Navigator.pop(context);
-            }
-          } catch (e) {
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Failed to delete receipt: ${e.toString()}'),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            }
-          }
-        },
+        onDeleteReceipt: handleReceiptDeleted,
       );
 
   get productsEditor => ReceiptDataEditor(

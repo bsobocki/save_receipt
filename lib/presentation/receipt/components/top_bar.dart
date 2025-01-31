@@ -108,14 +108,14 @@ class ReceiptPageTopBar extends StatelessWidget {
 
   Widget get returnButton => ValueListenableBuilder(
       valueListenable: dataChanged,
-      builder: (context, value, child) {
+      builder: (context, dataChangedValue, child) {
         return IconButton(
           onPressed: () async {
-            if (value) await onReturn();
+            if (dataChangedValue) await onReturn();
             if (context.mounted) Navigator.pop(context);
           },
           icon: Badge(
-            isLabelVisible: value,
+            isLabelVisible: dataChangedValue,
             backgroundColor: themeController.theme.extraLightMainColor,
             child: const Icon(Icons.chevron_left_outlined),
           ),
