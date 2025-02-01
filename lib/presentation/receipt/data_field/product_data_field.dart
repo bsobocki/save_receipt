@@ -60,18 +60,19 @@ class _ProductDataFieldState extends State<ProductDataField> {
   }
 
   Widget get normalModeContent => Container(
-      color: themeController.theme.mainColor
-          .withOpacity(widget.isDarker ? 0.04 : 0.0),
-      child: Column(children: [
-        DataTextField(
+        color: themeController.theme.mainColor
+            .withOpacity(widget.isDarker ? 0.04 : 0.0),
+        child: Column(children: [
+          DataTextField(
             enabled: widget.enabled,
             textController: textController,
             onChanged: (String value) {
               widget.model.text = value;
               widget.onChangedData?.call();
-            }),
-        if (widget.model.value != null)
-          ValueField(
+            },
+          ),
+          if (widget.model.value != null)
+            ValueField(
               enabled: widget.enabled,
               textColor: Colors.black,
               initValue: widget.model.value ?? '',
@@ -79,25 +80,28 @@ class _ProductDataFieldState extends State<ProductDataField> {
               onValueChanged: (String? value) {
                 widget.model.value = value;
                 widget.onChangedData?.call();
-              }),
-      ]),
-    );
+              },
+            ),
+        ]),
+      );
 
   Widget get editModeContent => Container(
-      color: themeController.theme.ligtherMainColor,
-      child: Column(children: [
-      DataFieldEditModeTextRow(
-        model: widget.model,
-        onFieldToValueChanged: widget.onChangedToValue,
-        textColor: themeController.theme.extraLightMainColor,
-        onChangedToInfo: widget.onChangedToInfo,
-      ),
-      DataFieldEditModeValueRow(
-        model: widget.model,
-        textColor: themeController.theme.extraLightMainColor,
-      ),
-    ]),
-    );
+        color: themeController.theme.ligtherMainColor,
+        child: Column(
+          children: [
+            DataFieldEditModeTextRow(
+              model: widget.model,
+              onFieldToValueChanged: widget.onChangedToValue,
+              textColor: themeController.theme.extraLightMainColor,
+              onChangedToInfo: widget.onChangedToInfo,
+            ),
+            DataFieldEditModeValueRow(
+              model: widget.model,
+              textColor: themeController.theme.extraLightMainColor,
+            ),
+          ],
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {

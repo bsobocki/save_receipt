@@ -123,25 +123,44 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-              title: Text("Save Receipt",
-                  style: TextStyle(color: themeController.theme.mainColor)),
-              content: Text("Do you want to save receipt?",
-                  style: TextStyle(color: themeController.theme.mainColor)),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    saveReceipt();
-                    Navigator.pop(context);
-                  },
-                  child: const Text("Yes"),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text("No"),
-                )
-              ]);
+            title: Text(
+              "Save Receipt",
+              style: TextStyle(
+                color: themeController.theme.mainColor,
+              ),
+            ),
+            content: Text(
+              "Do you want to save receipt?",
+              style: TextStyle(
+                color: themeController.theme.mainColor,
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  saveReceipt();
+                  Navigator.pop(context);
+                },
+                child: const Text("Yes"),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("No"),
+              )
+            ],
+          );
         },
       );
+
+  void openFullImageMode() {
+    if (modelController.imgPathExists) {
+      setState(() {
+        _showFullScreenReceiptImage = true;
+      });
+    } else {
+      print("no - image");
+    }
+  }
 
   @override
   void initState() {
@@ -247,16 +266,6 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         onResized: setInfoEditing,
         onAddObject: addEmptyInfo,
       );
-
-  void openFullImageMode() {
-    if (modelController.imgPathExists) {
-      setState(() {
-        _showFullScreenReceiptImage = true;
-      });
-    } else {
-      print("no - image");
-    }
-  }
 
   Widget content(BuildContext context) => Center(
         child: Padding(

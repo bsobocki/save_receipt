@@ -84,7 +84,7 @@ class _ValueFieldState extends State<ValueField> {
           textFieldController.text = newValue;
           widget.onValueChanged(newValue);
         },
-        dropdownMenuEntries: menuEntries,
+        dropdownMenuEntries: uniqueMenuEntries,
         textAlign: TextAlign.right,
       );
 
@@ -97,7 +97,7 @@ class _ValueFieldState extends State<ValueField> {
         surfaceTintColor: const WidgetStatePropertyAll(Colors.white),
       );
 
-  get menuEntries => values.map<DropdownMenuEntry<dynamic>>((value) {
+  get uniqueMenuEntries => values.toSet().map<DropdownMenuEntry<dynamic>>((value) {
         return DropdownMenuEntry<dynamic>(
             value: value, label: value.toString());
       }).toList();
