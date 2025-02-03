@@ -12,6 +12,7 @@ import 'package:save_receipt/data/values.dart';
 class ReceiptModelController {
   String? _receiptImagePath;
   late AllReceiptValuesController _allValues;
+  List<int> _selectedObjects = [];
   List<ReceiptObjectModel> _infos = [];
   List<ReceiptObjectModel> _products = [];
   List<ReceiptObjectModel> _dates = [];
@@ -22,6 +23,7 @@ class ReceiptModelController {
   final List<int> _deletedInfoNumericIds = [];
   final ValueNotifier<bool> _dataChangedNotifier = ValueNotifier<bool>(false);
   bool _areProductsEdited = true;
+  bool _isSelectModeEnabled = false;
   int _editingObjectFieldIndex = -1;
   int? receiptId;
 
@@ -273,6 +275,35 @@ class ReceiptModelController {
     }
   }
 
+  void toggleSelectMode() {
+    _isSelectModeEnabled = !_isSelectModeEnabled;
+    _selectedObjects = [];
+  }
+
+  void selectProduct(int index) {
+    if (_areProductsEdited && productIndexExists(index)) {
+      _selectedObjects.add(index);
+    }
+  }
+
+  void selectInfo(int index) {
+    if (!_areProductsEdited && infoIndexExists(index)) {
+      _selectedObjects.add(index);
+    }
+  }
+
+  void unselectProduct(int index) {
+    if (_areProductsEdited && productIndexExists(index)) {
+      _selectedObjects.remove(index);
+    }
+  }
+
+  void unselectInfo(int index) {
+    if (!_areProductsEdited && infoIndexExists(index)) {
+      _selectedObjects.remove(index);
+    }
+  }
+
   AllValuesModel get allValuesModel => _allValues.model;
 
   String? get imgPath => _receiptImagePath;
@@ -311,6 +342,8 @@ class ReceiptModelController {
 
   ValueNotifier<bool> get dataChangedNotifier => _dataChangedNotifier;
 
+  bool isSelectModeEnabled() => _isSelectModeEnabled;
+
   bool isProductInEditMode(int index) =>
       _areProductsEdited &&
       productIndexExists(index) &&
@@ -320,4 +353,14 @@ class ReceiptModelController {
       !_areProductsEdited &&
       infoIndexExists(index) &&
       index == _editingObjectFieldIndex;
+
+  bool isProductSelected(int index) =>
+      _areProductsEdited &&
+      productIndexExists(index) &&
+      _selectedObjects.contains(index);
+
+  bool isInfoSelected(int index) =>
+      !_areProductsEdited &&
+      infoIndexExists(index) &&
+      _selectedObjects.contains(index);
 }
