@@ -6,6 +6,7 @@ import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/presentation/common/widgets/receipt_image.dart';
 import 'package:save_receipt/presentation/receipt/components/data_editing/data_editor.dart';
 import 'package:save_receipt/presentation/receipt/components/top_bar.dart';
+import 'package:save_receipt/presentation/receipt/data_field/data_field.dart';
 import 'package:save_receipt/presentation/receipt/data_field/info_data_field.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
 import 'package:save_receipt/presentation/receipt/controller/receipt_controller.dart';
@@ -186,7 +187,12 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             onItemEditModeSwipe: () => setEditModeForProduct(index),
             onChangedToValue: () => changeProductToValue(index),
             onChangedToInfo: () => changeProductToInfo(index),
-            isInEditMode: modelController.isProductInEditMode(index),
+            mode: modelController.isSelectModeEnabled()
+                ? DataFieldMode.select
+                : modelController.isProductInEditMode(index)
+                    ? DataFieldMode.edit
+                    : DataFieldMode.normal,
+            selected: modelController.isProductSelected(index),
           );
         },
       ),
@@ -218,7 +224,12 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             onValueTypeChanged: (ReceiptObjectModelType type) =>
                 changeInfoValueType(type, index),
             onChangedToProduct: onChangedToProduct,
-            isInEditMode: modelController.isInfoInEditMode(index),
+            mode: modelController.isSelectModeEnabled()
+                ? DataFieldMode.select
+                : modelController.isInfoInEditMode(index)
+                    ? DataFieldMode.edit
+                    : DataFieldMode.normal,
+            selected: modelController.isInfoSelected(index),
           );
         },
       ),

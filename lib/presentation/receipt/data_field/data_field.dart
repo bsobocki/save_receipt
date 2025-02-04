@@ -5,12 +5,15 @@ import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/domain/entities/receipt_object.dart';
 
+enum DataFieldMode { normal, edit, select }
+
 class DataField extends StatefulWidget {
   final bool enabled;
   final bool isDarker;
-  final bool isInEditMode;
+  final DataFieldMode mode;
   final Widget editModeContent;
   final Widget normalModeContent;
+  final Widget selectModeContent;
   final ReceiptObjectModel model;
   final AllValuesModel allValuesData;
   final Function() onItemDismissSwipe;
@@ -19,15 +22,16 @@ class DataField extends StatefulWidget {
 
   const DataField({
     super.key,
+    required this.mode,
     required this.model,
     required this.allValuesData,
-    required this.isInEditMode,
     required this.isDarker,
     required this.enabled,
     required this.onItemDismissSwipe,
     required this.onItemEditModeSwipe,
     required this.editModeContent,
     required this.normalModeContent,
+    required this.selectModeContent,
     this.onItemSwipe,
   });
 
@@ -54,7 +58,7 @@ class _DataFieldState extends State<DataField> {
   @override
   void initState() {
     super.initState();
-    if (widget.isInEditMode) {
+    if (widget.mode == DataFieldMode.edit) {
       backgroundColor = themeController.theme.ligtherMainColor;
       textColor = Colors.white.withOpacity(0.6);
     } else {
@@ -64,9 +68,16 @@ class _DataFieldState extends State<DataField> {
     }
   }
 
-  Widget get dataFieldContent => widget.isInEditMode
-            ? widget.editModeContent
-            : widget.normalModeContent;
+  Widget get dataFieldContent {
+    switch (widget.mode) {
+      case DataFieldMode.edit:
+        return widget.editModeContent;
+      case DataFieldMode.select:
+        return widget.selectModeContent;
+      default:
+        return widget.normalModeContent;
+    }
+  }
 
   get swipableDataFieldContent => Dismissible(
         key: UniqueKey(),
@@ -78,7 +89,7 @@ class _DataFieldState extends State<DataField> {
           Alignment.centerLeft,
         ),
         secondaryBackground: getFieldSwipeBackground(
-          widget.isInEditMode ? Icons.edit_off : Icons.edit,
+          widget.mode == DataFieldMode.edit ? Icons.edit_off : Icons.edit,
           transparentToGoldGradient,
           Alignment.centerRight,
         ),

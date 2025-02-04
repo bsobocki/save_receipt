@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/domain/entities/all_values.dart';
+import 'package:save_receipt/presentation/receipt/data_field/content/select_mode/data_text_field.dart';
 import 'package:save_receipt/presentation/receipt/data_field/data_field.dart';
 import 'package:save_receipt/presentation/receipt/data_field/content/edit_mode/data_field_edit_mode_label_row.dart';
 import 'package:save_receipt/presentation/receipt/data_field/content/edit_mode/data_fiels_edit_mode_value_row.dart';
@@ -12,9 +13,10 @@ import 'package:save_receipt/domain/entities/receipt_object.dart';
 class InfoDataField extends StatefulWidget {
   final ReceiptObjectModel model;
   final AllValuesModel allValuesData;
-  final bool isInEditMode;
+  final DataFieldMode mode;
   final bool isDarker;
   final bool enabled;
+  final bool selected;
   final Function() onItemDismissSwipe;
   final Function() onItemEditModeSwipe;
   final Function(DismissDirection direction)? onItemSwipe;
@@ -29,7 +31,7 @@ class InfoDataField extends StatefulWidget {
     super.key,
     required this.model,
     required this.allValuesData,
-    required this.isInEditMode,
+    required this.mode,
     required this.isDarker,
     required this.enabled,
     required this.onItemDismissSwipe,
@@ -41,6 +43,7 @@ class InfoDataField extends StatefulWidget {
     this.onChangedToProduct,
     this.onChangedToInfo,
     this.onChangedData,
+    required this.selected,
   });
 
   get text => null;
@@ -77,6 +80,26 @@ class _InfoDataFieldState extends State<InfoDataField> {
     textController.dispose();
     super.dispose();
   }
+
+  Widget get selectModeContent => Container(
+        color: widget.selected
+            ? themeController.theme.mainColor
+            : themeController.theme.mainColor
+                .withOpacity(widget.isDarker ? 0.04 : 0.0),
+        child: Column(
+          children: [
+            SelectModeDataTextField(
+              text: widget.model.text,
+              textAlign: TextAlign.start,
+            ),
+            if (widget.model.value != null)
+              SelectModeDataTextField(
+                text: widget.model.value!,
+                textAlign: TextAlign.right,
+              ),
+          ],
+        ),
+      );
 
   Widget get normalModeContent => Container(
         color: themeController.theme.mainColor
@@ -129,14 +152,16 @@ class _InfoDataFieldState extends State<InfoDataField> {
   @override
   Widget build(BuildContext context) {
     return DataField(
-        model: widget.model,
-        allValuesData: widget.allValuesData,
-        isInEditMode: widget.isInEditMode,
-        isDarker: widget.isDarker,
-        enabled: widget.enabled,
-        onItemDismissSwipe: widget.onItemDismissSwipe,
-        onItemEditModeSwipe: widget.onItemEditModeSwipe,
-        editModeContent: editModeContent,
-        normalModeContent: normalModeContent);
+      model: widget.model,
+      allValuesData: widget.allValuesData,
+      mode: widget.mode,
+      isDarker: widget.isDarker,
+      enabled: widget.enabled,
+      onItemDismissSwipe: widget.onItemDismissSwipe,
+      onItemEditModeSwipe: widget.onItemEditModeSwipe,
+      editModeContent: editModeContent,
+      normalModeContent: normalModeContent,
+      selectModeContent: selectModeContent,
+    );
   }
 }
