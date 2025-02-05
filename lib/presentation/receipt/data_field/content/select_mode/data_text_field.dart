@@ -17,18 +17,23 @@ class SelectModeDataTextField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(
         right: 24,
-        left: 8.0,
+        left: 16.0,
         top: 4.0,
-        bottom: 0.0,
+        bottom: 4.0,
       ),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: textColor,
-          fontWeight: FontWeight.w600,
-          fontSize: 14.0,
-        ),
-        textAlign: textAlign,
+      child: Row(
+        children: [
+          if (textAlign == TextAlign.right) Expanded(child: Container()),
+          Text(
+            text,
+            style: TextStyle(
+              color: textColor,
+              fontWeight: FontWeight.w600,
+              fontSize: 14.0,
+            ),
+          ),
+          if (textAlign == TextAlign.left) Expanded(child: Container()),
+        ],
       ),
     );
   }

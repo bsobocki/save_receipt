@@ -34,6 +34,8 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   final ScrollController _infoScrollController = ScrollController();
   late ReceiptModelController modelController;
 
+  void setSelectionMode() => setState(() => modelController.setSelectionMode());
+
   void changeInfoValueType(ReceiptObjectModelType type, int index) =>
       setState(() => modelController.changeInfoValueType(type, index));
 
@@ -193,6 +195,9 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
                     ? DataFieldMode.edit
                     : DataFieldMode.normal,
             selected: modelController.isProductSelected(index),
+            onSelected: () => setState(() {
+              modelController.toggleProductSelection(index);
+            }),
           );
         },
       ),
@@ -230,6 +235,9 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
                     ? DataFieldMode.edit
                     : DataFieldMode.normal,
             selected: modelController.isInfoSelected(index),
+            onSelected: () => setState(() {
+              modelController.toggleInfoSelection(index);
+            }),
           );
         },
       ),
@@ -258,6 +266,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         onReturnAfterChanges: handleReturnAfterChanges,
         onSaveReceiptOptionPress: saveReceipt,
         onDeleteReceiptOptionPress: handleReceiptDeleted,
+        onSelectMode: setSelectionMode,
       );
 
   get productsEditor => ReceiptDataEditor(
@@ -302,6 +311,8 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
       background,
       content(context),
     ];
+
+    print("SELECTION MODE? ${modelController.isSelectModeEnabled()}");
 
     if (_showFullScreenReceiptImage) {
       screenElements.add(

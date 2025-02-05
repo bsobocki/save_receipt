@@ -246,11 +246,13 @@ class ReceiptModelController {
   void setProductsEditing() {
     _areProductsEdited = true;
     resetEditModeIndex();
+    _selectedObjects = [];
   }
 
   void setInfoEditing() {
     _areProductsEdited = false;
     resetEditModeIndex();
+    _selectedObjects = [];
   }
 
   void resetEditModeIndex() => _editingObjectFieldIndex = -1;
@@ -275,9 +277,29 @@ class ReceiptModelController {
     }
   }
 
+  void setSelectionMode() {
+    _isSelectModeEnabled = true;
+  }
+
   void toggleSelectMode() {
     _isSelectModeEnabled = !_isSelectModeEnabled;
     _selectedObjects = [];
+  }
+
+  void toggleProductSelection(int index) {
+    if (isProductSelected(index)) {
+      unselectProduct(index);
+    } else {
+      selectProduct(index);
+    }
+  }
+
+  void toggleInfoSelection(int index) {
+    if (isInfoSelected(index)) {
+      unselectInfo(index);
+    } else {
+      selectInfo(index);
+    }
   }
 
   void selectProduct(int index) {

@@ -19,6 +19,7 @@ String getMenuLabel(MenuOption option) => switch (option) {
 class ReceiptPageTopBar extends StatelessWidget {
   final Function() onSaveReceiptOptionPress;
   final Function() onDeleteReceiptOptionPress;
+  final Function() onSelectMode;
   final VoidCallback onImageIconPress;
   final String? receiptImgPath;
   final String? barcodeImgPaht;
@@ -36,6 +37,7 @@ class ReceiptPageTopBar extends StatelessWidget {
     required this.onDeleteReceiptOptionPress,
     required this.dataChanged,
     required this.onReturnAfterChanges,
+    required this.onSelectMode,
   });
 
   get expandedPlaceholder => Expanded(child: Container());
@@ -103,11 +105,16 @@ class ReceiptPageTopBar extends StatelessWidget {
             case MenuOption.delete:
               onDeleteReceiptOptionPress();
               break;
+            case MenuOption.selectItem:
+              onSelectMode();
+              break;
             default:
               break;
           }
         },
-        itemBuilder: (context) => MenuOption.values.map((option) => getPopupMenuItem(option)).toList(),
+        itemBuilder: (context) => MenuOption.values
+            .map((option) => getPopupMenuItem(option))
+            .toList(),
         child: const Icon(Icons.menu),
       );
 

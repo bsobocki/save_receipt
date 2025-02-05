@@ -26,6 +26,7 @@ class InfoDataField extends StatefulWidget {
   final Function()? onValueToFieldChanged;
   final Function(ReceiptObjectModelType)? onValueTypeChanged;
   final VoidCallback? onChangedData;
+  final VoidCallback onSelected;
 
   const InfoDataField({
     super.key,
@@ -44,6 +45,7 @@ class InfoDataField extends StatefulWidget {
     this.onChangedToInfo,
     this.onChangedData,
     required this.selected,
+    required this.onSelected,
   });
 
   get text => null;
@@ -81,25 +83,36 @@ class _InfoDataFieldState extends State<InfoDataField> {
     super.dispose();
   }
 
-  Widget get selectModeContent => Container(
-        color: widget.selected
-            ? themeController.theme.mainColor
-            : themeController.theme.mainColor
-                .withOpacity(widget.isDarker ? 0.04 : 0.0),
+  Widget get selectModeContent {
+    double opacity = widget.isDarker ? 0.06 : 0.0;
+    Color textColor = Colors.black;
+    if (widget.selected) {
+      opacity += 0.9;
+      textColor = Colors.white.withOpacity(0.8);
+    }
+
+    return GestureDetector(
+      onTap: widget.onSelected,
+      child: Container(
+        color: themeController.theme.mainColor.withOpacity(opacity),
         child: Column(
           children: [
             SelectModeDataTextField(
               text: widget.model.text,
               textAlign: TextAlign.start,
+              textColor: textColor,
             ),
             if (widget.model.value != null)
               SelectModeDataTextField(
                 text: widget.model.value!,
                 textAlign: TextAlign.right,
+                textColor: textColor,
               ),
           ],
         ),
-      );
+      ),
+    );
+  }
 
   Widget get normalModeContent => Container(
         color: themeController.theme.mainColor

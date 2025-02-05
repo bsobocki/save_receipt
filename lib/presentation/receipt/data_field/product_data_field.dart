@@ -23,6 +23,7 @@ class ProductDataField extends StatefulWidget {
   final Function()? onChangedToValue;
   final Function()? onChangedToInfo;
   final VoidCallback? onChangedData;
+  final VoidCallback onSelected;
 
   const ProductDataField({
     super.key,
@@ -38,6 +39,7 @@ class ProductDataField extends StatefulWidget {
     this.onChangedToInfo,
     this.onChangedData,
     required this.selected,
+    required this.onSelected,
   });
 
   get text => null;
@@ -107,25 +109,36 @@ class _ProductDataFieldState extends State<ProductDataField> {
         ),
       );
 
-  Widget get selectModeContent => Container(
-        color: widget.selected
-            ? themeController.theme.mainColor
-            : themeController.theme.mainColor
-                .withOpacity(widget.isDarker ? 0.04 : 0.0),
+  Widget get selectModeContent {
+    double opacity = widget.isDarker ? 0.06 : 0.0;
+    Color textColor = Colors.black;
+    if (widget.selected) {
+      opacity += 0.9;
+      textColor = Colors.white.withOpacity(0.8);
+    }
+
+    return GestureDetector(
+      onTap: widget.onSelected,
+      child: Container(
+        color: themeController.theme.mainColor.withOpacity(opacity),
         child: Column(
           children: [
             SelectModeDataTextField(
               text: widget.model.text,
               textAlign: TextAlign.start,
+              textColor: textColor,
             ),
             if (widget.model.value != null)
               SelectModeDataTextField(
                 text: widget.model.value!,
                 textAlign: TextAlign.right,
+                textColor: textColor,
               ),
           ],
         ),
-      );
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
