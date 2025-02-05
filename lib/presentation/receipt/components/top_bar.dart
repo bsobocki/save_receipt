@@ -6,6 +6,16 @@ import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/presentation/common/widgets/expendable/expandable_button.dart';
 import 'package:save_receipt/core/settings/receipt_data_page.dart';
 
+enum MenuOption { save, delete, editItem, removeItem, selectItem }
+
+String getMenuLabel(MenuOption option) => switch (option) {
+      MenuOption.save => 'save receipt',
+      MenuOption.delete => 'delete receipt',
+      MenuOption.editItem => 'edit item',
+      MenuOption.removeItem => 'remove item',
+      MenuOption.selectItem => 'select item'
+    };
+
 class ReceiptPageTopBar extends StatelessWidget {
   final Function() onSaveReceiptOptionPress;
   final Function() onDeleteReceiptOptionPress;
@@ -56,51 +66,48 @@ class ReceiptPageTopBar extends StatelessWidget {
     );
   }
 
-  IconData getIconByOption(String text) {
+  IconData getIconByOption(MenuOption text) {
     switch (text) {
-      case 'save receipt':
+      case MenuOption.save:
         return Icons.save;
-      case 'edit item':
+      case MenuOption.editItem:
         return Icons.edit;
-      case 'remove item':
+      case MenuOption.delete:
         return Icons.delete_rounded;
-      case 'delete receipt':
+      case MenuOption.removeItem:
         return Icons.playlist_remove_rounded;
       default:
         return Icons.keyboard_option_key;
     }
   }
 
-  PopupMenuItem<String> getPopupMenuItem(String text) {
-    return PopupMenuItem<String>(
-        value: text,
+  PopupMenuItem<MenuOption> getPopupMenuItem(MenuOption option) {
+    return PopupMenuItem<MenuOption>(
+        value: option,
         child: Row(
           children: [
-            Icon(getIconByOption(text), color: Colors.white),
+            Icon(getIconByOption(option), color: Colors.white),
             const SizedBox(width: 8),
-            Text(text),
+            Text(getMenuLabel(option)),
           ],
         ));
   }
 
-  get popupMenu => PopupMenuButton<String>(
+  get popupMenu => PopupMenuButton<MenuOption>(
         color: themeController.theme.mainColor,
-        onSelected: (String value) {
+        onSelected: (MenuOption value) {
           switch (value) {
-            case 'save receipt':
+            case MenuOption.save:
               onSaveReceiptOptionPress();
               break;
-            case 'delete receipt':
+            case MenuOption.delete:
               onDeleteReceiptOptionPress();
+              break;
+            default:
               break;
           }
         },
-        itemBuilder: (context) => [
-          'save receipt',
-          'delete receipt',
-          'edit item',
-          'remove item'
-        ].map((text) => getPopupMenuItem(text)).toList(),
+        itemBuilder: (context) => MenuOption.values.map((option) => getPopupMenuItem(option)).toList(),
         child: const Icon(Icons.menu),
       );
 
