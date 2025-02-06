@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
-import 'package:save_receipt/presentation/common/widgets/expendable/expandable_button.dart';
 import 'package:save_receipt/core/settings/receipt_data_page.dart';
 
 enum MenuOption { save, delete, removeItem, selectMode }
@@ -149,37 +148,13 @@ class ReceiptPageTopBar extends StatelessWidget {
   Widget get emptyVerticalSpace =>
       const SizedBox(height: ReceiptEditorSettings.topBarSpaceHeight);
 
-  List<Widget> get additionalOptions => [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ExpandableButton(
-            buttonColor: themeController.theme.mainColor,
-            iconData: Icons.qr_code,
-            onPressed: () {},
-            label: 'Add barcode',
-            wrapText: true,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ExpandableButton(
-            buttonColor: themeController.theme.mainColor,
-            iconData: Icons.add,
-            onPressed: () {},
-            label: 'Add Item',
-            wrapText: true,
-          ),
-        ),
-      ];
-
   Widget get panel => SizedBox(
         height: ReceiptEditorSettings.topBarMainContentHeight,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            expandedPlaceholder(flex: selectMode ? 1 : 2),
+            expandedPlaceholder(),
             Expanded(
-              flex: 2,
               child: Column(
                 children: [
                   Expanded(
@@ -199,18 +174,7 @@ class ReceiptPageTopBar extends StatelessWidget {
                 ],
               ),
             ),
-            selectMode
-                ? Expanded(
-                    flex: 3,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: additionalOptions,
-                    ),
-                  )
-                : Expanded(
-                    flex: 2,
-                    child: Container(),
-                  )
+            expandedPlaceholder(),
           ],
         ),
       );

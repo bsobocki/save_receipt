@@ -85,10 +85,10 @@ class _InfoDataFieldState extends State<InfoDataField> {
 
   Widget get selectModeContent {
     double opacity = widget.isDarker ? 0.06 : 0.0;
-    Color textColor = Colors.black;
+    Color foregroundColor = Colors.black;
     if (widget.selected) {
       opacity += 0.9;
-      textColor = Colors.white.withOpacity(0.8);
+      foregroundColor = Colors.white.withOpacity(0.9);
     }
 
     return GestureDetector(
@@ -100,13 +100,13 @@ class _InfoDataFieldState extends State<InfoDataField> {
             SelectModeDataTextField(
               text: widget.model.text,
               textAlign: TextAlign.start,
-              textColor: textColor,
+              textColor: foregroundColor,
             ),
             if (widget.model.value != null)
               SelectModeDataTextField(
                 text: widget.model.value!,
                 textAlign: TextAlign.right,
-                textColor: textColor,
+                textColor: foregroundColor,
               ),
           ],
         ),

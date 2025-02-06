@@ -9,21 +9,23 @@ class SelectModeDataTextField extends StatelessWidget {
     super.key,
     required this.text,
     required this.textAlign,
-    Color? textColor,
-  }) : textColor = textColor ?? Colors.black;
+    this.textColor,
+  });
+
+  Widget get placeholder => Expanded(child: Container());
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(
-        right: 24,
-        left: 16.0,
+        right: 22.0,
+        left: 22.0,
         top: 4.0,
         bottom: 4.0,
       ),
       child: Row(
         children: [
-          if (textAlign == TextAlign.right) Expanded(child: Container()),
+          if (textAlign == TextAlign.right) placeholder,
           Text(
             text,
             style: TextStyle(
@@ -32,7 +34,7 @@ class SelectModeDataTextField extends StatelessWidget {
               fontSize: 14.0,
             ),
           ),
-          if (textAlign == TextAlign.left) Expanded(child: Container()),
+          if (textAlign == TextAlign.left) placeholder
         ],
       ),
     );
