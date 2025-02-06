@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
-import 'package:save_receipt/presentation/receipt/components/data_editing/data_editor_top_bar.dart';
+import 'package:save_receipt/presentation/receipt/components/data_editor/data_editor_top_bar.dart';
 
 class ReceiptDataEditor extends StatelessWidget {
   final int flex;

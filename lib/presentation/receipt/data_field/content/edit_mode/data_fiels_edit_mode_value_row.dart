@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:save_receipt/presentation/receipt/data_field/content/edit_mode/options/value/expandable_value_options.dart';
+import 'package:save_receipt/presentation/receipt/components/options/value/expandable_value_options.dart';
 import 'package:save_receipt/presentation/receipt/data_field/content/edit_mode/text/value_text.dart';
 import 'package:save_receipt/domain/entities/receipt_object.dart';
 

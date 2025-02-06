@@ -4,7 +4,7 @@ import 'package:save_receipt/core/settings/receipt_data_page.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/presentation/common/widgets/receipt_image.dart';
-import 'package:save_receipt/presentation/receipt/components/data_editing/data_editor.dart';
+import 'package:save_receipt/presentation/receipt/components/data_editor/data_editor.dart';
 import 'package:save_receipt/presentation/receipt/components/top_bar.dart';
 import 'package:save_receipt/presentation/receipt/data_field/data_field.dart';
 import 'package:save_receipt/presentation/receipt/data_field/info_data_field.dart';
@@ -34,7 +34,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   final ScrollController _infoScrollController = ScrollController();
   late ReceiptModelController modelController;
 
-  void setSelectionMode() => setState(() => modelController.setSelectionMode());
+  void toggleSelectMode() => setState(() => modelController.toggleSelectMode());
 
   void changeInfoValueType(ReceiptObjectModelType type, int index) =>
       setState(() => modelController.changeInfoValueType(type, index));
@@ -266,7 +266,8 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         onReturnAfterChanges: handleReturnAfterChanges,
         onSaveReceiptOptionPress: saveReceipt,
         onDeleteReceiptOptionPress: handleReceiptDeleted,
-        onSelectMode: setSelectionMode,
+        onSelectModeToggled: toggleSelectMode,
+        selectMode: modelController.isSelectModeEnabled(),
       );
 
   get productsEditor => ReceiptDataEditor(

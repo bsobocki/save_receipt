@@ -6,25 +6,26 @@ import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/presentation/common/widgets/expendable/expandable_button.dart';
 import 'package:save_receipt/core/settings/receipt_data_page.dart';
 
-enum MenuOption { save, delete, editItem, removeItem, selectItem }
+enum MenuOption { save, delete, removeItem, selectMode }
 
-String getMenuLabel(MenuOption option) => switch (option) {
+String getMenuLabel(MenuOption option, {bool selectMode = false}) =>
+    switch (option) {
       MenuOption.save => 'save receipt',
       MenuOption.delete => 'delete receipt',
-      MenuOption.editItem => 'edit item',
       MenuOption.removeItem => 'remove item',
-      MenuOption.selectItem => 'select item'
+      MenuOption.selectMode => selectMode ? 'cancel selection' : 'select items'
     };
 
 class ReceiptPageTopBar extends StatelessWidget {
   final Function() onSaveReceiptOptionPress;
   final Function() onDeleteReceiptOptionPress;
-  final Function() onSelectMode;
+  final Function() onSelectModeToggled;
   final VoidCallback onImageIconPress;
   final String? receiptImgPath;
   final String? barcodeImgPaht;
   final ValueNotifier<bool> dataChanged;
   final Future<void> Function() onReturnAfterChanges;
+  final bool selectMode;
 
   final ThemeController themeController = Get.find();
 
@@ -37,10 +38,12 @@ class ReceiptPageTopBar extends StatelessWidget {
     required this.onDeleteReceiptOptionPress,
     required this.dataChanged,
     required this.onReturnAfterChanges,
-    required this.onSelectMode,
+    required this.onSelectModeToggled,
+    required this.selectMode,
   });
 
-  get expandedPlaceholder => Expanded(child: Container());
+  Widget expandedPlaceholder({int flex = 1}) =>
+      Expanded(flex: flex, child: Container());
 
   Widget receiptIcon(String? path, IconData iconData) {
     Widget? icon;
@@ -72,8 +75,6 @@ class ReceiptPageTopBar extends StatelessWidget {
     switch (text) {
       case MenuOption.save:
         return Icons.save;
-      case MenuOption.editItem:
-        return Icons.edit;
       case MenuOption.delete:
         return Icons.delete_rounded;
       case MenuOption.removeItem:
@@ -90,7 +91,7 @@ class ReceiptPageTopBar extends StatelessWidget {
           children: [
             Icon(getIconByOption(option), color: Colors.white),
             const SizedBox(width: 8),
-            Text(getMenuLabel(option)),
+            Text(getMenuLabel(option, selectMode: selectMode)),
           ],
         ));
   }
@@ -105,8 +106,8 @@ class ReceiptPageTopBar extends StatelessWidget {
             case MenuOption.delete:
               onDeleteReceiptOptionPress();
               break;
-            case MenuOption.selectItem:
-              onSelectMode();
+            case MenuOption.selectMode:
+              onSelectModeToggled();
               break;
             default:
               break;
@@ -139,7 +140,7 @@ class ReceiptPageTopBar extends StatelessWidget {
         child: Row(
           children: [
             returnButton,
-            expandedPlaceholder,
+            expandedPlaceholder(),
             popupMenu,
           ],
         ),
@@ -176,8 +177,9 @@ class ReceiptPageTopBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            expandedPlaceholder,
+            expandedPlaceholder(flex: selectMode ? 1 : 2),
             Expanded(
+              flex: 2,
               child: Column(
                 children: [
                   Expanded(
@@ -197,12 +199,18 @@ class ReceiptPageTopBar extends StatelessWidget {
                 ],
               ),
             ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: additionalOptions,
-              ),
-            ),
+            selectMode
+                ? Expanded(
+                    flex: 3,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: additionalOptions,
+                    ),
+                  )
+                : Expanded(
+                    flex: 2,
+                    child: Container(),
+                  )
           ],
         ),
       );
