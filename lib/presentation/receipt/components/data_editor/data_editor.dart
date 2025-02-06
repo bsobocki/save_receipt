@@ -7,10 +7,12 @@ class ReceiptDataEditor extends StatelessWidget {
   final int flex;
   final String title;
   final bool isExpanded;
+  final bool selectMode;
   final Widget objectsList;
   final VoidCallback onResized;
   final VoidCallback onAddObject;
   final ThemeController themeController = Get.find();
+  final List<SelectModeEditorOption> selectModeOptions;
 
   ReceiptDataEditor({
     super.key,
@@ -20,6 +22,8 @@ class ReceiptDataEditor extends StatelessWidget {
     required this.objectsList,
     required this.onResized,
     required this.onAddObject,
+    required this.selectMode,
+    required this.selectModeOptions,
   });
 
   Widget get topBar => DataEditorTopBar(
@@ -28,6 +32,8 @@ class ReceiptDataEditor extends StatelessWidget {
         background: themeController.theme.mainColor,
         title: title,
         onAddObject: onAddObject,
+        selectModeOptions: selectModeOptions,
+        selectMode: selectMode,
       );
 
   @override

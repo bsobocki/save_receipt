@@ -5,6 +5,7 @@ import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/presentation/common/widgets/receipt_image.dart';
 import 'package:save_receipt/presentation/receipt/components/data_editor/data_editor.dart';
+import 'package:save_receipt/presentation/receipt/components/data_editor/data_editor_top_bar.dart';
 import 'package:save_receipt/presentation/receipt/components/top_bar.dart';
 import 'package:save_receipt/presentation/receipt/data_field/data_field.dart';
 import 'package:save_receipt/presentation/receipt/data_field/info_data_field.dart';
@@ -33,56 +34,6 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   final ScrollController _productsScrollController = ScrollController();
   final ScrollController _infoScrollController = ScrollController();
   late ReceiptModelController modelController;
-
-  void toggleSelectMode() => setState(() => modelController.toggleSelectMode());
-
-  void changeInfoValueType(ReceiptObjectModelType type, int index) =>
-      setState(() => modelController.changeInfoValueType(type, index));
-
-  void changeInfoToValue(int index) =>
-      setState(() => modelController.changeInfoToValue(index));
-
-  void changeProductToValue(int index) =>
-      setState(() => modelController.changeProductToValue(index));
-
-  void changeInfoToProduct(int index) =>
-      setState(() => modelController.changeInfoToValue(index));
-
-  void changeProductToInfo(int index) =>
-      setState(() => modelController.changeProductToInfoDouble(index));
-
-  void changeInfoDoubleToProduct(int index) =>
-      setState(() => modelController.changeInfoDoubleToProduct(index));
-
-  void changeValueToInfo(int index) =>
-      setState(() => modelController.changeValueToInfo(index));
-
-  void setEditModeForInfo(int index) =>
-      setState(() => modelController.setEditModeForInfo(index));
-
-  void setEditModeForProduct(int index) =>
-      setState(() => modelController.setEditModeForProduct(index));
-
-  void handleInfoDismiss(int index) =>
-      setState(() => modelController.removeInfo(index));
-
-  void handleProductDismiss(int index) =>
-      setState(() => modelController.removeProduct(index));
-
-  void setProductsEditing() =>
-      setState(() => modelController.setProductsEditing());
-
-  void setInfoEditing() => setState(() => modelController.setInfoEditing());
-
-  void addEmptyProduct() {
-    setState(() => modelController.addEmptyProduct());
-    _scrollToBottom(_productsScrollController);
-  }
-
-  void addEmptyInfo() {
-    setState(() => modelController.addEmptyInfo());
-    _scrollToBottom(_infoScrollController);
-  }
 
   void _scrollToBottom(ScrollController controller) {
     if (controller.hasClients) {
@@ -189,7 +140,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             onItemEditModeSwipe: () => setEditModeForProduct(index),
             onChangedToValue: () => changeProductToValue(index),
             onChangedToInfo: () => changeProductToInfo(index),
-            mode: modelController.isSelectModeEnabled()
+            mode: modelController.isSelectModeEnabled
                 ? DataFieldMode.select
                 : modelController.isProductInEditMode(index)
                     ? DataFieldMode.edit
@@ -229,7 +180,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             onValueTypeChanged: (ReceiptObjectModelType type) =>
                 changeInfoValueType(type, index),
             onChangedToProduct: onChangedToProduct,
-            mode: modelController.isSelectModeEnabled()
+            mode: modelController.isSelectModeEnabled
                 ? DataFieldMode.select
                 : modelController.isInfoInEditMode(index)
                     ? DataFieldMode.edit
@@ -267,25 +218,38 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         onSaveReceiptOptionPress: saveReceipt,
         onDeleteReceiptOptionPress: handleReceiptDeleted,
         onSelectModeToggled: toggleSelectMode,
-        selectMode: modelController.isSelectModeEnabled(),
+        selectMode: modelController.isSelectModeEnabled,
       );
 
   get productsEditor => ReceiptDataEditor(
-        flex: modelController.areProductsEdited ? 3 : 1,
-        title: "Products",
-        isExpanded: modelController.areProductsEdited,
-        objectsList: productsList,
-        onResized: setProductsEditing,
-        onAddObject: addEmptyProduct,
-      );
+          flex: modelController.areProductsEdited ? 3 : 1,
+          title: "Products",
+          isExpanded: modelController.areProductsEdited,
+          objectsList: productsList,
+          onResized: setProductsEditing,
+          onAddObject: addEmptyProduct,
+          selectMode: modelController.isSelectModeEnabled,
+          selectModeOptions: [
+            SelectModeEditorOption(
+                label: 'To Info', icon: Icons.info_outline, onSelected: () {}),
+            SelectModeEditorOption(
+                label: 'To Value', icon: Icons.transform, onSelected: () {})
+          ]);
 
   get infoEditor => ReceiptDataEditor(
         flex: modelController.areProductsEdited ? 1 : 3,
         title: "Info",
         isExpanded: !modelController.areProductsEdited,
+        selectMode: modelController.isSelectModeEnabled,
         objectsList: infosList,
         onResized: setInfoEditing,
         onAddObject: addEmptyInfo,
+        selectModeOptions: [
+          SelectModeEditorOption(
+              label: 'To Product', icon: Icons.info_outline, onSelected: () {}),
+          SelectModeEditorOption(
+              label: 'To Value', icon: Icons.transform, onSelected: () {}),
+        ],
       );
 
   Widget content(BuildContext context) => Center(
@@ -313,7 +277,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
       content(context),
     ];
 
-    print("SELECTION MODE? ${modelController.isSelectModeEnabled()}");
+    print("SELECTION MODE? ${modelController.isSelectModeEnabled}");
 
     if (_showFullScreenReceiptImage) {
       screenElements.add(
@@ -332,5 +296,67 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         children: screenElements,
       ),
     );
+  }
+
+  void toggleSelectMode() => setState(() => modelController.toggleSelectMode());
+
+  void changeInfoValueType(ReceiptObjectModelType type, int index) =>
+      setState(() => modelController.changeInfoValueType(type, index));
+
+  void changeSelectedInfoValueType(ReceiptObjectModelType type) =>
+      setState(() => modelController.changeSelectedInfoValueType(type));
+
+  void changeInfoToValue(int index) =>
+      setState(() => modelController.changeInfoToValue(index));
+
+  void changeSelectedInfoToValue() =>
+      setState(() => modelController.changeSelectedInfoToValue());
+
+  void changeInfoDoubleToProduct(int index) =>
+      setState(() => modelController.changeInfoDoubleToProduct(index));
+
+  void changeSelectedInfoToProduct() =>
+      setState(() => modelController.changeSelectedInfoToProduct());
+
+  void changeProductToValue(int index) =>
+      setState(() => modelController.changeProductToValue(index));
+
+  void changeSelectedProductToValue() =>
+      setState(() => modelController.changeSelectedProductToValue());
+
+  void changeProductToInfo(int index) =>
+      setState(() => modelController.changeProductToInfoDouble(index));
+
+  void changeSelectedProductsToInfo() =>
+      setState(() => modelController.changeSelectedProductsToInfo());
+
+  void changeValueToInfo(int index) =>
+      setState(() => modelController.changeValueToInfo(index));
+
+  void setEditModeForInfo(int index) =>
+      setState(() => modelController.setEditModeForInfo(index));
+
+  void setEditModeForProduct(int index) =>
+      setState(() => modelController.setEditModeForProduct(index));
+
+  void handleInfoDismiss(int index) =>
+      setState(() => modelController.removeInfo(index));
+
+  void handleProductDismiss(int index) =>
+      setState(() => modelController.removeProduct(index));
+
+  void setProductsEditing() =>
+      setState(() => modelController.setProductsEditing());
+
+  void setInfoEditing() => setState(() => modelController.setInfoEditing());
+
+  void addEmptyProduct() {
+    setState(() => modelController.addEmptyProduct());
+    _scrollToBottom(_productsScrollController);
+  }
+
+  void addEmptyInfo() {
+    setState(() => modelController.addEmptyInfo());
+    _scrollToBottom(_infoScrollController);
   }
 }

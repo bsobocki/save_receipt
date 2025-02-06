@@ -364,7 +364,7 @@ class ReceiptModelController {
 
   ValueNotifier<bool> get dataChangedNotifier => _dataChangedNotifier;
 
-  bool isSelectModeEnabled() => _isSelectModeEnabled;
+  bool get isSelectModeEnabled => _isSelectModeEnabled;
 
   bool isProductInEditMode(int index) =>
       _areProductsEdited &&
@@ -385,4 +385,14 @@ class ReceiptModelController {
       !_areProductsEdited &&
       infoIndexExists(index) &&
       _selectedObjects.contains(index);
+
+  void changeSelectedInfoToValue() {}
+
+  void changeSelectedProductToValue() {}
+
+  void changeSelectedInfoToProduct() {}
+
+  void changeSelectedProductsToInfo() {}
+
+  void changeSelectedInfoValueType(ReceiptObjectModelType type) {}
 }
