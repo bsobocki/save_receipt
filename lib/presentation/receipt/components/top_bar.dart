@@ -78,6 +78,8 @@ class ReceiptPageTopBar extends StatelessWidget {
         return Icons.delete_rounded;
       case MenuOption.removeItem:
         return Icons.playlist_remove_rounded;
+      case MenuOption.selectMode:
+        return Icons.select_all;
       default:
         return Icons.keyboard_option_key;
     }

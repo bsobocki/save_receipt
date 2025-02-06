@@ -76,7 +76,7 @@ class DataEditorTopBar extends StatelessWidget {
             ),
             Expanded(child: Container()),
             if (isExpanded && selectMode)
-              Padding(padding: EdgeInsets.all(12.0), child: popupMenu)
+              Padding(padding: const EdgeInsets.all(12.0), child: popupMenu)
             else
               IconButton(
                 iconSize: 20,
