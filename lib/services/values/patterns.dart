@@ -1,4 +1,3 @@
-
 bool isNumeric(String data) {
   return false;
 }
@@ -19,11 +18,13 @@ String getPriceStr(String data) {
 }
 
 String getProductTextWithoutPrice(String data) {
-  return data
-      .split(' ')
-      .where((e) => !isPrice(e))
-      .toList()
-      .reduce((value, element) => '$value $element');
+  return data.isEmpty
+      ? data
+      : data
+          .split(' ')
+          .where((e) => !isPrice(e))
+          .toList()
+          .reduce((value, element) => '$value $element');
 }
 
 List<String> getAllPricesFromStr(String data) {
