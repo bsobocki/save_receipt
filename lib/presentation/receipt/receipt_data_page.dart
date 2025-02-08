@@ -231,9 +231,15 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
           selectMode: modelController.isSelectModeEnabled,
           selectModeOptions: [
             SelectModeEditorOption(
-                label: 'To Info', icon: Icons.info_outline, onSelected: () {}),
+              label: 'To Info',
+              icon: Icons.info_outline,
+              onSelected: changeSelectedProductsToInfo,
+            ),
             SelectModeEditorOption(
-                label: 'To Value', icon: Icons.transform, onSelected: () {})
+              label: 'To Value',
+              icon: Icons.transform,
+              onSelected: changeSelectedProductsToValue,
+            )
           ]);
 
   get infoEditor => ReceiptDataEditor(
@@ -246,9 +252,15 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         onAddObject: addEmptyInfo,
         selectModeOptions: [
           SelectModeEditorOption(
-              label: 'To Product', icon: Icons.info_outline, onSelected: () {}),
+            label: 'To Product',
+            icon: Icons.info_outline,
+            onSelected: changeSelectedInfoToProducts,
+          ),
           SelectModeEditorOption(
-              label: 'To Value', icon: Icons.transform, onSelected: () {}),
+            label: 'To Value',
+            icon: Icons.transform,
+            onSelected: changeSelectedInfoToValue,
+          ),
         ],
       );
 
@@ -315,14 +327,14 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   void changeInfoDoubleToProduct(int index) =>
       setState(() => modelController.changeInfoDoubleToProduct(index));
 
-  void changeSelectedInfoToProduct() =>
-      setState(() => modelController.changeSelectedInfoToProduct());
+  void changeSelectedInfoToProducts() =>
+      setState(() => modelController.changeSelectedInfoToProducts());
 
   void changeProductToValue(int index) =>
       setState(() => modelController.changeProductToValue(index));
 
-  void changeSelectedProductToValue() =>
-      setState(() => modelController.changeSelectedProductToValue());
+  void changeSelectedProductsToValue() =>
+      setState(() => modelController.changeSelectedProductsToValue());
 
   void changeProductToInfo(int index) =>
       setState(() => modelController.changeProductToInfoDouble(index));
