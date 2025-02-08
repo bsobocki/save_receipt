@@ -1,8 +1,8 @@
 import 'dart:core';
 import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/domain/entities/connected_data.dart';
-import 'package:save_receipt/data/values.dart';
 import 'package:save_receipt/domain/entities/receipt_object.dart';
+import 'package:save_receipt/services/values/patterns.dart';
 
 class ProcessedDataModel {
   List<ReceiptObjectModel> receiptObjectModels = [];

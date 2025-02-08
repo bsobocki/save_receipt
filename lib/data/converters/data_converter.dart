@@ -1,7 +1,7 @@
 import 'package:save_receipt/data/models/document.dart';
 import 'package:save_receipt/data/models/database_entities.dart';
-import 'package:save_receipt/data/values.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
+import 'package:save_receipt/services/values/patterns.dart';
 
 class ReceiptDataConverter {
   static ReceiptData toReceiptData(ReceiptModel receipt, {int? shopId}) {
