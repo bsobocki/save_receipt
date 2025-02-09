@@ -47,18 +47,17 @@ class ReceiptModelController {
     _dataChangedNotifier.value = false;
   }
 
-  Future<int> saveReceipt(ReceiptModel model) async {
-    int receiptId = -1;
+  Future<void> saveReceipt() async {
     var dbRepo = ReceiptDatabaseRepository.get;
     ReceiptDocumentData data;
 
-    if (model.receiptId != null) {
+    if (receiptId != null) {
       data = ReceiptDataConverter.toDocumentDataForExistingReceipt(model);
       receiptId = await dbRepo.updateReceipt(data.receipt);
     } else {
       ReceiptData receiptData = ReceiptDataConverter.toReceiptData(model);
       receiptId = await dbRepo.insertReceipt(receiptData);
-      data = ReceiptDataConverter.toDocumentData(model, receiptId);
+      data = ReceiptDataConverter.toDocumentData(model, receiptId!);
     }
 
     // because of conflictAlgorithm: ConflictAlgorithm.replace
@@ -90,12 +89,12 @@ class ReceiptModelController {
     }
 
     resetChangesTracking();
-
-    return receiptId;
   }
 
-  Future<void> deleteReceipt(int receiptId) async {
-    await ReceiptDatabaseRepository.get.deleteReceipt(receiptId);
+  Future<void> deleteReceipt() async {
+    if (receiptId != null) {
+      await ReceiptDatabaseRepository.get.deleteReceipt(receiptId!);
+    }
   }
 
   void changeInfoToValue(int index) {

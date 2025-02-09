@@ -47,17 +47,9 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     }
   }
 
-  void saveReceipt() async {
-    int receiptId = await modelController.saveReceipt(modelController.model);
-    modelController.receiptId ??= receiptId;
-    modelController.resetChangesTracking();
-  }
-
   Future<void> handleReceiptDeleted() async {
     try {
-      if (modelController.receiptId != null) {
-        await modelController.deleteReceipt(modelController.receiptId!);
-      }
+        await modelController.deleteReceipt();
       if (mounted) {
         Navigator.pop(context);
       }
@@ -91,8 +83,8 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             ),
             actions: [
               TextButton(
-                onPressed: () {
-                  saveReceipt();
+                onPressed: () async {
+                  await modelController.saveReceipt();
                   Navigator.pop(context);
                 },
                 child: const Text("Yes"),
@@ -215,7 +207,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         receiptImgPath: modelController.imgPath,
         //barcodeImgPaht: _receipt.barcodePath,
         onReturnAfterChanges: handleReturnAfterChanges,
-        onSaveReceiptOptionPress: saveReceipt,
+        onSaveReceiptOptionPress: modelController.saveReceipt,
         onDeleteReceiptOptionPress: handleReceiptDeleted,
         onSelectModeToggled: toggleSelectMode,
         selectMode: modelController.isSelectModeEnabled,
