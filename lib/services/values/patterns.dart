@@ -18,13 +18,12 @@ String getPriceStr(String data) {
 }
 
 String getProductTextWithoutPrice(String data) {
-  return data.isEmpty
-      ? data
-      : data
-          .split(' ')
-          .where((e) => !isPrice(e))
-          .toList()
-          .reduce((value, element) => '$value $element');
+  List<String> dataWithoutPrices =
+      data.split(' ').where((e) => !isPrice(e)).toList();
+
+  return dataWithoutPrices.isEmpty
+      ? ''
+      : dataWithoutPrices.reduce((value, element) => '$value $element');
 }
 
 List<String> getAllPricesFromStr(String data) {

@@ -250,7 +250,12 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
               label: 'To Value',
               icon: Icons.transform,
               onSelected: changeSelectedProductsToValue,
-            )
+            ),
+            SelectModeEditorOption(
+              label: 'Remove',
+              icon: Icons.delete,
+              onSelected: removeSelectedProducts,
+            ),
           ]);
 
   get infoEditor => ReceiptDataEditor(
@@ -272,6 +277,11 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             icon: Icons.transform,
             onSelected: changeSelectedInfoToValue,
           ),
+            SelectModeEditorOption(
+              label: 'Remove',
+              icon: Icons.delete,
+              onSelected: removeSelectedInfo,
+            ),
         ],
       );
 
@@ -322,6 +332,12 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   }
 
   void toggleSelectMode() => setState(() => modelController.toggleSelectMode());
+
+  void removeSelectedInfo() =>
+      setState(() => modelController.removeSelectedInfo());
+
+  void removeSelectedProducts() =>
+      setState(() => modelController.removeSelectedProducts());
 
   void changeInfoValueType(ReceiptObjectModelType type, int index) =>
       setState(() => modelController.changeInfoValueType(type, index));

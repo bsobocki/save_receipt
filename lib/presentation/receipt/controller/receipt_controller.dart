@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:save_receipt/data/converters/data_converter.dart';
 import 'package:save_receipt/data/models/document.dart';
@@ -12,7 +14,7 @@ import 'package:save_receipt/data/values.dart';
 class ReceiptModelController {
   String? _receiptImagePath;
   late AllReceiptValuesController _allValues;
-  List<int> _selectedObjects = [];
+  final SplayTreeSet<int> _selectedObjects = SplayTreeSet((a, b) => b.compareTo(a));
   List<ReceiptObjectModel> _infos = [];
   List<ReceiptObjectModel> _products = [];
   List<ReceiptObjectModel> _dates = [];
@@ -253,13 +255,13 @@ class ReceiptModelController {
   void setProductsEditing() {
     _areProductsEdited = true;
     resetEditModeIndex();
-    _selectedObjects = [];
+    _selectedObjects.clear();
   }
 
   void setInfoEditing() {
     _areProductsEdited = false;
     resetEditModeIndex();
-    _selectedObjects = [];
+    _selectedObjects.clear();
   }
 
   void resetEditModeIndex() => _editingObjectFieldIndex = -1;
@@ -290,7 +292,7 @@ class ReceiptModelController {
 
   void toggleSelectMode() {
     _isSelectModeEnabled = !_isSelectModeEnabled;
-    _selectedObjects = [];
+    _selectedObjects.clear();
   }
 
   void toggleProductSelection(int index) {
@@ -392,6 +394,22 @@ class ReceiptModelController {
       !_areProductsEdited &&
       infoIndexExists(index) &&
       _selectedObjects.contains(index);
+
+  void removeSelectedProducts() {
+    for (int index in _selectedObjects) {
+      removeProduct(index);
+    }
+    toggleSelectMode();
+  }
+
+  void removeSelectedInfo() {
+    for (int index in _selectedObjects) {
+      print("trying to remove info: $index");
+      if (infoIndexExists(index)) print("removing ${_infos[index]}");
+      removeInfo(index);
+    }
+    toggleSelectMode();
+  }
 
   void changeSelectedInfoValueType(ReceiptObjectModelType type) {
     for (int index in _selectedObjects) {
