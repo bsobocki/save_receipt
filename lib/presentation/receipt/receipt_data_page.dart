@@ -49,7 +49,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
 
   Future<void> handleReceiptDeleted() async {
     try {
-        await modelController.deleteReceipt();
+      await modelController.deleteReceipt();
       if (mounted) {
         Navigator.pop(context);
       }
@@ -65,38 +65,57 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     }
   }
 
-  Future<void> handleReturnAfterChanges() async => await showDialog<void>(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(
-              "Save Receipt",
-              style: TextStyle(
-                color: themeController.theme.mainColor,
-              ),
-            ),
-            content: Text(
-              "Do you want to save receipt?",
-              style: TextStyle(
-                color: themeController.theme.mainColor,
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () async {
-                  await modelController.saveReceipt();
-                  Navigator.pop(context);
-                },
-                child: const Text("Yes"),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text("No"),
-              )
-            ],
-          );
-        },
+  Future<void> handleReturnAfterChanges() async => await showAlertDialog(
+        title: "Save Receipt",
+        content: "Do you want to save receipt?",
+        actions: [
+          TextButton(
+            onPressed: () async {
+              await modelController.saveReceipt();
+              Navigator.pop(context);
+            },
+            child: const Text("Yes"),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("No"),
+          )
+        ],
       );
+
+  Future<void> showAlertDialog({
+    required String title,
+    required String content,
+    List<Widget>? actions,
+  }) async {
+    actions ??= [
+      TextButton(
+        onPressed: () => Navigator.pop(context),
+        child: const Text("OK"),
+      ),
+    ];
+
+    await showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            title,
+            style: TextStyle(
+              color: themeController.theme.mainColor,
+            ),
+          ),
+          content: Text(
+            content,
+            style: TextStyle(
+              color: themeController.theme.mainColor,
+            ),
+          ),
+          actions: actions,
+        );
+      },
+    );
+  }
 
   void openFullImageMode() {
     if (modelController.imgPathExists) {
@@ -316,11 +335,25 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   void changeSelectedInfoToValue() =>
       setState(() => modelController.changeSelectedInfoToValue());
 
-  void changeInfoDoubleToProduct(int index) =>
-      setState(() => modelController.changeInfoDoubleToProduct(index));
+  void changeInfoDoubleToProduct(int index) async {
+    bool status = modelController.changeInfoDoubleToProduct(index);
+    if (!status) {
+      await showAlertDialog(
+          title: "Changing Info to Product",
+          content: "Info value must exists as a price!");
+    }
+    setState(() {});
+  }
 
-  void changeSelectedInfoToProducts() =>
-      setState(() => modelController.changeSelectedInfoToProducts());
+  void changeSelectedInfoToProducts() async {
+    bool status = modelController.changeSelectedInfoToProducts();
+    if (!status) {
+      await showAlertDialog(
+          title: "Changing Info to Product",
+          content: "Info value must exists as a price!");
+    }
+    setState(() {});
+  }
 
   void changeProductToValue(int index) =>
       setState(() => modelController.changeProductToValue(index));

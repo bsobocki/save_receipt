@@ -62,8 +62,8 @@ class ReceiptModelController {
 
     // because of conflictAlgorithm: ConflictAlgorithm.replace
     // existing object insertion will work similar to update
-    for (ProductData prod in data.products) {
-      await dbRepo.insertProduct(prod);
+    for (ProductData product in data.products) {
+      await dbRepo.insertProduct(product);
     }
     for (InfoData info in data.infos) {
       await dbRepo.insertInfo(info);
@@ -108,14 +108,6 @@ class ReceiptModelController {
     if (productIndexExists(index)) {
       _allValues.insertValue(_products[index].text);
       removeProduct(index);
-    }
-  }
-
-  void changeInfoToProduct(int index) {
-    if (infoIndexExists(index)) {
-      resetEditModeIndex();
-      _products.add(_infos[index]);
-      removeInfo(index);
     }
   }
 
@@ -191,12 +183,17 @@ class ReceiptModelController {
     trackChange();
   }
 
-  void changeInfoDoubleToProduct(int index) {
+  bool changeInfoDoubleToProduct(int index) {
     if (infoIndexExists(index)) {
-      _infos[index].type = ReceiptObjectModelType.product;
-      _products.add(_infos[index]);
-      removeInfo(index);
+      if (_infos[index].value != null) {
+        _infos[index].type = ReceiptObjectModelType.product;
+        _products.add(_infos[index]);
+        removeInfo(index);
+      } else {
+        return false;
+      }
     }
+    return true;
   }
 
   void removeInfo(int index) {
@@ -413,20 +410,25 @@ class ReceiptModelController {
     toggleSelectMode();
   }
 
-  void changeSelectedInfoToProducts() {
+  bool changeSelectedInfoToProducts() {
     List<ReceiptObjectModel> selectedInfos = _selectedObjects
         .where((index) => infoIndexExists(index))
         .map((index) => _infos[index])
         .toList();
+    bool status = true;
 
     for (ReceiptObjectModel info in selectedInfos) {
       if (info.value != null &&
           info.type == ReceiptObjectModelType.infoDouble) {
+        info.type = ReceiptObjectModelType.product;
         _products.add(info);
         removeInfoObject(info);
+      } else {
+        status = false;
       }
     }
     toggleSelectMode();
+    return status;
   }
 
   void changeSelectedProductsToValue() {
@@ -454,5 +456,7 @@ class ReceiptModelController {
       removeProductObject(product);
     }
     toggleSelectMode();
+
+    print(_infos);
   }
 }
