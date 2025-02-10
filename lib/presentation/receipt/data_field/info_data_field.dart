@@ -27,6 +27,7 @@ class InfoDataField extends StatefulWidget {
   final Function(ReceiptObjectModelType)? onValueTypeChanged;
   final VoidCallback? onChangedData;
   final VoidCallback onSelected;
+  final VoidCallback onLongPress;
 
   const InfoDataField({
     super.key,
@@ -46,6 +47,7 @@ class InfoDataField extends StatefulWidget {
     this.onChangedData,
     required this.selected,
     required this.onSelected,
+    required this.onLongPress,
   });
 
   get text => null;
@@ -93,6 +95,7 @@ class _InfoDataFieldState extends State<InfoDataField> {
 
     return GestureDetector(
       onTap: widget.onSelected,
+      onLongPress: widget.onLongPress,
       child: Container(
         color: themeController.theme.mainColor.withOpacity(opacity),
         child: Column(
@@ -114,31 +117,34 @@ class _InfoDataFieldState extends State<InfoDataField> {
     );
   }
 
-  Widget get normalModeContent => Container(
-        color: themeController.theme.mainColor
-            .withOpacity(widget.isDarker ? 0.04 : 0.0),
-        child: Column(
-          children: [
-            DataTextField(
-              enabled: widget.enabled,
-              textController: textController,
-              onChanged: (String value) {
-                widget.model.text = value;
-                widget.onChangedData?.call();
-              },
-            ),
-            if (widget.model.value != null)
-              ValueField(
+  Widget get normalModeContent => GestureDetector(
+        onLongPress: widget.onLongPress,
+        child: Container(
+          color: themeController.theme.mainColor
+              .withOpacity(widget.isDarker ? 0.04 : 0.0),
+          child: Column(
+            children: [
+              DataTextField(
                 enabled: widget.enabled,
-                textColor: Colors.black,
-                initValue: widget.model.value ?? '',
-                values: allValuesForType(widget.model.type),
-                onValueChanged: (String? value) {
-                  widget.model.value = value;
+                textController: textController,
+                onChanged: (String value) {
+                  widget.model.text = value;
                   widget.onChangedData?.call();
                 },
               ),
-          ],
+              if (widget.model.value != null)
+                ValueField(
+                  enabled: widget.enabled,
+                  textColor: Colors.black,
+                  initValue: widget.model.value ?? '',
+                  values: allValuesForType(widget.model.type),
+                  onValueChanged: (String? value) {
+                    widget.model.value = value;
+                    widget.onChangedData?.call();
+                  },
+                ),
+            ],
+          ),
         ),
       );
 

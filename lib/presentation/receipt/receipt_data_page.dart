@@ -160,6 +160,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             onSelected: () => setState(() {
               modelController.toggleProductSelection(index);
             }),
+            onLongPress: toggleSelectMode,
           );
         },
       ),
@@ -200,6 +201,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             onSelected: () => setState(() {
               modelController.toggleInfoSelection(index);
             }),
+            onLongPress: toggleSelectMode,
           );
         },
       ),

@@ -24,6 +24,7 @@ class ProductDataField extends StatefulWidget {
   final Function()? onChangedToInfo;
   final VoidCallback? onChangedData;
   final VoidCallback onSelected;
+  final VoidCallback onLongPress;
 
   const ProductDataField({
     super.key,
@@ -40,6 +41,7 @@ class ProductDataField extends StatefulWidget {
     this.onChangedData,
     required this.selected,
     required this.onSelected,
+    required this.onLongPress,
   });
 
   get text => null;
@@ -64,30 +66,33 @@ class _ProductDataFieldState extends State<ProductDataField> {
     super.dispose();
   }
 
-  Widget get normalModeContent => Container(
-        color: themeController.theme.mainColor
-            .withOpacity(widget.isDarker ? 0.04 : 0.0),
-        child: Column(
-          children: [
-            DataTextField(
-              enabled: widget.enabled,
-              textController: textController,
-              onChanged: (String value) {
-                widget.model.text = value;
-                widget.onChangedData?.call();
-              },
-            ),
-            ValueField(
-              enabled: widget.enabled,
-              textColor: Colors.black,
-              initValue: widget.model.value!,
-              values: widget.allValuesData.prices,
-              onValueChanged: (String? value) {
-                widget.model.value = value;
-                widget.onChangedData?.call();
-              },
-            ),
-          ],
+  Widget get normalModeContent => GestureDetector(
+        onLongPress: widget.onLongPress,
+        child: Container(
+          color: themeController.theme.mainColor
+              .withOpacity(widget.isDarker ? 0.04 : 0.0),
+          child: Column(
+            children: [
+              DataTextField(
+                enabled: widget.enabled,
+                textController: textController,
+                onChanged: (String value) {
+                  widget.model.text = value;
+                  widget.onChangedData?.call();
+                },
+              ),
+              ValueField(
+                enabled: widget.enabled,
+                textColor: Colors.black,
+                initValue: widget.model.value!,
+                values: widget.allValuesData.prices,
+                onValueChanged: (String? value) {
+                  widget.model.value = value;
+                  widget.onChangedData?.call();
+                },
+              ),
+            ],
+          ),
         ),
       );
 
@@ -119,6 +124,7 @@ class _ProductDataFieldState extends State<ProductDataField> {
 
     return GestureDetector(
       onTap: widget.onSelected,
+      onLongPress: widget.onLongPress,
       child: Container(
         color: themeController.theme.mainColor.withOpacity(opacity),
         child: Column(
