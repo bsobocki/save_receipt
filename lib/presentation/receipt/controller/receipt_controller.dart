@@ -25,7 +25,7 @@ class ReceiptModelController {
   bool _areProductsEdited = true;
   bool _isSelectModeEnabled = false;
   int _editingObjectFieldIndex = -1;
-  int? receiptId;
+  int? _receiptId;
 
   ReceiptModelController(
       final ReceiptModel receipt, AllValuesModel? allValuesModel) {
@@ -36,7 +36,7 @@ class ReceiptModelController {
     _products = receipt.products;
     _infos = receipt.infos;
     _dates = receipt.dates;
-    receiptId = receipt.receiptId;
+    _receiptId = receipt.receiptId;
   }
 
   void trackChange() {
@@ -50,14 +50,17 @@ class ReceiptModelController {
   Future<void> saveReceipt() async {
     var dbRepo = ReceiptDatabaseRepository.get;
     ReceiptDocumentData data;
+    ReceiptModel receiptModel = model;
 
-    if (receiptId != null) {
-      data = ReceiptDataConverter.toDocumentDataForExistingReceipt(model);
-      receiptId = await dbRepo.updateReceipt(data.receipt);
+    if (_receiptId != null) {
+      data =
+          ReceiptDataConverter.toDocumentDataForExistingReceipt(receiptModel);
+      _receiptId = await dbRepo.updateReceipt(data.receipt);
     } else {
-      ReceiptData receiptData = ReceiptDataConverter.toReceiptData(model);
-      receiptId = await dbRepo.insertReceipt(receiptData);
-      data = ReceiptDataConverter.toDocumentData(model, receiptId!);
+      ReceiptData receiptData =
+          ReceiptDataConverter.toReceiptData(receiptModel);
+      _receiptId = await dbRepo.insertReceipt(receiptData);
+      data = ReceiptDataConverter.toDocumentData(model, _receiptId!);
     }
 
     // because of conflictAlgorithm: ConflictAlgorithm.replace
@@ -92,8 +95,8 @@ class ReceiptModelController {
   }
 
   Future<void> deleteReceipt() async {
-    if (receiptId != null) {
-      await ReceiptDatabaseRepository.get.deleteReceipt(receiptId!);
+    if (_receiptId != null) {
+      await ReceiptDatabaseRepository.get.deleteReceipt(_receiptId!);
     }
   }
 
@@ -340,7 +343,7 @@ class ReceiptModelController {
       ];
 
   ReceiptModel get model => ReceiptModel(
-      receiptId: receiptId, objects: objects, imgPath: _receiptImagePath);
+      receiptId: _receiptId, objects: objects, imgPath: _receiptImagePath);
 
   List<ReceiptObjectModel> get products => _products;
 
@@ -456,7 +459,5 @@ class ReceiptModelController {
       removeProductObject(product);
     }
     toggleSelectMode();
-
-    print(_infos);
   }
 }
