@@ -4,7 +4,6 @@ bool isNumeric(String data) {
 
 bool isProductWithPrice(String data) {
   RegExp regex = RegExp(r'[a-zA-Z]+[ \t]*[0-9]+[,\.][0-9]+[a-zA-Z]*');
-  print(regex.allMatches(data).map((e) => e.input,).toList());
   return regex.hasMatch(data); // && isPrice(regex.allMatches(data).last.input);
 }
 

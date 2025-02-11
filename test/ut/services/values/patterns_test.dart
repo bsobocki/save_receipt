@@ -28,5 +28,21 @@ void main() {
       expect(isPrice('D3.5fs'), false);
       expect(isPrice('84f.9'), false);
     });
+
+    test('isProductWithPrice', () {
+      expect(isProductWithPrice(' WKŁADY DO SZCZOTECZEK 1.000*79.99 79.99A '), true);
+      expect(isProductWithPrice('WKŁADY DO SZCZOTECZEK 1.000*79.99 79.99A '), true);
+      expect(isProductWithPrice('WKŁADY DO SZCZOTECZEK 1.000*79.99 79.99A'), true);
+      expect(isProductWithPrice('product 1x 42,6D'), true);
+      expect(isProductWithPrice('product 1 x 78.9'), true);
+      expect(isProductWithPrice('product 1x78.9'), true);
+      expect(isProductWithPrice('product1x78.9D'), true);
+      expect(isProductWithPrice('p 78.9'), true);
+      expect(isProductWithPrice('product 42,6D'), true);
+      expect(isProductWithPrice('prod78.9'), true);
+      expect(isProductWithPrice('p78.9AC'), true);
+      expect(isProductWithPrice('42,6D'), false);
+      expect(isProductWithPrice('product1x789'), false);
+    });
   });
 }
