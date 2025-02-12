@@ -84,6 +84,7 @@ void main() {
       expect(getAllPricesFromStr('84.9 1.00 x'), ['84.9','1.00']);
       expect(getAllPricesFromStr('ad 32.9*84.9 1.00x'), ['32.9', '84.9', '1.00']);
       expect(getAllPricesFromStr('ad 32.9*84.9 100x'), ['32.9', '84.9']);
+      expect(getAllPricesFromStr(' WKŁADY DO SZCZOTECZEK 1.000*79.99 79.99A '), ['1.000', '79.99', '79.99']);
     });
 
     test('isProductWithPrice', () {
