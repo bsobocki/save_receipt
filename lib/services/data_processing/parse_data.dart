@@ -27,7 +27,7 @@ class DataParser {
 
       if (isTwoPart) {
         String connectedStr = line.connectedLine!.text;
-        if (isPrice(connectedStr)) {
+        if (hasPrice(connectedStr)) {
           String priceStr = getAllPricesFromStr(connectedStr).last;
           receiptObjectModels.add(
             ReceiptObjectModel(
@@ -66,6 +66,14 @@ class DataParser {
         }
         else if (isPrice(text)) {
           prices.add(getAllPricesFromStr(text).last);
+        } else if (isDate(text)) {
+          receiptObjectModels.add(
+            ReceiptObjectModel(
+              text: 'DATE',
+              value: text,
+              type: ReceiptObjectModelType.infoDate,
+            ),
+          );
         } else {
           receiptObjectModels.add(
             ReceiptObjectModel(
