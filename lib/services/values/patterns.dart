@@ -5,7 +5,7 @@ bool isNumeric(String data) {
 }
 
 bool isProductWithPrice(String data) {
-  RegExp regex = RegExp(r'[a-zA-Z]+[ \t]*[0-9]+[,\.][0-9]+[a-zA-Z]*');
+  RegExp regex = RegExp(r'[a-zA-Z]+[ \t]*' + priceRegex + r'[a-zA-Z]*');
   return regex.hasMatch(data) && isPrice(getAllPricesFromStr(data).last);
 }
 
@@ -34,7 +34,7 @@ String getProductTextWithoutPrice(String data) {
 }
 
 List<String> getAllPricesFromStr(String data) {
-  RegExp regex = RegExp(r'[0-9]+[,\.][0-9]+');
+  RegExp regex = RegExp(priceRegex);
   return regex
       .allMatches(data)
       .map((e) => e[0]?.replaceAll(RegExp(','), '.') ?? '')
