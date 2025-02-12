@@ -132,6 +132,9 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     super.initState();
     modelController =
         ReceiptModelController(widget.initialReceipt, widget.allValuesModel);
+    if (widget.initialReceipt.receiptId == null) {
+      modelController.trackChange();
+    }
   }
 
   Widget get productsList {
@@ -279,11 +282,11 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             icon: Icons.transform,
             onSelected: changeSelectedInfoToValue,
           ),
-            SelectModeEditorOption(
-              label: 'Remove',
-              icon: Icons.delete,
-              onSelected: removeSelectedInfo,
-            ),
+          SelectModeEditorOption(
+            label: 'Remove',
+            icon: Icons.delete,
+            onSelected: removeSelectedInfo,
+          ),
         ],
       );
 
