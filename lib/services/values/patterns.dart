@@ -1,16 +1,19 @@
 const String priceRegex = r'[0-9]+[,\.][0-9]+';
+const String amountRegex = r'([ \t][0-9\.,x*]+)|([0-9\.,x*]+[ \t])|([0-9][x*,\.][0-9]*)|([0-9]*[x*,\.][0-9])';
+const String additionalPriceMarksRegex = r'[a-zA-Z]{0,2}';
 
 bool isNumeric(String data) {
   return false;
 }
 
 bool isProductWithPrice(String data) {
-  RegExp regex = RegExp(r'[a-zA-Z]+[ \t]*' + priceRegex + r'[a-zA-Z]*');
+  RegExp regex =
+      RegExp(r'[a-zA-Z]+[ \t]*' + priceRegex + additionalPriceMarksRegex);
   return regex.hasMatch(data) && isPrice(getAllPricesFromStr(data).last);
 }
 
 bool isPrice(String data) {
-  RegExp regex = RegExp(r'^' + priceRegex + r'[a-zA-Z]{0,2}$');
+  RegExp regex = RegExp(r'^' + priceRegex + additionalPriceMarksRegex + r'$');
   return regex.hasMatch(data) && double.tryParse(getPriceStr(data)) != null;
 }
 
@@ -21,16 +24,15 @@ bool hasPrice(String data) {
 
 String getPriceStr(String data) {
   RegExp regex = RegExp(priceRegex);
-  return regex.firstMatch(data)?[0]?.replaceAll(RegExp(','), '.') ?? '';
+  List<RegExpMatch> matches = regex.allMatches(data).toList();
+  return matches.isEmpty ? '' : matches.last[0]?.replaceAll(RegExp(','), '.') ?? '';
 }
 
 String getProductTextWithoutPrice(String data) {
-  List<String> dataWithoutPrices =
-      data.split(' ').where((e) => !isPrice(e)).toList();
-
-  return dataWithoutPrices.isEmpty
-      ? ''
-      : dataWithoutPrices.reduce((value, element) => '$value $element');
+  return data
+      .replaceAll(RegExp('$priceRegex$additionalPriceMarksRegex'), '')
+      .replaceAll(RegExp(amountRegex), '')
+      .trim();
 }
 
 List<String> getAllPricesFromStr(String data) {
