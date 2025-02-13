@@ -52,16 +52,33 @@ List<String> getAllPricesFromStr(String data) {
 }
 
 bool isDate(String data) {
-  const String hourRegex = r'[0-9]+:[0-9]+[:]*[0-9]*';
+  const String secondsRegex = r'(?:[0-5]*[0-9])';
+  const String minutesRegex = r'(?:[0-5]*[0-9])';
+  const String hourRegex = r'(?:[01]*[0-9]|2[0-3])';
+  const String endingRegex = '(?::$secondsRegex|(?::$secondsRegex:[0-9]+))';
+  const String timeRegex = '$hourRegex:$minutesRegex$endingRegex*';
+
   const String yearRegex = r'(?:[0-9]{4}|[0-9]{2})';
-  const String dayMonthRegex = r'[0-9]{1,2}';
-  const String dateSepRegex = r'[:\/\\_ -]';
-  const String dateStartsWithYearRegex =
-      '$yearRegex$dateSepRegex$dayMonthRegex$dateSepRegex$dayMonthRegex';
-  const String dateEndsWithYearRegex =
-      '$dayMonthRegex$dateSepRegex$dayMonthRegex$dateSepRegex$yearRegex';
-  String dateRegex =
-      '$startRegex(?:$dateStartsWithYearRegex|$dateEndsWithYearRegex|$hourRegex)$endRegex';
+  const String dayRegex = r'(?:0*[1-9]|[12]\d|3[01])';
+  const String monthRegex = r'(?:0*[1-9]|1[0-2])';
+  const String dateSepRegex = r'[:.\/\\_ -]';
+
+  const String yearMonthDayRegex =
+      '$yearRegex$dateSepRegex$monthRegex$dateSepRegex$dayRegex';
+  const String yearDayMonthRegex =
+      '$yearRegex$dateSepRegex$dayRegex$dateSepRegex$monthRegex';
+  const String dayMonthYearRegex =
+      '$dayRegex$dateSepRegex$monthRegex$dateSepRegex$yearRegex';
+  const String monthDayYearRegex =
+      '$monthRegex$dateSepRegex$dayRegex$dateSepRegex$yearRegex';
+
+  String dateRegex = '$startRegex'
+      '(?:$yearMonthDayRegex|'
+      '$yearDayMonthRegex|'
+      '$dayMonthYearRegex|'
+      '$monthDayYearRegex|'
+      '$timeRegex)'
+      '$endRegex';
 
   return RegExp(dateRegex).hasMatch(data);
 }
