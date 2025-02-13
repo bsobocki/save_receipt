@@ -188,7 +188,7 @@ void main() {
       expect(isProductWithPrice('product1x789'), false);
     });
 
-    test('isProductWithPrice', () {
+    test('getProductTextWithoutPrice', () {
       expect(getProductTextWithoutPrice(' WKl 79.99A '), 'WKl');
       expect(
           getProductTextWithoutPrice(
