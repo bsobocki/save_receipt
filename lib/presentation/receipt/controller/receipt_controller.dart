@@ -122,7 +122,7 @@ class ReceiptModelController {
       _allValues.removeValue(_infos[index].value!);
       _infos.add(
         ReceiptObjectModel(
-          type: ReceiptObjectModelType.object,
+          type: ReceiptObjectModelType.infoText,
           text: _infos[index].value!,
           value: null,
         ),
