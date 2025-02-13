@@ -26,12 +26,15 @@ class SelectModeDataTextField extends StatelessWidget {
       child: Row(
         children: [
           if (textAlign == TextAlign.right) placeholder,
-          Text(
-            text,
-            style: TextStyle(
-              color: textColor,
-              fontWeight: FontWeight.w600,
-              fontSize: 14.0,
+          Expanded(
+            child: Text(
+              text,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: textColor,
+                fontWeight: FontWeight.w600,
+                fontSize: 14.0,
+              ),
             ),
           ),
           if (textAlign == TextAlign.left) placeholder
