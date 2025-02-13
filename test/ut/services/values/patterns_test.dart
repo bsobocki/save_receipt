@@ -63,8 +63,10 @@ void main() {
       expect(getPriceStr('42.0'), '42.0');
       expect(getPriceStr('1999.00'), '1999.00');
       expect(getPriceStr('146.7D'), '146.7');
-      expect(getPriceStr('1.000*79.99 79.99A'),
-          '79.99',);
+      expect(
+        getPriceStr('1.000*79.99 79.99A'),
+        '79.99',
+      );
       expect(getPriceStr('1.000x79.99A'), '79.99');
       expect(getPriceStr('1x 32,6'), '32.6');
       expect(getPriceStr('1x23,5'), '23.5');
@@ -187,10 +189,7 @@ void main() {
     });
 
     test('isProductWithPrice', () {
-      expect(
-          getProductTextWithoutPrice(
-              ' WKl 79.99A '),
-          'WKl');
+      expect(getProductTextWithoutPrice(' WKl 79.99A '), 'WKl');
       expect(
           getProductTextWithoutPrice(
               ' WKŁADY DO SZCZOTECZEK 1.000*79.99 79.99A '),
@@ -207,13 +206,65 @@ void main() {
       expect(getProductTextWithoutPrice('product 1 x 78.9'), 'product');
       expect(getProductTextWithoutPrice('product 1x78.9'), 'product');
       expect(getProductTextWithoutPrice('product1x78.9D'), 'product');
-      expect(getProductTextWithoutPrice('extreme product1x78.9D'), 'extreme product');
+      expect(getProductTextWithoutPrice('extreme product1x78.9D'),
+          'extreme product');
       expect(getProductTextWithoutPrice('p 78.9'), 'p');
       expect(getProductTextWithoutPrice('product 42,6D'), 'product');
       expect(getProductTextWithoutPrice('prod78.9'), 'prod');
       expect(getProductTextWithoutPrice('p78.9AC'), 'p');
       expect(getProductTextWithoutPrice('42,6D'), '');
       expect(getProductTextWithoutPrice('product1x789'), 'product');
+    });
+
+    test('isDate', () {
+      expect(isDate('NIP: 754-3994-213-414'), false);
+      expect(isDate('2011-05-18'), true);
+      expect(isDate('2011/05/18'), true);
+      expect(isDate(' Śr 2011_05_18'), true);
+      expect(isDate('Czw 2011 05 18'), true);
+      expect(isDate('2011:05:18 Mon'), true);
+      expect(isDate('Wed 2011-05-18'), true);
+      expect(isDate('Wed 20:11'), true);
+      expect(isDate('2011-05-18 .'), true);
+
+      // Leading space is allowed:
+      expect(isDate(' 2011-05-18'), true);
+      // Trailing space is allowed:
+      expect(isDate('2011-05-18 '), true);
+      // Surrounded by text with whitespace before and after:
+      expect(isDate('some text 2011-12-31 some text'), true);
+      // Single-digit month/day:
+      expect(isDate('2011-5-1'), true);
+      // Mixed separators:
+      expect(isDate('2011_5_1'), true); // underscores
+      expect(isDate('2011/5/1'), true); // forward slash
+      expect(isDate(r'2011\5\1'), true); // backslash
+      // Hours or times:
+      expect(isDate('14:00'), true);
+      expect(isDate('14:30:10'), true);
+      // 2-digit year:
+      expect(isDate('21-05-18'), true);
+      // Reverse date format (day-month-year):
+      expect(isDate('05/18/2011'), true);
+      // Another day-month-year style with underscores:
+      expect(isDate('5_18_11'), true);
+
+      // No whitespace before the date => fails:
+      expect(isDate('some text2011-05-18'), false);
+      // No whitespace after the date => fails:
+      expect(isDate('2011-05-18,some text'), false);
+      // Extra punctuation right after the date => fails (comma not allowed before whitespace/end):
+      expect(isDate('2011-05-18,'), false);
+      // Dot as separator is not in our character class => fails:
+      expect(isDate('2011.05.18'), false);
+      // Too many digits throws off matching (5-digit year):
+      expect(isDate('99999-12-31'), false);
+      // Missing separator:
+      expect(isDate('20110518'), false);
+      // Punctuation mismatch, e.g. dash + colon + underscore in a weird place:
+      expect(isDate('2011:-_05-18'), false);
+      // No actual date or time in numeric form:
+      expect(isDate('today is Wed'), false);
     });
   });
 }

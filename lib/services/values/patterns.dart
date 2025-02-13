@@ -1,6 +1,12 @@
 const String priceRegex = r'[0-9]+[,\.][0-9]+';
-const String amountRegex = r'([ \t][0-9\.,x*]+)|([0-9\.,x*]+[ \t])|([0-9][x*,\.][0-9]*)|([0-9]*[x*,\.][0-9])';
+const String amountRegex =
+    r'([ \t][0-9\.,x*]+)|([0-9\.,x*]+[ \t])|([0-9][x*,\.][0-9]*)|([0-9]*[x*,\.][0-9])';
 const String additionalPriceMarksRegex = r'[a-zA-Z]{0,2}';
+
+// start with space or just start string
+// ?: means that we don't want to capture this group
+const String startRegex = r'(?:^|\s)';
+const String endRegex = r'(?:\s|$)';
 
 bool isNumeric(String data) {
   return false;
@@ -25,7 +31,9 @@ bool hasPrice(String data) {
 String getPriceStr(String data) {
   RegExp regex = RegExp(priceRegex);
   List<RegExpMatch> matches = regex.allMatches(data).toList();
-  return matches.isEmpty ? '' : matches.last[0]?.replaceAll(RegExp(','), '.') ?? '';
+  return matches.isEmpty
+      ? ''
+      : matches.last[0]?.replaceAll(RegExp(','), '.') ?? '';
 }
 
 String getProductTextWithoutPrice(String data) {
@@ -44,9 +52,18 @@ List<String> getAllPricesFromStr(String data) {
 }
 
 bool isDate(String data) {
-  RegExp regex =
-      RegExp(r'([0-9]+:[0-9]+)+|[ \t]*([0-9]+[\-\\/][0-9]+[\-\\/][0-9]+).*');
-  return regex.hasMatch(data);
+  const String hourRegex = r'[0-9]+:[0-9]+[:]*[0-9]*';
+  const String yearRegex = r'(?:[0-9]{4}|[0-9]{2})';
+  const String dayMonthRegex = r'[0-9]{1,2}';
+  const String dateSepRegex = r'[:\/\\_ -]';
+  const String dateStartsWithYearRegex =
+      '$yearRegex$dateSepRegex$dayMonthRegex$dateSepRegex$dayMonthRegex';
+  const String dateEndsWithYearRegex =
+      '$dayMonthRegex$dateSepRegex$dayMonthRegex$dateSepRegex$yearRegex';
+  String dateRegex =
+      '$startRegex(?:$dateStartsWithYearRegex|$dateEndsWithYearRegex|$hourRegex)$endRegex';
+
+  return RegExp(dateRegex).hasMatch(data);
 }
 
 double parsePrice(String data) {
