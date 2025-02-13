@@ -50,7 +50,7 @@ class _DataFieldValueTypeMenuState extends State<DataFieldValueTypeMenu> {
         return Icons.price_change;
       case ReceiptObjectModelType.infoText:
         return Icons.text_fields_sharp;
-      case ReceiptObjectModelType.infoDate:
+      case ReceiptObjectModelType.infoTime:
         return Icons.calendar_month;
       case ReceiptObjectModelType.infoNumeric:
         return Icons.looks_one_outlined;
@@ -71,7 +71,7 @@ class _DataFieldValueTypeMenuState extends State<DataFieldValueTypeMenu> {
       }),
       itemBuilder: (context) => [
         getPopupMenuItem('text', ReceiptObjectModelType.infoText),
-        getPopupMenuItem('date', ReceiptObjectModelType.infoDate),
+        getPopupMenuItem('time', ReceiptObjectModelType.infoTime),
         getPopupMenuItem('price', ReceiptObjectModelType.infoDouble),
         getPopupMenuItem('numeric', ReceiptObjectModelType.infoNumeric),
       ],

@@ -51,7 +51,7 @@ List<String> getAllPricesFromStr(String data) {
       .toList();
 }
 
-bool isDate(String data) {
+bool isTime(String data) {
   const String secondsRegex = r'(?:[0-5]*[0-9])';
   const String minutesRegex = r'(?:[0-5]*[0-9])';
   const String hourRegex = r'(?:[01]*[0-9]|2[0-3])';

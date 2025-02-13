@@ -4,7 +4,7 @@ import 'package:save_receipt/data/database/structure/names.dart';
 
 class ReceiptDao extends Dao<ReceiptData> {
   final String shopIdColumnt = 'shop_id';
-  final String dateColumn = 'date';
+  final String timeColumn = 'time';
   final String totalCostColumn = 'total_cost';
   final String imgPathColumn = 'img_path';
 
@@ -12,7 +12,7 @@ class ReceiptDao extends Dao<ReceiptData> {
   Map<String, dynamic> toMap(ReceiptData object) {
     var map = {
       shopIdColumnt: object.shopId,
-      dateColumn: object.date,
+      timeColumn: object.time,
       totalCostColumn: object.totalCost,
       imgPathColumn: object.imgPath,
     };
@@ -27,7 +27,7 @@ class ReceiptDao extends Dao<ReceiptData> {
       CREATE TABLE ${DatabaseTableNames.receipts}(
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         $shopIdColumnt INTEGER DEFAULT -1,
-        $dateColumn TEXT NOT NULL,
+        $timeColumn TEXT NOT NULL,
         $totalCostColumn REAL NOT NULL,
         $imgPathColumn TEXT,
         FOREIGN KEY ($shopIdColumnt) REFERENCES ${DatabaseTableNames.shops} (id) ON DELETE SET DEFAULT
@@ -39,7 +39,7 @@ class ReceiptDao extends Dao<ReceiptData> {
     return ReceiptData(
       id: query['id'],
       shopId: query[shopIdColumnt],
-      date: query[dateColumn],
+      time: query[timeColumn],
       totalCost: (query[totalCostColumn] ?? 0.0) as double,
       imgPath: query[imgPathColumn],
     );

@@ -35,13 +35,13 @@ class ReceiptModel {
         ...getObjects(ReceiptObjectModelType.infoText),
         ...getObjects(ReceiptObjectModelType.infoDouble),
         ...getObjects(ReceiptObjectModelType.infoNumeric),
-        ...getObjects(ReceiptObjectModelType.infoDate)
+        ...getObjects(ReceiptObjectModelType.infoTime)
       ];
-  get dates => getObjects(ReceiptObjectModelType.infoDate);
+  get time => getObjects(ReceiptObjectModelType.infoTime);
 
   get prices => products.map((e) => e.value!).toList();
   get infoStr => getValuesAsStr(ReceiptObjectModelType.infoText);
-  get datesStr => getValuesAsStr(ReceiptObjectModelType.infoDate);
+  get timeStr => getValuesAsStr(ReceiptObjectModelType.infoTime);
 
   @override
   String toString() => 'img: $imgPath, [$objects]';

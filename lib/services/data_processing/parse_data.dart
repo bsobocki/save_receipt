@@ -19,7 +19,7 @@ class DataParser {
     List<ReceiptObjectModel> receiptObjectModels = [];
     List<String> prices = [];
     List<String> info = [];
-    List<String> dates = [];
+    List<String> time = [];
 
     for (ConnectedTextLines line in lines) {
       bool isTwoPart = line.connectedLine != null;
@@ -36,14 +36,14 @@ class DataParser {
                 type: ReceiptObjectModelType.product),
           );
           prices.add(priceStr);
-        } else if (isDate(connectedStr)) {
+        } else if (isTime(connectedStr)) {
           receiptObjectModels.add(
             ReceiptObjectModel(
                 text: text,
                 value: connectedStr,
-                type: ReceiptObjectModelType.infoDate),
+                type: ReceiptObjectModelType.infoTime),
           );
-          dates.add(connectedStr);
+          time.add(connectedStr);
         } else {
           receiptObjectModels.add(
             ReceiptObjectModel(
@@ -63,15 +63,14 @@ class DataParser {
             ),
           );
           prices.add(getAllPricesFromStr(text).last);
-        }
-        else if (isPrice(text)) {
+        } else if (isPrice(text)) {
           prices.add(getAllPricesFromStr(text).last);
-        } else if (isDate(text)) {
+        } else if (isTime(text)) {
           receiptObjectModels.add(
             ReceiptObjectModel(
-              text: 'DATE',
+              text: 'TIME',
               value: text,
-              type: ReceiptObjectModelType.infoDate,
+              type: ReceiptObjectModelType.infoTime,
             ),
           );
         } else {
@@ -89,7 +88,7 @@ class DataParser {
       allValuesModel: AllValuesModel(
         prices: prices,
         info: info,
-        dates: dates,
+        time: time,
       ),
     );
   }

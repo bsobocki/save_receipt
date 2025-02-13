@@ -4,7 +4,7 @@ enum ReceiptObjectModelType {
   infoText,
   infoDouble,
   infoNumeric,
-  infoDate
+  infoTime
 }
 
 class ReceiptObjectModel {

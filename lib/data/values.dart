@@ -8,9 +8,9 @@ class AllReceiptValuesController {
   AllReceiptValuesController.fromValues(
       {required List<String> priceValues,
       required List<String> infoValues,
-      required List<String> dateValues})
+      required List<String> timeValues})
       : model = AllValuesModel(
-            prices: priceValues, info: infoValues, dates: dateValues);
+            prices: priceValues, info: infoValues, time: timeValues);
 
   AllReceiptValuesController({required this.model});
 
@@ -18,13 +18,13 @@ class AllReceiptValuesController {
       : model = AllValuesModel(
             prices: receipt.prices,
             info: receipt.infoStr,
-            dates: receipt.datesStr);
+            time: receipt.timeStr);
 
   void insertValue(String value) {
     if (isPrice(value)) {
       model.prices.add(value);
-    } else if (isDate(value)) {
-      model.dates.add(value);
+    } else if (isTime(value)) {
+      model.time.add(value);
     } else {
       model.info.add(value);
     }
@@ -33,8 +33,8 @@ class AllReceiptValuesController {
   void removeValue(String value) {
     if (isPrice(value)) {
       model.prices.remove(value);
-    } else if (isDate(value)) {
-      model.dates.remove(value);
+    } else if (isTime(value)) {
+      model.time.remove(value);
     } else {
       model.info.remove(value);
     }

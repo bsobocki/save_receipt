@@ -14,13 +14,14 @@ import 'package:save_receipt/data/values.dart';
 class ReceiptModelController {
   String? _receiptImagePath;
   late AllReceiptValuesController _allValues;
-  final SplayTreeSet<int> _selectedObjects = SplayTreeSet((a, b) => b.compareTo(a));
+  final SplayTreeSet<int> _selectedObjects =
+      SplayTreeSet((a, b) => b.compareTo(a));
   List<ReceiptObjectModel> _infos = [];
   List<ReceiptObjectModel> _products = [];
-  List<ReceiptObjectModel> _dates = [];
+  List<ReceiptObjectModel> _time = [];
   final List<int> _deletedProductsIds = [];
   final List<int> _deletedInfoTextIds = [];
-  final List<int> _deletedInfoDateIds = [];
+  final List<int> _deletedInfoTimeIds = [];
   final List<int> _deletedInfoDoubleIds = [];
   final List<int> _deletedInfoNumericIds = [];
   final ValueNotifier<bool> _dataChangedNotifier = ValueNotifier<bool>(false);
@@ -37,7 +38,7 @@ class ReceiptModelController {
         : AllReceiptValuesController.fromReceipt(receipt);
     _products = receipt.products;
     _infos = receipt.infos;
-    _dates = receipt.dates;
+    _time = receipt.time;
     _receiptId = receipt.receiptId;
   }
 
@@ -83,7 +84,7 @@ class ReceiptModelController {
     for (int id in _deletedInfoTextIds) {
       await dbRepo.deleteInfo(id);
     }
-    for (int id in _deletedInfoDateIds) {
+    for (int id in _deletedInfoTimeIds) {
       await dbRepo.deleteInfo(id);
     }
     for (int id in _deletedInfoDoubleIds) {
@@ -148,8 +149,8 @@ class ReceiptModelController {
           case ReceiptObjectModelType.infoNumeric:
             _deletedInfoNumericIds.add(id);
             break;
-          case ReceiptObjectModelType.infoDate:
-            _deletedInfoDateIds.add(id);
+          case ReceiptObjectModelType.infoTime:
+            _deletedInfoTimeIds.add(id);
             break;
           default:
             break;
@@ -223,8 +224,8 @@ class ReceiptModelController {
         case ReceiptObjectModelType.infoNumeric:
           _deletedInfoNumericIds.add(id);
           break;
-        case ReceiptObjectModelType.infoDate:
-          _deletedInfoDateIds.add(id);
+        case ReceiptObjectModelType.infoTime:
+          _deletedInfoTimeIds.add(id);
           break;
         default:
           break;
@@ -351,7 +352,7 @@ class ReceiptModelController {
 
   List<ReceiptObjectModel> get infos => _infos;
 
-  List<ReceiptObjectModel> get dates => _dates;
+  List<ReceiptObjectModel> get times => _time;
 
   bool productIndexExists(int index) => index >= 0 && index < _products.length;
 

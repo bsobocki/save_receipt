@@ -216,125 +216,125 @@ void main() {
       expect(getProductTextWithoutPrice('product1x789'), 'product');
     });
 
-    test('isDate', () {
-      expect(isDate('NIP: 754-3994-213-414'), false);
-      expect(isDate('2011-05-18'), true);
-      expect(isDate('2011/05/18'), true);
-      expect(isDate(' Śr 2011_05_18'), true);
-      expect(isDate('Czw 2011 05 18'), true);
-      expect(isDate('2011:05:18 Mon'), true);
-      expect(isDate('Wed 2011-05-18'), true);
-      expect(isDate('Wed 20:11'), true);
-      expect(isDate('2011-05-18 .'), true);
+    test('isTime', () {
+      expect(isTime('NIP: 754-3994-213-414'), false);
+      expect(isTime('2011-05-18'), true);
+      expect(isTime('2011/05/18'), true);
+      expect(isTime(' Śr 2011_05_18'), true);
+      expect(isTime('Czw 2011 05 18'), true);
+      expect(isTime('2011:05:18 Mon'), true);
+      expect(isTime('Wed 2011-05-18'), true);
+      expect(isTime('Wed 20:11'), true);
+      expect(isTime('2011-05-18 .'), true);
 
       // generated tests:
 
       // Leading space is allowed:
-      expect(isDate(' 2011-05-18'), true);
+      expect(isTime(' 2011-05-18'), true);
       // Trailing space is allowed:
-      expect(isDate('2011-05-18 '), true);
+      expect(isTime('2011-05-18 '), true);
       // Surrounded by text with whitespace before and after:
-      expect(isDate('some text 2011-12-31 some text'), true);
+      expect(isTime('some text 2011-12-31 some text'), true);
       // Single-digit month/day:
-      expect(isDate('2011-5-1'), true);
+      expect(isTime('2011-5-1'), true);
       // Mixed separators:
-      expect(isDate('2011_5_1'), true); // underscores
-      expect(isDate('2011/5/1'), true); // forward slash
-      expect(isDate(r'2011\5\1'), true); // backslash
+      expect(isTime('2011_5_1'), true); // underscores
+      expect(isTime('2011/5/1'), true); // forward slash
+      expect(isTime(r'2011\5\1'), true); // backslash
       // Hours or times:
-      expect(isDate('14:00'), true);
-      expect(isDate('14:30:10'), true);
+      expect(isTime('14:00'), true);
+      expect(isTime('14:30:10'), true);
       // 2-digit year:
-      expect(isDate('21-05-18'), true);
+      expect(isTime('21-05-18'), true);
       // Reverse date format (day-month-year):
-      expect(isDate('05/18/2011'), true);
+      expect(isTime('05/18/2011'), true);
       // Another day-month-year style with underscores:
-      expect(isDate('5_18_11'), true);
+      expect(isTime('5_18_11'), true);
 
       // No whitespace before the date => fails:
-      expect(isDate('some text2011-05-18'), false);
+      expect(isTime('some text2011-05-18'), false);
       // No whitespace after the date => fails:
-      expect(isDate('2011-05-18,some text'), false);
+      expect(isTime('2011-05-18,some text'), false);
       // Extra punctuation right after the date => fails (comma not allowed before whitespace/end):
-      expect(isDate('2011-05-18,'), false);
+      expect(isTime('2011-05-18,'), false);
       // Too many digits throws off matching (5-digit year):
-      expect(isDate('99999-12-31'), false);
+      expect(isTime('99999-12-31'), false);
       // Missing separator:
-      expect(isDate('20110518'), false);
+      expect(isTime('20110518'), false);
       // Punctuation mismatch, e.g. dash + colon + underscore in a weird place:
-      expect(isDate('2011:-_05-18'), false);
+      expect(isTime('2011:-_05-18'), false);
       // No actual date or time in numeric form:
-      expect(isDate('today is Wed'), false);
+      expect(isTime('today is Wed'), false);
 
       // simple date range-checking (without going deeper - 30 feb or 31 April are alowed)
 
       // Typical ISO-like date
-      expect(isDate('2011-05-18'), true); // year=2011, month=05, day=18
-      expect(isDate('99-12-31'), true); // year=99, month=12, day=31
-      expect(isDate('0001-1-1'),
+      expect(isTime('2011-05-18'), true); // year=2011, month=05, day=18
+      expect(isTime('99-12-31'), true); // year=99, month=12, day=31
+      expect(isTime('0001-1-1'),
           true); // unusual but valid by pattern (year=0001, mo=1, day=1)
 
       // Different separators
-      expect(isDate('2011/05/18'), true);
-      expect(isDate(r'2011\05\18'), true);
-      expect(isDate('2011:05:18'), true);
-      expect(isDate('2011_05_18'), true);
-      expect(isDate('2011.05.18'), true);
+      expect(isTime('2011/05/18'), true);
+      expect(isTime(r'2011\05\18'), true);
+      expect(isTime('2011:05:18'), true);
+      expect(isTime('2011_05_18'), true);
+      expect(isTime('2011.05.18'), true);
 
       // Day-month-year style
-      expect(isDate('18-05-2011'), true);
+      expect(isTime('18-05-2011'), true);
       // Month-day-year style
-      expect(isDate('05-18-2011'), true);
+      expect(isTime('05-18-2011'), true);
 
       // Leading zeros for day/month
-      expect(isDate('2011-01-09'), true); // January 9
-      expect(isDate('03-07-21'), true); // day=07, year=21, mo=3
+      expect(isTime('2011-01-09'), true); // January 9
+      expect(isTime('03-07-21'), true); // day=07, year=21, mo=3
 
       // Times within valid range
-      expect(isDate('00:00'), true); // hour=0 , minute=0, no seconds
-      expect(isDate('23:59'), true); // hour=23 , minute=59, no seconds
-      expect(isDate('23:59:59'), true); // hour=23 , minute=59, seconds=59
-      expect(isDate('07:05'), true); // hour=7 , minute=05
-      expect(isDate('07:05:09'), true); // hour=7 , minute=05, second=09
-      expect(isDate('19:59:0'),
+      expect(isTime('00:00'), true); // hour=0 , minute=0, no seconds
+      expect(isTime('23:59'), true); // hour=23 , minute=59, no seconds
+      expect(isTime('23:59:59'), true); // hour=23 , minute=59, seconds=59
+      expect(isTime('07:05'), true); // hour=7 , minute=05
+      expect(isTime('07:05:09'), true); // hour=7 , minute=05, second=09
+      expect(isTime('19:59:0'),
           true); // hour=19 , minute=59, second=0 (leading zeros optional)
 
       // Out-of-range months or days
-      expect(isDate('2011-13-18'), false); // month=13 not allowed
-      expect(isDate('2011-05-32'), false); // day=32 not allowed
-      expect(isDate('2011-00-15'), false); // month=0 not allowed
-      expect(isDate('2011-05-0'), false); // day=0 not allowed
+      expect(isTime('2011-13-18'), false); // month=13 not allowed
+      expect(isTime('2011-05-32'), false); // day=32 not allowed
+      expect(isTime('2011-00-15'), false); // month=0 not allowed
+      expect(isTime('2011-05-0'), false); // day=0 not allowed
 
       // better range-checking for time
 
       // Times out of range
-      expect(isDate('24:00'), false); // hour=24 not allowed
-      expect(isDate('23:60'), false); // minute=60 not allowed
-      expect(isDate('23:59:60'), false); // second=60 not allowed
-      expect(isDate('09:999'), false); // minutes=999 definitely out of range
-      expect(isDate('25:10'), false); // hour=25 not allowed
-      expect(isDate('07:65'), false); // minute=65 not allowed
+      expect(isTime('24:00'), false); // hour=24 not allowed
+      expect(isTime('23:60'), false); // minute=60 not allowed
+      expect(isTime('23:59:60'), false); // second=60 not allowed
+      expect(isTime('09:999'), false); // minutes=999 definitely out of range
+      expect(isTime('25:10'), false); // hour=25 not allowed
+      expect(isTime('07:65'), false); // minute=65 not allowed
 
       // Formatting issues
-      expect(isDate('2011-05-18,'),
+      expect(isTime('2011-05-18,'),
           false); // comma after date won't match (?:\s|$)
-      expect(isDate('some2011-05-18'),
+      expect(isTime('some2011-05-18'),
           false); // no whitespace or start-of-string before 2011
-      expect(isDate('2011-05-188'), false); // leftover digit "8" after day=18
-      expect(isDate('2011- 05-18'),
+      expect(isTime('2011-05-188'), false); // leftover digit "8" after day=18
+      expect(isTime('2011- 05-18'),
           false); // dash followed by space in the month => breaks monthRegex = 0*[1-9] or 1[0-2]
 
       // The pattern doesn't do real calendar checks, so 02/30 or 04/31 would match
       // in pure format terms. If you want to see that the pattern doesn't catch it:
-      expect(isDate('2011-02-30'),
+      expect(isTime('2011-02-30'),
           true); // matches format, despite being an invalid date
-      expect(isDate('04-31-2023'),
+      expect(isTime('04-31-2023'),
           true); // also matches format, but April 31 doesn't exist
 
-      expect(isDate('2011-05-18 13:15'), true);
-      expect(isDate('2011-05-18 13:15:05'), true);
-      expect(isDate('99/01/09 00:00'), true);
-      expect(isDate('05_18_21 23:59:59'), true);
+      expect(isTime('2011-05-18 13:15'), true);
+      expect(isTime('2011-05-18 13:15:05'), true);
+      expect(isTime('99/01/09 00:00'), true);
+      expect(isTime('05_18_21 23:59:59'), true);
     });
   });
 }

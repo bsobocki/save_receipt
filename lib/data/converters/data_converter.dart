@@ -5,18 +5,18 @@ import 'package:save_receipt/services/values/patterns.dart';
 
 class ReceiptDataConverter {
   static ReceiptData toReceiptData(ReceiptModel receipt, {int? shopId}) {
-    List<ReceiptObjectModel> dates = receipt.dates;
-    String date = '';
+    List<ReceiptObjectModel> time = receipt.time;
+    String timeStr = '';
 
-    if (dates.isNotEmpty) {
-      date = dates[0].value ?? '';
+    if (time.isNotEmpty) {
+      timeStr = time[0].value ?? '';
     }
     return ReceiptData(
         id: receipt.receiptId,
         shopId: shopId,
         totalCost: 0.0,
         imgPath: receipt.imgPath,
-        date: date);
+        time: timeStr);
   }
 
   static ProductData toProductData(ReceiptObjectModel product, int receiptId) {
@@ -41,7 +41,7 @@ class ReceiptDataConverter {
 
   static ReceiptDocumentData toDocumentData(ReceiptModel model, int receiptId) {
     ShopData? shop; // for now shops are not supported
-    List<ReceiptObjectModel> dates = model.dates;
+    List<ReceiptObjectModel> time = model.time;
     List<ProductData> products =
         model.products.map((e) => toProductData(e, receiptId)).toList();
     List<InfoData> infoTexts =
@@ -51,7 +51,7 @@ class ReceiptDataConverter {
         shopId: -1,
         totalCost: 0.0,
         imgPath: model.imgPath,
-        date: dates.isNotEmpty ? dates[0].value ?? '' : '');
+        time: time.isNotEmpty ? time[0].value ?? '' : '');
     return ReceiptDocumentData(
         receipt: receipt, infos: infoTexts, products: products, shop: shop);
   }
@@ -81,8 +81,8 @@ class ReceiptDataConverter {
     if (isPrice(value)) {
       return ReceiptObjectModelType.infoDouble;
     }
-    if (isDate(value)) {
-      return ReceiptObjectModelType.infoDate;
+    if (isTime(value)) {
+      return ReceiptObjectModelType.infoTime;
     }
     if (isNumeric(value)) {
       return ReceiptObjectModelType.infoNumeric;

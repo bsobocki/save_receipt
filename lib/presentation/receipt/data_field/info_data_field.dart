@@ -64,8 +64,8 @@ class _InfoDataFieldState extends State<InfoDataField> {
     switch (type) {
       case ReceiptObjectModelType.infoDouble:
         return widget.allValuesData.prices;
-      case ReceiptObjectModelType.infoDate:
-        return widget.allValuesData.dates;
+      case ReceiptObjectModelType.infoTime:
+        return widget.allValuesData.time;
       case ReceiptObjectModelType.infoText:
         return widget.allValuesData.info;
       default:
