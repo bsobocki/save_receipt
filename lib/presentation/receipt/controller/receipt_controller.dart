@@ -120,15 +120,16 @@ class ReceiptModelController {
   void changeValueToInfo(int index) {
     if (infoIndexExists(index) && infoHasValue(index)) {
       _allValues.removeValue(_infos[index].value!);
+      String newTextFromValue = _infos[index].value!;
+      _infos[index].value = null;
       _infos.add(
         ReceiptObjectModel(
           type: ReceiptObjectModelType.infoText,
-          text: _infos[index].value!,
+          text: newTextFromValue,
           value: null,
         ),
       );
       trackChange();
-      _infos[index].value = null;
     }
   }
 
