@@ -30,8 +30,8 @@ class ReceiptModelController {
   int _editingObjectFieldIndex = -1;
   int? _receiptId;
 
-  ReceiptModelController(
-      final ReceiptModel receipt, AllValuesModel? allValuesModel) {
+  ReceiptModelController({required final ReceiptModel receipt,
+      AllValuesModel? allValuesModel}) {
     _receiptImagePath = receipt.imgPath;
     _allValues = allValuesModel != null
         ? AllReceiptValuesController(model: allValuesModel)

@@ -131,7 +131,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   void initState() {
     super.initState();
     modelController =
-        ReceiptModelController(widget.initialReceipt, widget.allValuesModel);
+        ReceiptModelController(receipt: widget.initialReceipt, allValuesModel: widget.allValuesModel);
     if (widget.initialReceipt.receiptId == null) {
       modelController.trackChange();
     }
