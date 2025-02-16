@@ -3,7 +3,7 @@ import 'package:save_receipt/domain/entities/receipt.dart';
 import 'package:save_receipt/services/values/patterns.dart';
 
 class AllReceiptValuesController {
-  AllValuesModel model;
+  final AllValuesModel model;
 
   AllReceiptValuesController.fromValues(
       {required List<String> priceValues,

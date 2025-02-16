@@ -9,7 +9,7 @@ bool receiptObjectModelsHasTheSameData(
       m1.value == m2.value;
 }
 
-bool listsContainsSameData<T>(List<T> l1, List<T> l2,
+bool listsContainsSameValues<T>(List<T> l1, List<T> l2,
     {bool Function(T, T)? areTheSame}) {
   if (l1.length != l2.length) return false;
 
@@ -31,7 +31,7 @@ bool sameDataInReceiptModels(ReceiptModel a, ReceiptModel b) {
   List<ReceiptObjectModel> objectsA = a.objects.toList()..sort();
   List<ReceiptObjectModel> objectsB = b.objects.toList()..sort();
   return a.imgPath == b.imgPath &&
-      listsContainsSameData(objectsA, objectsB,
+      listsContainsSameValues(objectsA, objectsB,
           areTheSame: receiptObjectModelsHasTheSameData) &&
       a.receiptId == b.receiptId;
 }
@@ -43,7 +43,7 @@ bool sameDataInAllValuesModels(AllValuesModel a, AllValuesModel b) {
   List<String> infoB = b.info.toList()..sort();
   List<String> timeA = a.time.toList()..sort();
   List<String> timeB = b.time.toList()..sort();
-  return listsContainsSameData(pricesA, pricesB) &&
-      listsContainsSameData(infoA, infoB) &&
-      listsContainsSameData(timeA, timeB);
+  return listsContainsSameValues(pricesA, pricesB) &&
+      listsContainsSameValues(infoA, infoB) &&
+      listsContainsSameValues(timeA, timeB);
 }
