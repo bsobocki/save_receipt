@@ -8,7 +8,7 @@ import 'package:save_receipt/data/models/entities/product.dart';
 import 'package:save_receipt/data/models/entities/receipt.dart';
 import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
-import 'package:save_receipt/presentation/effect/page_slide_animation.dart';
+import 'package:save_receipt/presentation/common/effect/page_slide_animation.dart';
 import 'package:save_receipt/presentation/home/components/expandable_fab.dart';
 import 'package:save_receipt/presentation/home/components/loading_animation.dart';
 import 'package:save_receipt/presentation/home/components/home_page_navigation_bar.dart';
