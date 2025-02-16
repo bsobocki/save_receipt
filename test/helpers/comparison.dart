@@ -1,3 +1,6 @@
+import 'dart:collection';
+
+import 'package:flutter/foundation.dart';
 import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
 
@@ -9,29 +12,29 @@ bool receiptObjectModelsHasTheSameData(
       m1.value == m2.value;
 }
 
-bool listsContainsSameValues<T>(List<T> l1, List<T> l2,
+bool containsSameValues<T>(Iterable<T> i1, Iterable<T> i2,
     {bool Function(T, T)? areTheSame}) {
-  if (l1.length != l2.length) return false;
-
-  var list1 = l1.toList()..sort();
-  var list2 = l2.toList()..sort();
-
+  if (i1.length != i2.length) return false;
   bool Function(T, T) sameData = areTheSame ?? (T a, T b) => a == b;
 
-  for (int i = 0; i < l1.length; i++) {
-    if (!sameData(list1[i], list2[i])) {
-      return false;
-    }
+  Map<T, int> count1 = HashMap(equals: sameData);
+  Map<T, int> count2 = HashMap(equals: sameData);
+
+  for (T elem in i1) {
+    count1[elem] = (count1[elem] ?? 0) + 1;
+  }
+  for (T elem in i2) {
+    count2[elem] = (count2[elem] ?? 0) + 1;
   }
 
-  return true;
+  return mapEquals(count1, count2);
 }
 
 bool sameDataInReceiptModels(ReceiptModel a, ReceiptModel b) {
   List<ReceiptObjectModel> objectsA = a.objects.toList()..sort();
   List<ReceiptObjectModel> objectsB = b.objects.toList()..sort();
   return a.imgPath == b.imgPath &&
-      listsContainsSameValues(objectsA, objectsB,
+      containsSameValues(objectsA, objectsB,
           areTheSame: receiptObjectModelsHasTheSameData) &&
       a.receiptId == b.receiptId;
 }
@@ -43,7 +46,7 @@ bool sameDataInAllValuesModels(AllValuesModel a, AllValuesModel b) {
   List<String> infoB = b.info.toList()..sort();
   List<String> timeA = a.time.toList()..sort();
   List<String> timeB = b.time.toList()..sort();
-  return listsContainsSameValues(pricesA, pricesB) &&
-      listsContainsSameValues(infoA, infoB) &&
-      listsContainsSameValues(timeA, timeB);
+  return containsSameValues(pricesA, pricesB) &&
+      containsSameValues(infoA, infoB) &&
+      containsSameValues(timeA, timeB);
 }

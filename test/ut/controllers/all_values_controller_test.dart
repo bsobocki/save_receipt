@@ -55,16 +55,16 @@ void main() {
         timeValues: testTime,
       );
       expectTrue(sameDataInAllValuesModels(controller2.model, testValuesModel));
-      expectTrue(listsContainsSameValues(controller2.model.prices, testPrices));
-      expectTrue(listsContainsSameValues(controller2.model.info, testInfo));
-      expectTrue(listsContainsSameValues(controller2.model.time, testTime));
+      expectTrue(containsSameValues(controller2.model.prices, testPrices));
+      expectTrue(containsSameValues(controller2.model.info, testInfo));
+      expectTrue(containsSameValues(controller2.model.time, testTime));
 
       var controller3 =
           AllReceiptValuesController.fromReceipt(testReceiptModel);
       expectTrue(sameDataInAllValuesModels(controller3.model, testValuesModel));
-      expectTrue(listsContainsSameValues(controller3.model.prices, testPrices));
-      expectTrue(listsContainsSameValues(controller3.model.info, testInfo));
-      expectTrue(listsContainsSameValues(controller3.model.time, testTime));
+      expectTrue(containsSameValues(controller3.model.prices, testPrices));
+      expectTrue(containsSameValues(controller3.model.info, testInfo));
+      expectTrue(containsSameValues(controller3.model.time, testTime));
 
       expectTrue(
           sameDataInAllValuesModels(controller.model, controller2.model));
@@ -79,43 +79,43 @@ void main() {
       for (var price in newPrices) {
         controller.insertValue(price);
       }
-      expectTrue(listsContainsSameValues(
+      expectTrue(containsSameValues(
           controller.model.prices, [...testPrices, ...newPrices]));
-      expectTrue(listsContainsSameValues(controller.model.info, testInfo));
-      expectTrue(listsContainsSameValues(controller.model.time, testTime));
+      expectTrue(containsSameValues(controller.model.info, testInfo));
+      expectTrue(containsSameValues(controller.model.time, testTime));
 
       var newInfo = ['Dzień Dobry kochani!', 'Jak się macie?'];
       for (var info in newInfo) {
         controller.insertValue(info);
       }
-      expectTrue(listsContainsSameValues(
+      expectTrue(containsSameValues(
           controller.model.prices, [...testPrices, ...newPrices]));
-      expectTrue(listsContainsSameValues(
+      expectTrue(containsSameValues(
           controller.model.info, [...testInfo, ...newInfo]));
-      expectTrue(listsContainsSameValues(controller.model.time, testTime));
+      expectTrue(containsSameValues(controller.model.time, testTime));
 
       controller.insertValue('14:12');
-      expectTrue(listsContainsSameValues(
+      expectTrue(containsSameValues(
           controller.model.prices, [...testPrices, ...newPrices]));
-      expectTrue(listsContainsSameValues(
+      expectTrue(containsSameValues(
           controller.model.info, [...testInfo, ...newInfo]));
-      expectTrue(listsContainsSameValues(
+      expectTrue(containsSameValues(
           controller.model.time, [...testTime, '14:12']));
 
       controller.insertValue('13:12');
-      expectTrue(listsContainsSameValues(
+      expectTrue(containsSameValues(
           controller.model.prices, [...testPrices, ...newPrices]));
-      expectTrue(listsContainsSameValues(
+      expectTrue(containsSameValues(
           controller.model.info, [...testInfo, ...newInfo]));
-      expectTrue(listsContainsSameValues(
+      expectTrue(containsSameValues(
           controller.model.time, [...testTime, '14:12', '13:12']));
 
       controller.insertValue('13.12');
-      expectTrue(listsContainsSameValues(
+      expectTrue(containsSameValues(
           controller.model.prices, [...testPrices, ...newPrices, '13.12']));
-      expectTrue(listsContainsSameValues(
+      expectTrue(containsSameValues(
           controller.model.info, [...testInfo, ...newInfo]));
-      expectTrue(listsContainsSameValues(
+      expectTrue(containsSameValues(
           controller.model.time, [...testTime, '14:12', '13:12']));
     });
 
@@ -140,15 +140,15 @@ void main() {
         controller.insertValue(time);
       }
 
-      expectTrue(listsContainsSameValues(controller.model.prices, testPrices));
-      expectTrue(listsContainsSameValues(controller.model.info, testInfo));
-      expectTrue(listsContainsSameValues(controller.model.time, testTime));
-      expectTrue(listsContainsSameValues(
+      expectTrue(containsSameValues(controller.model.prices, testPrices));
+      expectTrue(containsSameValues(controller.model.info, testInfo));
+      expectTrue(containsSameValues(controller.model.time, testTime));
+      expectTrue(containsSameValues(
           testPrices, [...testPricesBefore, ...newPrices]));
       expectTrue(
-          listsContainsSameValues(testInfo, [...testInfoBefore, ...newInfo]));
+          containsSameValues(testInfo, [...testInfoBefore, ...newInfo]));
       expectTrue(
-          listsContainsSameValues(testTime, [...testTimeBefore, ...newTime]));
+          containsSameValues(testTime, [...testTimeBefore, ...newTime]));
     });
   });
 }
