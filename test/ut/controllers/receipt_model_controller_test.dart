@@ -8,13 +8,13 @@ void main() {
   setUp(() {});
 
   group('ReceiptModelController', () {
-    
-
     test('create model controller for empty data', () {
       ReceiptModel model = const ReceiptModel(objects: []);
       ReceiptModelController controller =
           ReceiptModelController(receipt: model);
-      expect(sameDataInReceiptModels(controller.model, model), true);
+      expect(sameDataInReceiptModels(controller.model, model), isTrue);
     });
+
+    test('', (){});
   });
 }

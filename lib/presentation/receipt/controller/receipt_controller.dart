@@ -9,7 +9,7 @@ import 'package:save_receipt/data/models/entities/receipt.dart';
 import 'package:save_receipt/data/repositories/database_repository.dart';
 import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
-import 'package:save_receipt/data/values.dart';
+import 'package:save_receipt/data/controller/values_controller.dart';
 
 class ReceiptModelController {
   String? _receiptImagePath;
