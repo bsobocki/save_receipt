@@ -1,9 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:save_receipt/data/controller/values_controller.dart';
 import 'package:save_receipt/domain/entities/all_values.dart';
+import 'package:save_receipt/domain/entities/receipt.dart';
 
 import '../../helpers/comparison.dart';
 import '../../helpers/expectations.dart';
+import '../../helpers/test_data.dart';
 
 void main() {
   late AllValuesModel emptyModel;
@@ -12,6 +14,7 @@ void main() {
   late List<String> testPrices;
   late List<String> testInfo;
   late List<String> testTime;
+  late ReceiptModel testReceiptModel;
 
   setUp(() {
     testPrices = ["3.21", "54,78", "1009.4"];
@@ -29,6 +32,11 @@ void main() {
         prices: testPrices.toList(),
         info: testInfo.toList(),
         time: testTime.toList());
+    testReceiptModel = ReceiptModel(objects: [
+      ...testPrices.map((price) => produtctModel('product', price)),
+      ...testInfo.map((info) => infoTextModel('info', info)),
+      ...testTime.map((time) => infoTimeModel('product', time)),
+    ]);
   });
 
   group('AllReceiptValuesController', () {
@@ -39,8 +47,29 @@ void main() {
 
     test('create values controller from non-empty data', () {
       var controller = AllReceiptValuesController(model: testValuesModel);
-      expect(
-          sameDataInAllValuesModels(controller.model, testValuesModel), isTrue);
+      expectTrue(sameDataInAllValuesModels(controller.model, testValuesModel));
+
+      var controller2 = AllReceiptValuesController.fromValues(
+        priceValues: testPrices,
+        infoValues: testInfo,
+        timeValues: testTime,
+      );
+      expectTrue(sameDataInAllValuesModels(controller2.model, testValuesModel));
+      expectTrue(listsContainsSameValues(controller2.model.prices, testPrices));
+      expectTrue(listsContainsSameValues(controller2.model.info, testInfo));
+      expectTrue(listsContainsSameValues(controller2.model.time, testTime));
+
+      var controller3 =
+          AllReceiptValuesController.fromReceipt(testReceiptModel);
+      expectTrue(sameDataInAllValuesModels(controller3.model, testValuesModel));
+      expectTrue(listsContainsSameValues(controller3.model.prices, testPrices));
+      expectTrue(listsContainsSameValues(controller3.model.info, testInfo));
+      expectTrue(listsContainsSameValues(controller3.model.time, testTime));
+
+      expectTrue(
+          sameDataInAllValuesModels(controller.model, controller2.model));
+      expectTrue(
+          sameDataInAllValuesModels(controller.model, controller3.model));
     });
 
     test('insert values - separated copied model', () {
@@ -116,10 +145,10 @@ void main() {
       expectTrue(listsContainsSameValues(controller.model.time, testTime));
       expectTrue(listsContainsSameValues(
           testPrices, [...testPricesBefore, ...newPrices]));
-      expectTrue(listsContainsSameValues(
-          testInfo, [...testInfoBefore, ...newInfo]));
-      expectTrue(listsContainsSameValues(
-          testTime, [...testTimeBefore, ...newTime]));
+      expectTrue(
+          listsContainsSameValues(testInfo, [...testInfoBefore, ...newInfo]));
+      expectTrue(
+          listsContainsSameValues(testTime, [...testTimeBefore, ...newTime]));
     });
   });
 }
