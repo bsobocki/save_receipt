@@ -102,8 +102,8 @@ class _InfoDataFieldState extends State<InfoDataField> {
           children: [
             SelectModeDataTextField(
               text: widget.model.text,
-              textAlign: TextAlign.start,
               textColor: foregroundColor,
+              fontWeight: FontWeight.w600,
             ),
             if (widget.model.value != null)
               SelectModeDataTextField(

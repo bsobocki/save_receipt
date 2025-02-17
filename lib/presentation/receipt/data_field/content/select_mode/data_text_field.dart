@@ -3,13 +3,17 @@ import 'package:flutter/material.dart';
 class SelectModeDataTextField extends StatelessWidget {
   final String text;
   final Color? textColor;
-  final TextAlign textAlign;
+  final TextAlign? textAlign;
+  final FontWeight? fontWeight;
+  final double? fontSize;
 
   const SelectModeDataTextField({
     super.key,
     required this.text,
-    required this.textAlign,
+    this.textAlign,
     this.textColor,
+    this.fontWeight,
+    this.fontSize,
   });
 
   Widget get placeholder => Expanded(child: Container());
@@ -18,27 +22,24 @@ class SelectModeDataTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(
-        right: 22.0,
+        right: 32.0,
         left: 22.0,
         top: 4.0,
         bottom: 4.0,
       ),
-      child: Row(
-        children: [
-          if (textAlign == TextAlign.right) placeholder,
-          Expanded(
-            child: Text(
-              text,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                color: textColor,
-                fontWeight: FontWeight.w600,
-                fontSize: 14.0,
-              ),
-            ),
+      child: Container(
+        alignment: textAlign == TextAlign.right
+            ? Alignment.centerRight
+            : Alignment.centerLeft,
+        child: Text(
+          text,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: textColor,
+            fontWeight: fontWeight,
+            fontSize: fontSize,
           ),
-          if (textAlign == TextAlign.left) placeholder
-        ],
+        ),
       ),
     );
   }
