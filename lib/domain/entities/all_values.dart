@@ -1,7 +1,7 @@
 class AllValuesModel {
-  List<String> prices;
-  List<String> info;
-  List<String> time;
+  Set<String> prices;
+  Set<String> info;
+  Set<String> time;
 
   AllValuesModel({
     required this.prices,

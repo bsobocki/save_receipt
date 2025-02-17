@@ -12,13 +12,15 @@ class ValueField extends StatefulWidget {
     required this.onValueChanged,
     required this.textColor,
     required this.enabled,
+    this.compareItems,
   });
 
   final String initValue;
-  final List<dynamic> values;
-  final Function(String? value) onValueChanged;
+  final Set<String> values;
+  final Function(String?) onValueChanged;
   final Color textColor;
   final bool enabled;
+  final int Function(String, String)? compareItems;
 
   @override
   State<ValueField> createState() => _ValueFieldState();
@@ -35,7 +37,7 @@ class _ValueFieldState extends State<ValueField> {
   @override
   void initState() {
     menuController.text = widget.initValue;
-    initialValues = List.from(widget.values)..sort();
+    initialValues = List.from(widget.values)..sort(widget.compareItems);
     values = initialValues;
     menuController.addListener(() {
       setState(() {
@@ -97,7 +99,7 @@ class _ValueFieldState extends State<ValueField> {
         surfaceTintColor: const WidgetStatePropertyAll(Colors.white),
       );
 
-  get uniqueMenuEntries => values.toSet().map<DropdownMenuEntry<dynamic>>((value) {
+  get uniqueMenuEntries => values.map<DropdownMenuEntry<dynamic>>((value) {
         return DropdownMenuEntry<dynamic>(
             value: value, label: value.toString());
       }).toList();

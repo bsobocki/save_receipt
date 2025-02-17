@@ -60,7 +60,7 @@ class _InfoDataFieldState extends State<InfoDataField> {
   TextEditingController textController = TextEditingController();
   final ThemeController themeController = Get.find();
 
-  List<String> allValuesForType(ReceiptObjectModelType type) {
+  Set<String> allValuesForType(ReceiptObjectModelType type) {
     switch (type) {
       case ReceiptObjectModelType.infoDouble:
         return widget.allValuesData.prices;
@@ -69,7 +69,7 @@ class _InfoDataFieldState extends State<InfoDataField> {
       case ReceiptObjectModelType.infoText:
         return widget.allValuesData.info;
       default:
-        return [];
+        return {};
     }
   }
 
@@ -138,6 +138,11 @@ class _InfoDataFieldState extends State<InfoDataField> {
                   textColor: Colors.black,
                   initValue: widget.model.value ?? '',
                   values: allValuesForType(widget.model.type),
+                  compareItems:
+                      widget.model.type == ReceiptObjectModelType.infoDouble
+                          ? (String a, String b) =>
+                              double.parse(a).compareTo(double.parse(b))
+                          : null,
                   onValueChanged: (String? value) {
                     widget.model.value = value;
                     widget.onChangedData?.call();

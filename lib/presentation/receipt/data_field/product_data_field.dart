@@ -90,6 +90,8 @@ class _ProductDataFieldState extends State<ProductDataField> {
                   widget.model.value = value;
                   widget.onChangedData?.call();
                 },
+                compareItems: (String a, String b) =>
+                    double.parse(a).compareTo(double.parse(b)),
               ),
             ],
           ),

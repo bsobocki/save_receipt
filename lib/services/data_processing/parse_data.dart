@@ -17,9 +17,9 @@ class DataParser {
 
   DataParser.parseData(List<ConnectedTextLines> lines) {
     List<ReceiptObjectModel> receiptObjectModels = [];
-    List<String> prices = [];
-    List<String> info = [];
-    List<String> time = [];
+    Set<String> prices = {};
+    Set<String> info = {};
+    Set<String> time = {};
 
     for (ConnectedTextLines line in lines) {
       bool isTwoPart = line.connectedLine != null;

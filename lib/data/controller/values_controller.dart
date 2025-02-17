@@ -6,19 +6,19 @@ class AllReceiptValuesController {
   final AllValuesModel model;
 
   AllReceiptValuesController.fromValues(
-      {required List<String> priceValues,
-      required List<String> infoValues,
-      required List<String> timeValues})
+      {required Iterable<String> priceValues,
+      required Iterable<String> infoValues,
+      required Iterable<String> timeValues})
       : model = AllValuesModel(
-            prices: priceValues, info: infoValues, time: timeValues);
+            prices: priceValues.toSet(), info: infoValues.toSet(), time: timeValues.toSet());
 
   AllReceiptValuesController({required this.model});
 
   AllReceiptValuesController.fromReceipt(ReceiptModel receipt)
       : model = AllValuesModel(
-            prices: receipt.prices,
-            info: receipt.infoStr,
-            time: receipt.timeStr);
+            prices: receipt.prices.toSet(),
+            info: receipt.infoStr.toSet(),
+            time: receipt.timeStr.toSet());
 
   void insertValue(String value) {
     if (isPrice(value)) {
