@@ -31,36 +31,5 @@ Future<List<TextLine>> scanTextFromImage(String imageFilePath) async {
     textLines += block.lines;
   }
 
-  // int i = 0;
-  // print("-=-=-=-=-=-=-=");
-  // recognizedText.blocks
-  //     .sort((a, b) => a.boundingBox.top.compareTo(b.boundingBox.top));
-  // for (var block in recognizedText.blocks) {
-  //   print('$i:');
-  //   print('lines:');
-  //   for (var line in block.lines) {
-  //     print('text: ${line.text}');
-  //     print('line angle: ${line.angle}');
-  //     print('line box: ${line.boundingBox}');
-  //     print('line height: ${line.boundingBox.height}');
-  //     print('line center: ${line.boundingBox.center}');
-  //     print('line box bottom left: ${line.boundingBox.bottomLeft}');
-  //     print('line box bottom right: ${line.boundingBox.bottomRight}');
-  //   }
-  //   i++;
-  //   print('===');
-  // }
-  // TextLine nameElem = recognizedText.blocks[14].lines[0];
-  // TextLine valueElem = recognizedText.blocks[13].lines[0];
-  // VerticalMargin margin = VerticalMargin.calc(nameElem.angle!,
-  //     nameElem.boundingBox.center, valueElem.boundingBox.center.dx,
-  //     err: nameElem.boundingBox.height);
-  // print(
-  //     "quickCheck: name rect: ${nameElem.boundingBox}  ||  valueElem: ${valueElem.boundingBox}");
-  // print('margin : ${margin}');
-  // print(
-  //     "is in margin ${valueElem.boundingBox.center.dy}? -> ${margin.inMargin(valueElem.boundingBox.center.dy)}");
-  // print("-=-=-=-=-=-=-=");
-
   return textLines;
 }

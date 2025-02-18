@@ -167,9 +167,6 @@ class _MyHomePageState extends State<MyHomePage> {
           productsData: filteredProducts,
           onItemSelected: (index) {
             int receiptId = filteredProducts[index].receiptId;
-            print(
-                'Selected product: ${filteredProducts[index].name} from: $receiptId');
-
             ReceiptDocumentData? data = dataList
                 .firstWhereOrNull((element) => element.receipt.id == receiptId);
             if (data != null) {

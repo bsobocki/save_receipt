@@ -122,8 +122,6 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
       setState(() {
         _showFullScreenReceiptImage = true;
       });
-    } else {
-      print("no - image");
     }
   }
 
@@ -314,8 +312,6 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
       background,
       content(context),
     ];
-
-    print("SELECTION MODE? ${modelController.isSelectModeEnabled}");
 
     if (_showFullScreenReceiptImage) {
       screenElements.add(

@@ -406,8 +406,6 @@ class ReceiptModelController {
 
   void removeSelectedInfo() {
     for (int index in _selectedObjects) {
-      print("trying to remove info: $index");
-      if (infoIndexExists(index)) print("removing ${_infos[index]}");
       removeInfo(index);
     }
     toggleSelectMode();
