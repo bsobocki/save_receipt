@@ -14,7 +14,7 @@ import 'package:save_receipt/data/controller/values_controller.dart';
 class ReceiptModelController {
   String? _receiptImagePath;
   late AllReceiptValuesController _allValues;
-  final SplayTreeSet<int> _selectedObjects =
+  final SplayTreeSet<int> _selectedObjectsIndexes =
       SplayTreeSet((a, b) => b.compareTo(a));
   List<ReceiptObjectModel> _infos = [];
   List<ReceiptObjectModel> _products = [];
@@ -30,8 +30,10 @@ class ReceiptModelController {
   int _editingObjectFieldIndex = -1;
   int? _receiptId;
 
-  ReceiptModelController({required final ReceiptModel receipt,
-      AllValuesModel? allValuesModel}) {
+  ReceiptModelController({
+    required final ReceiptModel receipt,
+    AllValuesModel? allValuesModel,
+  }) {
     _receiptImagePath = receipt.imgPath;
     _allValues = allValuesModel != null
         ? AllReceiptValuesController(model: allValuesModel)
@@ -103,17 +105,11 @@ class ReceiptModelController {
     }
   }
 
-  void changeInfoToValue(int index) {
-    if (infoIndexExists(index)) {
-      _allValues.insertValue(_infos[index].text);
-      removeInfo(index);
-    }
-  }
-
-  void changeProductToValue(int index) {
-    if (productIndexExists(index)) {
-      _allValues.insertValue(_products[index].text);
-      removeProduct(index);
+  void changeObjectToValue(int index) {
+    if (objectIndexExists(index)) {
+      ReceiptObjectModel obj = objectAt(index);
+      _allValues.insertValue(obj.text);
+      removeObject(obj);
     }
   }
 
@@ -165,57 +161,55 @@ class ReceiptModelController {
     if (productIndexExists(index)) {
       _products[index].type = ReceiptObjectModelType.infoDouble;
       _infos.add(_products[index]);
-      removeProduct(index);
+      removeObjectByIndex(index);
     }
-  }
-
-  void addEmptyProduct() {
-    _products.add(
-      ReceiptObjectModel(
-        type: ReceiptObjectModelType.product,
-        text: "<new-product>",
-        value: "0.0",
-      ),
-    );
-    trackChange();
-  }
-
-  void addEmptyInfo() {
-    _infos.add(
-      ReceiptObjectModel(
-        type: ReceiptObjectModelType.infoText,
-        text: "<new-info-text>",
-      ),
-    );
-    trackChange();
   }
 
   bool changeInfoDoubleToProduct(int index) {
     if (infoIndexExists(index)) {
-      if (_infos[index].value != null) {
-        _infos[index].type = ReceiptObjectModelType.product;
-        _products.add(_infos[index]);
-        removeInfo(index);
-      } else {
+      if (_infos[index].value == null) {
         return false;
       }
+      _infos[index].type = ReceiptObjectModelType.product;
+      _products.add(_infos[index]);
+      removeObjectByIndex(index);
     }
     return true;
   }
 
-  void removeInfo(int index) {
-    if (infoIndexExists(index)) {
+  void addEmptyObject() {
+    if (_areProductsEdited) {
+      _products.add(
+        ReceiptObjectModel(
+          type: ReceiptObjectModelType.product,
+          text: "<new-product>",
+          value: "0.0",
+        ),
+      );
+    } else {
+      _infos.add(
+        ReceiptObjectModel(
+          type: ReceiptObjectModelType.infoText,
+          text: "<new-info-text>",
+        ),
+      );
+    }
+    trackChange();
+  }
+
+  void removeObjectByIndex(int index) {
+    if (objectIndexExists(index)) {
       if (_editingObjectFieldIndex == index) {
         resetEditModeIndex();
       }
-      removeInfoObject(_infos[index]);
+      removeObject(objectAt(index));
     }
   }
 
-  void removeInfoObject(ReceiptObjectModel info) {
-    int? id = info.dataId;
+  void removeObject(ReceiptObjectModel object) {
+    int? id = object.dataId;
     if (id != null) {
-      switch (info.type) {
+      switch (object.type) {
         case ReceiptObjectModelType.infoText:
           _deletedInfoTextIds.add(id);
           break;
@@ -228,42 +222,30 @@ class ReceiptModelController {
         case ReceiptObjectModelType.infoTime:
           _deletedInfoTimeIds.add(id);
           break;
+        case ReceiptObjectModelType.product:
+          _deletedProductsIds.add(id);
         default:
           break;
       }
     }
-    _infos.remove(info);
-    trackChange();
-  }
-
-  void removeProduct(int index) {
-    if (productIndexExists(index)) {
-      if (_editingObjectFieldIndex == index) {
-        resetEditModeIndex();
-      }
-      removeProductObject(_products[index]);
+    if (_areProductsEdited) {
+      _products.remove(object);
+    } else {
+      _infos.remove(object);
     }
-  }
-
-  void removeProductObject(ReceiptObjectModel product) {
-    int? id = product.dataId;
-    if (id != null) {
-      _deletedProductsIds.add(id);
-    }
-    _products.remove(product);
     trackChange();
   }
 
   void setProductsEditing() {
     _areProductsEdited = true;
     resetEditModeIndex();
-    _selectedObjects.clear();
+    _selectedObjectsIndexes.clear();
   }
 
   void setInfoEditing() {
     _areProductsEdited = false;
     resetEditModeIndex();
-    _selectedObjects.clear();
+    _selectedObjectsIndexes.clear();
   }
 
   void resetEditModeIndex() => _editingObjectFieldIndex = -1;
@@ -294,46 +276,26 @@ class ReceiptModelController {
 
   void toggleSelectMode() {
     _isSelectModeEnabled = !_isSelectModeEnabled;
-    _selectedObjects.clear();
+    _selectedObjectsIndexes.clear();
   }
 
-  void toggleProductSelection(int index) {
-    if (isProductSelected(index)) {
-      unselectProduct(index);
+  void toggleObjectSelection(int index) {
+    if (isObjectSelected(index)) {
+      unselectObject(index);
     } else {
-      selectProduct(index);
+      selectObject(index);
     }
   }
 
-  void toggleInfoSelection(int index) {
-    if (isInfoSelected(index)) {
-      unselectInfo(index);
-    } else {
-      selectInfo(index);
+  void selectObject(int index) {
+    if (objectIndexExists(index)) {
+      _selectedObjectsIndexes.add(index);
     }
   }
 
-  void selectProduct(int index) {
-    if (_areProductsEdited && productIndexExists(index)) {
-      _selectedObjects.add(index);
-    }
-  }
-
-  void selectInfo(int index) {
-    if (!_areProductsEdited && infoIndexExists(index)) {
-      _selectedObjects.add(index);
-    }
-  }
-
-  void unselectProduct(int index) {
-    if (_areProductsEdited && productIndexExists(index)) {
-      _selectedObjects.remove(index);
-    }
-  }
-
-  void unselectInfo(int index) {
-    if (!_areProductsEdited && infoIndexExists(index)) {
-      _selectedObjects.remove(index);
+  void unselectObject(int index) {
+    if (objectIndexExists(index)) {
+      _selectedObjectsIndexes.remove(index);
     }
   }
 
@@ -359,6 +321,9 @@ class ReceiptModelController {
 
   bool infoIndexExists(int index) => index >= 0 && index < _infos.length;
 
+  bool objectIndexExists(int index) =>
+      _areProductsEdited ? productIndexExists(index) : infoIndexExists(index);
+
   bool infoHasValue(int index) => _infos[index].value != null;
 
   ReceiptObjectModel? infoAt(int index) =>
@@ -377,73 +342,61 @@ class ReceiptModelController {
 
   bool get isSelectModeEnabled => _isSelectModeEnabled;
 
-  bool isProductInEditMode(int index) =>
-      _areProductsEdited &&
-      productIndexExists(index) &&
-      index == _editingObjectFieldIndex;
+  ReceiptObjectModel objectAt(int index) =>
+      _areProductsEdited ? _products[index] : _infos[index];
 
+  bool isObjectInEditMode(int index) =>
+      objectIndexExists(index) && index == _editingObjectFieldIndex;
+
+  bool isProductInEditMode(int index) =>
+      _areProductsEdited && isObjectInEditMode(index);
+      
   bool isInfoInEditMode(int index) =>
-      !_areProductsEdited &&
-      infoIndexExists(index) &&
-      index == _editingObjectFieldIndex;
+      !_areProductsEdited && isObjectInEditMode(index);
+
+  bool isObjectSelected(int index) =>
+      objectIndexExists(index) && _selectedObjectsIndexes.contains(index);
 
   bool isProductSelected(int index) =>
-      _areProductsEdited &&
-      productIndexExists(index) &&
-      _selectedObjects.contains(index);
+      _areProductsEdited && isObjectSelected(index);
 
   bool isInfoSelected(int index) =>
-      !_areProductsEdited &&
-      infoIndexExists(index) &&
-      _selectedObjects.contains(index);
+      !_areProductsEdited && isObjectSelected(index);
 
-  void removeSelectedProducts() {
-    for (int index in _selectedObjects) {
-      removeProduct(index);
-    }
-    toggleSelectMode();
-  }
+  List<ReceiptObjectModel> get selectedObjects => _selectedObjectsIndexes
+      .where((index) => objectIndexExists(index))
+      .map((index) => objectAt(index))
+      .toList();
 
-  void removeSelectedInfo() {
-    for (int index in _selectedObjects) {
-      removeInfo(index);
+  void removeSelectedObjects() {
+    for (int index in _selectedObjectsIndexes) {
+      removeObjectByIndex(index);
     }
     toggleSelectMode();
   }
 
   void changeSelectedInfoValueType(ReceiptObjectModelType type) {
-    for (int index in _selectedObjects) {
+    for (int index in _selectedObjectsIndexes) {
       changeInfoValueType(type, index);
     }
     toggleSelectMode();
   }
 
-  void changeSelectedInfoToValue() {
-    List<ReceiptObjectModel> selectedInfos = _selectedObjects
-        .where((index) => infoIndexExists(index))
-        .map((index) => _infos[index])
-        .toList();
-
-    for (ReceiptObjectModel info in selectedInfos) {
-      _allValues.insertValue(info.text);
-      removeInfoObject(info);
+  void changeSelectedObjectsToValue() {
+    for (ReceiptObjectModel obj in selectedObjects) {
+      _allValues.insertValue(obj.text);
+      removeObject(obj);
     }
     toggleSelectMode();
   }
 
-  bool changeSelectedInfoToProducts() {
-    List<ReceiptObjectModel> selectedInfos = _selectedObjects
-        .where((index) => infoIndexExists(index))
-        .map((index) => _infos[index])
-        .toList();
+  bool changeSelectedObjectsToProducts() {
     bool status = true;
-
-    for (ReceiptObjectModel info in selectedInfos) {
-      if (info.value != null &&
-          info.type == ReceiptObjectModelType.infoDouble) {
-        info.type = ReceiptObjectModelType.product;
-        _products.add(info);
-        removeInfoObject(info);
+    for (ReceiptObjectModel obj in selectedObjects) {
+      if (obj.value != null && obj.type == ReceiptObjectModelType.infoDouble) {
+        obj.type = ReceiptObjectModelType.product;
+        _products.add(obj);
+        removeObject(obj);
       } else {
         status = false;
       }
@@ -452,29 +405,11 @@ class ReceiptModelController {
     return status;
   }
 
-  void changeSelectedProductsToValue() {
-    List<ReceiptObjectModel> selectedProducts = _selectedObjects
-        .where((index) => productIndexExists(index))
-        .map((index) => _products[index])
-        .toList();
-
-    for (ReceiptObjectModel product in selectedProducts) {
-      _allValues.insertValue(product.text);
-      removeProductObject(product);
-    }
-    toggleSelectMode();
-  }
-
   void changeSelectedProductsToInfo() {
-    List<ReceiptObjectModel> selectedProducts = _selectedObjects
-        .where((index) => productIndexExists(index))
-        .map((index) => _products[index])
-        .toList();
-
-    for (ReceiptObjectModel product in selectedProducts) {
-      product.type = ReceiptObjectModelType.infoDouble;
-      _infos.add(product);
-      removeProductObject(product);
+    for (ReceiptObjectModel obj in selectedObjects) {
+      obj.type = ReceiptObjectModelType.infoDouble;
+      _infos.add(obj);
+      removeObject(obj);
     }
     toggleSelectMode();
   }
