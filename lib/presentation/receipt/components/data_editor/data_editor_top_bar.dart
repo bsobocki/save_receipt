@@ -17,7 +17,6 @@ class DataEditorTopBar extends StatelessWidget {
   final VoidCallback onResized;
   final VoidCallback onAddObject;
   final Color background;
-  final String title;
   final List<SelectModeEditorOption> selectModeOptions;
   final bool selectMode;
 
@@ -26,7 +25,6 @@ class DataEditorTopBar extends StatelessWidget {
     required this.isExpanded,
     required this.onResized,
     required this.background,
-    required this.title,
     required this.onAddObject,
     required this.selectModeOptions,
     required this.selectMode,
@@ -54,39 +52,27 @@ class DataEditorTopBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onResized,
-      child: Container(
-        decoration: BoxDecoration(
-          color: background,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(15.0)),
-        ),
-        width: double.infinity,
-        //height: 30.0,
-        child: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0, top: 4.0),
-              child: Text(
-                title,
-                style: const TextStyle(
-                  color: Colors.white,
-                ),
+    return Container(
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(15.0)),
+      ),
+      width: double.infinity,
+      height: 40.0,
+      child: Row(
+        children: [
+          Expanded(child: Container()),
+          if (isExpanded && selectMode)
+            Padding(padding: const EdgeInsets.all(12.0), child: popupMenu)
+          else
+            IconButton(
+              iconSize: 20,
+              onPressed: !isExpanded ? null : onAddObject,
+              icon: Icon(
+                isExpanded ? Icons.add : Icons.radio_button_off,
               ),
             ),
-            Expanded(child: Container()),
-            if (isExpanded && selectMode)
-              Padding(padding: const EdgeInsets.all(12.0), child: popupMenu)
-            else
-              IconButton(
-                iconSize: 20,
-                onPressed: !isExpanded ? null : onAddObject,
-                icon: Icon(
-                  isExpanded ? Icons.add : Icons.radio_button_off,
-                ),
-              ),
-          ],
-        ),
+        ],
       ),
     );
   }

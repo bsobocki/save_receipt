@@ -147,35 +147,33 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   }
 
   Widget get productsList {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: modelController.products.length,
-        controller: _productsScrollController,
-        itemBuilder: (context, index) {
-          return ProductDataField(
-            key: UniqueKey(),
-            onChangedData: modelController.trackChange,
-            enabled: modelController.areProductsEdited,
-            model: modelController.productAt(index)!,
-            allValuesData: modelController.allValuesModel,
-            isDarker: (index % 2 == 0),
-            onItemDismissSwipe: () => handleProductDismiss(index),
-            onItemEditModeSwipe: () => setEditModeForProduct(index),
-            onChangedToValue: () => changeProductToValue(index),
-            onChangedToInfo: () => changeProductToInfo(index),
-            mode: modelController.isSelectModeEnabled
-                ? DataFieldMode.select
-                : modelController.isProductInEditMode(index)
-                    ? DataFieldMode.edit
-                    : DataFieldMode.normal,
-            selected: modelController.isProductSelected(index),
-            onSelected: () => setState(() {
-              modelController.toggleObjectSelection(index);
-            }),
-            onLongPress: toggleSelectMode,
-          );
-        },
-      ),
+    return ListView.builder(
+      itemCount: modelController.products.length,
+      controller: _productsScrollController,
+      itemBuilder: (context, index) {
+        return ProductDataField(
+          key: UniqueKey(),
+          onChangedData: modelController.trackChange,
+          enabled: modelController.areProductsEdited,
+          model: modelController.productAt(index)!,
+          allValuesData: modelController.allValuesModel,
+          isDarker: (index % 2 == 0),
+          onItemDismissSwipe: () => handleProductDismiss(index),
+          onItemEditModeSwipe: () => setEditModeForProduct(index),
+          onChangedToValue: () => changeProductToValue(index),
+          onChangedToInfo: () => changeProductToInfo(index),
+          mode: modelController.isSelectModeEnabled
+              ? DataFieldMode.select
+              : modelController.isProductInEditMode(index)
+                  ? DataFieldMode.edit
+                  : DataFieldMode.normal,
+          selected: modelController.isProductSelected(index),
+          onSelected: () => setState(() {
+            modelController.toggleObjectSelection(index);
+          }),
+          onLongPress: toggleSelectMode,
+        );
+      },
     );
   }
 
@@ -249,8 +247,9 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   get productsEditor => ReceiptDataEditor(
           flex: modelController.areProductsEdited ? 3 : 1,
           title: "Products",
-          isExpanded: modelController.areProductsEdited,
-          objectsList: productsList,
+          areProductsEdited: modelController.areProductsEdited,
+          productsList: productsList,
+          infoList: infosList,
           onResized: setProductsEditing,
           onAddObject: addEmptyObject,
           selectMode: modelController.isSelectModeEnabled,
@@ -272,33 +271,6 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             ),
           ]);
 
-  get infoEditor => ReceiptDataEditor(
-        flex: modelController.areProductsEdited ? 1 : 3,
-        title: "Info",
-        isExpanded: !modelController.areProductsEdited,
-        selectMode: modelController.isSelectModeEnabled,
-        objectsList: infosList,
-        onResized: setInfoEditing,
-        onAddObject: addEmptyObject,
-        selectModeOptions: [
-          SelectModeEditorOption(
-            label: 'To Product',
-            icon: Icons.info_outline,
-            onSelected: changeSelectedInfoToProducts,
-          ),
-          SelectModeEditorOption(
-            label: 'To Value',
-            icon: Icons.transform,
-            onSelected: changeSelectedInfoToValue,
-          ),
-          SelectModeEditorOption(
-            label: 'Remove',
-            icon: Icons.delete,
-            onSelected: removeSelectedInfo,
-          ),
-        ],
-      );
-
   Widget content(BuildContext context) => Center(
         child: Padding(
           padding: const EdgeInsets.only(
@@ -311,7 +283,6 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             children: [
               topBar(context),
               productsEditor,
-              infoEditor,
             ],
           ),
         ),
