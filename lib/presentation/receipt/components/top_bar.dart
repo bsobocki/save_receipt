@@ -23,7 +23,7 @@ class ReceiptPageTopBar extends StatelessWidget {
   final String? receiptImgPath;
   final String? barcodeImgPaht;
   final ValueNotifier<bool> dataChanged;
-  final Future<void> Function() onReturnAfterChanges;
+  final Future<bool> Function() onReturnAfterChanges;
   final bool selectMode;
 
   final ThemeController themeController = Get.find();
@@ -125,8 +125,11 @@ class ReceiptPageTopBar extends StatelessWidget {
       builder: (context, dataChangedValue, child) {
         return IconButton(
           onPressed: () async {
-            if (dataChangedValue) await onReturnAfterChanges();
-            if (context.mounted) Navigator.pop(context);
+            bool closePage = true;
+            if (dataChangedValue) {
+              closePage = await onReturnAfterChanges();
+            }
+            if (closePage && context.mounted) Navigator.pop(context);
           },
           icon: Badge(
             isLabelVisible: dataChangedValue,

@@ -65,23 +65,34 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     }
   }
 
-  Future<void> handleReturnAfterChanges() async => await showAlertDialog(
-        title: "Save Receipt",
-        content: "Do you want to save receipt?",
-        actions: [
-          TextButton(
-            onPressed: () async {
-              await modelController.saveReceipt();
-              Navigator.pop(context);
-            },
-            child: const Text("Yes"),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("No"),
-          )
-        ],
-      );
+  Future<bool> handleReturnAfterChanges() async {
+    bool closePage = true;
+    await showAlertDialog(
+      title: "Save Receipt",
+      content: "Do you want to save receipt?",
+      actions: [
+        TextButton(
+          onPressed: () async {
+            await modelController.saveReceipt();
+            if (mounted) Navigator.pop(context);
+          },
+          child: const Text("Yes"),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text("No"),
+        ),
+        TextButton(
+          onPressed: () {
+            closePage = false;
+            Navigator.pop(context);
+          },
+          child: const Text("Cancel"),
+        )
+      ],
+    );
+    return closePage;
+  }
 
   Future<void> showAlertDialog({
     required String title,
@@ -128,8 +139,8 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   @override
   void initState() {
     super.initState();
-    modelController =
-        ReceiptModelController(receipt: widget.initialReceipt, allValuesModel: widget.allValuesModel);
+    modelController = ReceiptModelController(
+        receipt: widget.initialReceipt, allValuesModel: widget.allValuesModel);
     if (widget.initialReceipt.receiptId == null) {
       modelController.trackChange();
     }
