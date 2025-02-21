@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/core/settings/receipt_data_page.dart';
+import 'package:save_receipt/services/document/scan/google_barcode_scan.dart';
 
 enum MenuOption { save, delete, removeItem, selectMode }
 
@@ -172,7 +173,14 @@ class ReceiptPageTopBar extends StatelessWidget {
                   Expanded(
                     flex: 1,
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        if (receiptImgPath != null) {
+                          GoogleBarcodeScanner scanner =
+                              GoogleBarcodeScanner(path: receiptImgPath!);
+                          scanner.scanImage();
+                          scanner.printBarCode();
+                        }
+                      },
                       child: receiptIcon(barcodeImgPaht, Icons.qr_code),
                     ),
                   ),
