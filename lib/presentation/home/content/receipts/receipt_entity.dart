@@ -7,7 +7,6 @@ import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/data/models/document.dart';
 
 class ReceiptEntity extends StatelessWidget {
-  final Color? color;
   final ReceiptDocumentData data;
   final VoidCallback onPressed;
   final VoidCallback onRemoved;
@@ -17,7 +16,6 @@ class ReceiptEntity extends StatelessWidget {
     super.key,
     required this.data,
     required this.onPressed,
-    this.color,
     required this.onRemoved,
   });
 
@@ -85,7 +83,7 @@ class ReceiptEntity extends StatelessWidget {
         onTap: onPressed,
         child: Container(
           decoration: BoxDecoration(
-            color: color,
+            color: Colors.white,
             boxShadow: [
               BoxShadow(
                 color: themeController.theme.mainColor
@@ -122,12 +120,12 @@ class ReceiptEntity extends StatelessWidget {
                       Text(
                         product1,
                         style:
-                            TextStyle(color: themeController.theme.mainColor),
+                            TextStyle(color: Colors.grey[700]!, fontSize: 12),
                       ),
                       Text(
                         product2,
                         style:
-                            TextStyle(color: themeController.theme.mainColor),
+                            TextStyle(color: Colors.grey[700]!, fontSize: 12),
                       ),
                     ],
                   ),

@@ -32,8 +32,8 @@ class ColorTheme {
 
   List<Color> get _lighterColors => [
         mainColor,
-        mainColor.moved(80),
-        mainColor.moved(160),
+        mainColor.moved(100),
+        mainColor.moved(200),
       ];
 
   LinearGradient get lighterGradient => LinearGradient(
