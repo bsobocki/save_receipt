@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/presentation/receipt/components/data_editor/data_editor_top_bar.dart';
 
-class ReceiptDataEditor extends StatelessWidget {
+enum ReceiptDataContent { products, info }
+
+class ReceiptDataEditor extends StatefulWidget {
   final int flex;
   final String title;
   final bool areProductsEdited;
@@ -12,10 +14,9 @@ class ReceiptDataEditor extends StatelessWidget {
   final Widget productsList;
   final VoidCallback onResized;
   final VoidCallback onAddObject;
-  final ThemeController themeController = Get.find();
   final List<SelectModeEditorOption> selectModeOptions;
 
-  ReceiptDataEditor({
+  const ReceiptDataEditor({
     super.key,
     required this.flex,
     required this.title,
@@ -28,14 +29,65 @@ class ReceiptDataEditor extends StatelessWidget {
     required this.selectModeOptions,
   });
 
+  @override
+  State<ReceiptDataEditor> createState() => _ReceiptDataEditorState();
+}
+
+class _ReceiptDataEditorState extends State<ReceiptDataEditor> {
+  final ThemeController themeController = Get.find();
+  bool showProducts = true;
+
   Widget get topBar => DataEditorTopBar(
-        isExpanded: areProductsEdited,
-        onResized: onResized,
+        isExpanded: widget.areProductsEdited,
+        onResized: widget.onResized,
         background: themeController.theme.mainColor,
-        onAddObject: onAddObject,
-        selectModeOptions: selectModeOptions,
-        selectMode: selectMode,
+        onAddObject: widget.onAddObject,
+        selectModeOptions: widget.selectModeOptions,
+        selectMode: widget.selectMode,
       );
+
+  Widget contentTab(ReceiptDataContent content) {
+    bool productTab = content == ReceiptDataContent.products;
+    Color background = Colors.white;
+    Color textColor = themeController.theme.mainColor;
+    bool currentContentTab =
+        (showProducts && productTab) || (!showProducts && !productTab);
+
+    if (currentContentTab) {
+      background = themeController.theme.mainColor;
+      textColor = Colors.white;
+    }
+
+    return RotatedBox(
+      quarterTurns: 3,
+      child: GestureDetector(
+        onTap: () => setState(() => showProducts = productTab),
+        child: Container(
+          decoration: BoxDecoration(
+            color: background,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: const Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+          width: 90,
+          height: 30,
+          child: Center(
+            child: Text(
+              productTab ? 'Products' : 'Info',
+              style: TextStyle(
+                color: textColor,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget get navigationVerticalBar => Container(
         decoration: const BoxDecoration(
@@ -48,60 +100,14 @@ class ReceiptDataEditor extends StatelessWidget {
             const SizedBox(
               height: 32,
             ),
-            RotatedBox(
-              quarterTurns: 3,
-              child: GestureDetector(
-                onTap: () {
-                  print("Products pressed!");
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset:
-                            const Offset(0, 3), // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  width: 90,
-                  height: 30,
-                  child: Center(
-                    child: Text(
-                      'Products',
-                      style: TextStyle(
-                        color: themeController.theme.mainColor,
-                      ),
-                    ),
-                  ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    contentTab(ReceiptDataContent.products),
+                    contentTab(ReceiptDataContent.info),
+                  ],
                 ),
-              ),
-            ),
-            RotatedBox(
-              quarterTurns: 3,
-              child: GestureDetector(
-                onTap: () {
-                  print("Info pressed!");
-                },
-                child: Container(
-                    decoration: BoxDecoration(
-                      color: themeController.theme.mainColor.withOpacity(0.8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 5,
-                          blurRadius: 7,
-                          offset:
-                              const Offset(0, 3), // changes position of shadow
-                        ),
-                      ],
-                    ),
-                    width: 90,
-                    height: 30,
-                    child: const Center(child: Text('Info'))),
               ),
             ),
           ],
@@ -111,7 +117,7 @@ class ReceiptDataEditor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      flex: flex,
+      flex: widget.flex,
       child: Padding(
         padding: const EdgeInsets.only(top: 8.0),
         child: Container(
@@ -152,7 +158,9 @@ class ReceiptDataEditor extends StatelessWidget {
                             ),
                           ],
                         ),
-                        child: productsList,
+                        child: showProducts
+                            ? widget.productsList
+                            : widget.infoList,
                       ),
                     ),
                   ],

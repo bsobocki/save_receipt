@@ -178,43 +178,41 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   }
 
   get infosList {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: modelController.infos.length,
-        controller: _infoScrollController,
-        itemBuilder: (context, index) {
-          ReceiptObjectModelType type = modelController.infoAt(index)!.type;
-          VoidCallback? onChangedToProduct;
-          if (type == ReceiptObjectModelType.infoDouble) {
-            onChangedToProduct = () => changeInfoDoubleToProduct(index);
-          }
-          return InfoDataField(
-            key: UniqueKey(),
-            onChangedData: modelController.trackChange,
-            enabled: !modelController.areProductsEdited,
-            model: modelController.infoAt(index)!,
-            allValuesData: modelController.allValuesModel,
-            isDarker: (index % 2 == 0),
-            onItemDismissSwipe: () => handleInfoDismiss(index),
-            onItemEditModeSwipe: () => setEditModeForInfo(index),
-            onChangedToValue: () => changeInfoToValue(index),
-            onValueToFieldChanged: () => changeValueToInfo(index),
-            onValueTypeChanged: (ReceiptObjectModelType type) =>
-                changeInfoValueType(type, index),
-            onChangedToProduct: onChangedToProduct,
-            mode: modelController.isSelectModeEnabled
-                ? DataFieldMode.select
-                : modelController.isInfoInEditMode(index)
-                    ? DataFieldMode.edit
-                    : DataFieldMode.normal,
-            selected: modelController.isInfoSelected(index),
-            onSelected: () => setState(() {
-              modelController.toggleObjectSelection(index);
-            }),
-            onLongPress: toggleSelectMode,
-          );
-        },
-      ),
+    return ListView.builder(
+      itemCount: modelController.infos.length,
+      controller: _infoScrollController,
+      itemBuilder: (context, index) {
+        ReceiptObjectModelType type = modelController.infoAt(index)!.type;
+        VoidCallback? onChangedToProduct;
+        if (type == ReceiptObjectModelType.infoDouble) {
+          onChangedToProduct = () => changeInfoDoubleToProduct(index);
+        }
+        return InfoDataField(
+          key: UniqueKey(),
+          onChangedData: modelController.trackChange,
+          enabled: !modelController.areProductsEdited,
+          model: modelController.infoAt(index)!,
+          allValuesData: modelController.allValuesModel,
+          isDarker: (index % 2 == 0),
+          onItemDismissSwipe: () => handleInfoDismiss(index),
+          onItemEditModeSwipe: () => setEditModeForInfo(index),
+          onChangedToValue: () => changeInfoToValue(index),
+          onValueToFieldChanged: () => changeValueToInfo(index),
+          onValueTypeChanged: (ReceiptObjectModelType type) =>
+              changeInfoValueType(type, index),
+          onChangedToProduct: onChangedToProduct,
+          mode: modelController.isSelectModeEnabled
+              ? DataFieldMode.select
+              : modelController.isInfoInEditMode(index)
+                  ? DataFieldMode.edit
+                  : DataFieldMode.normal,
+          selected: modelController.isInfoSelected(index),
+          onSelected: () => setState(() {
+            modelController.toggleObjectSelection(index);
+          }),
+          onLongPress: toggleSelectMode,
+        );
+      },
     );
   }
 
