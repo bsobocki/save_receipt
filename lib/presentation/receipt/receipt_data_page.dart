@@ -56,7 +56,6 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         );
       }
       WidgetsBinding.instance.addPostFrameCallback(scroll);
-      
     }
   }
 
