@@ -15,7 +15,6 @@ class ProductDataField extends StatefulWidget {
   final AllValuesModel allValuesData;
   final DataFieldMode mode;
   final bool isDarker;
-  final bool enabled;
   final bool selected;
   final Function() onItemDismissSwipe;
   final Function() onItemEditModeSwipe;
@@ -32,7 +31,6 @@ class ProductDataField extends StatefulWidget {
     required this.allValuesData,
     required this.mode,
     required this.isDarker,
-    required this.enabled,
     required this.onItemDismissSwipe,
     required this.onItemEditModeSwipe,
     this.onChangedToValue,
@@ -74,7 +72,6 @@ class _ProductDataFieldState extends State<ProductDataField> {
           child: Column(
             children: [
               DataTextField(
-                enabled: widget.enabled,
                 textController: textController,
                 onChanged: (String value) {
                   widget.model.text = value;
@@ -82,7 +79,6 @@ class _ProductDataFieldState extends State<ProductDataField> {
                 },
               ),
               ValueField(
-                enabled: widget.enabled,
                 textColor: Colors.black,
                 initValue: widget.model.value!,
                 values: widget.allValuesData.prices,
@@ -155,7 +151,6 @@ class _ProductDataFieldState extends State<ProductDataField> {
       allValuesData: widget.allValuesData,
       mode: widget.mode,
       isDarker: widget.isDarker,
-      enabled: widget.enabled,
       onItemDismissSwipe: widget.onItemDismissSwipe,
       onItemEditModeSwipe: widget.onItemEditModeSwipe,
       editModeContent: editModeContent,

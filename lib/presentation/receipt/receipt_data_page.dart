@@ -154,7 +154,6 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         return ProductDataField(
           key: UniqueKey(),
           onChangedData: modelController.trackChange,
-          enabled: modelController.areProductsEdited,
           model: modelController.productAt(index)!,
           allValuesData: modelController.allValuesModel,
           isDarker: (index % 2 == 0),
@@ -190,7 +189,6 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         return InfoDataField(
           key: UniqueKey(),
           onChangedData: modelController.trackChange,
-          enabled: !modelController.areProductsEdited,
           model: modelController.infoAt(index)!,
           allValuesData: modelController.allValuesModel,
           isDarker: (index % 2 == 0),

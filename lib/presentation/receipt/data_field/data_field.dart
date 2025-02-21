@@ -8,7 +8,6 @@ import 'package:save_receipt/domain/entities/receipt_object.dart';
 enum DataFieldMode { normal, edit, select }
 
 class DataField extends StatefulWidget {
-  final bool enabled;
   final bool isDarker;
   final DataFieldMode mode;
   final Widget editModeContent;
@@ -26,7 +25,6 @@ class DataField extends StatefulWidget {
     required this.model,
     required this.allValuesData,
     required this.isDarker,
-    required this.enabled,
     required this.onItemDismissSwipe,
     required this.onItemEditModeSwipe,
     required this.editModeContent,
@@ -116,6 +114,6 @@ class _DataFieldState extends State<DataField> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.enabled ? swipableDataFieldContent : dataFieldContent;
+    return swipableDataFieldContent;
   }
 }

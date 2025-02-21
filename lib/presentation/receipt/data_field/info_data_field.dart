@@ -15,7 +15,6 @@ class InfoDataField extends StatefulWidget {
   final AllValuesModel allValuesData;
   final DataFieldMode mode;
   final bool isDarker;
-  final bool enabled;
   final bool selected;
   final Function() onItemDismissSwipe;
   final Function() onItemEditModeSwipe;
@@ -35,7 +34,6 @@ class InfoDataField extends StatefulWidget {
     required this.allValuesData,
     required this.mode,
     required this.isDarker,
-    required this.enabled,
     required this.onItemDismissSwipe,
     required this.onItemEditModeSwipe,
     this.onChangedToValue,
@@ -125,7 +123,6 @@ class _InfoDataFieldState extends State<InfoDataField> {
           child: Column(
             children: [
               DataTextField(
-                enabled: widget.enabled,
                 textController: textController,
                 onChanged: (String value) {
                   widget.model.text = value;
@@ -134,7 +131,6 @@ class _InfoDataFieldState extends State<InfoDataField> {
               ),
               if (widget.model.value != null)
                 ValueField(
-                  enabled: widget.enabled,
                   textColor: Colors.black,
                   initValue: widget.model.value ?? '',
                   values: allValuesForType(widget.model.type),
@@ -180,7 +176,6 @@ class _InfoDataFieldState extends State<InfoDataField> {
       allValuesData: widget.allValuesData,
       mode: widget.mode,
       isDarker: widget.isDarker,
-      enabled: widget.enabled,
       onItemDismissSwipe: widget.onItemDismissSwipe,
       onItemEditModeSwipe: widget.onItemEditModeSwipe,
       editModeContent: editModeContent,

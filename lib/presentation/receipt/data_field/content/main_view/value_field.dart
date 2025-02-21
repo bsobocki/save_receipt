@@ -11,7 +11,6 @@ class ValueField extends StatefulWidget {
     required this.values,
     required this.onValueChanged,
     required this.textColor,
-    required this.enabled,
     this.compareItems,
   });
 
@@ -19,7 +18,6 @@ class ValueField extends StatefulWidget {
   final Set<String> values;
   final Function(String?) onValueChanged;
   final Color textColor;
-  final bool enabled;
   final int Function(String, String)? compareItems;
 
   @override
@@ -60,7 +58,6 @@ class _ValueFieldState extends State<ValueField> {
   }
 
   get dropdownMenu => DropdownMenu<dynamic>(
-        enabled: widget.enabled,
         menuHeight: dropdownmenuHeight,
         enableSearch: true,
         requestFocusOnTap: true,
