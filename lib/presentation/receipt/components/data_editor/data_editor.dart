@@ -40,7 +40,6 @@ class _ReceiptDataEditorState extends State<ReceiptDataEditor> {
   bool showProducts = true;
 
   Widget get topBar => DataEditorTopBar(
-        isExpanded: widget.areProductsEdited,
         onResized: widget.onProductsTabPressed,
         background: themeController.theme.mainColor,
         onAddObject: widget.onAddObject,

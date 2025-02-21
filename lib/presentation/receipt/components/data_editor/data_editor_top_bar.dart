@@ -13,7 +13,6 @@ class SelectModeEditorOption {
 }
 
 class DataEditorTopBar extends StatelessWidget {
-  final bool isExpanded;
   final VoidCallback onResized;
   final VoidCallback onAddObject;
   final Color background;
@@ -22,7 +21,6 @@ class DataEditorTopBar extends StatelessWidget {
 
   const DataEditorTopBar({
     super.key,
-    required this.isExpanded,
     required this.onResized,
     required this.background,
     required this.onAddObject,
@@ -62,15 +60,13 @@ class DataEditorTopBar extends StatelessWidget {
       child: Row(
         children: [
           Expanded(child: Container()),
-          if (isExpanded && selectMode)
+          if (selectMode)
             Padding(padding: const EdgeInsets.all(12.0), child: popupMenu)
           else
             IconButton(
               iconSize: 20,
-              onPressed: !isExpanded ? null : onAddObject,
-              icon: Icon(
-                isExpanded ? Icons.add : Icons.radio_button_off,
-              ),
+              onPressed: onAddObject,
+              icon: const Icon(Icons.add),
             ),
         ],
       ),
