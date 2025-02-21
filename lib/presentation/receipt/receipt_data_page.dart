@@ -31,21 +31,32 @@ class ReceiptDataPage extends StatefulWidget {
 class _ReceiptDataPageState extends State<ReceiptDataPage> {
   bool _showFullScreenReceiptImage = false;
   final ThemeController themeController = Get.find();
-  final ScrollController _productsScrollController = ScrollController();
-  final ScrollController _infoScrollController = ScrollController();
+  ScrollController _productsScrollController = ScrollController();
+  ScrollController _infoScrollController = ScrollController();
   late ReceiptModelController modelController;
+  final Key _productListKey = UniqueKey();
+  final Key _infoListKey = UniqueKey();
+
+  void _resetScrollControllers() {
+    _productsScrollController.dispose();
+    _infoScrollController.dispose();
+
+    _productsScrollController = ScrollController();
+    _infoScrollController = ScrollController();
+  }
 
   void _scrollToBottom(ScrollController controller) {
     if (controller.hasClients) {
       double distance = controller.position.maxScrollExtent - controller.offset;
-      print("distance: $distance");
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      void scroll(_) {
         controller.animateTo(
           controller.position.maxScrollExtent,
           duration: Duration(milliseconds: ((distance + 1) * 2).toInt()),
           curve: Curves.easeOut,
         );
-      });
+      }
+      WidgetsBinding.instance.addPostFrameCallback(scroll);
+      
     }
   }
 
@@ -148,8 +159,16 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     }
   }
 
+  @override
+  void dispose() {
+    _productsScrollController.dispose();
+    _infoScrollController.dispose();
+    super.dispose();
+  }
+
   Widget get productsList {
     return ListView.builder(
+      key: _productListKey,
       itemCount: modelController.products.length,
       controller: _productsScrollController,
       itemBuilder: (context, index) {
@@ -180,6 +199,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
 
   get infosList {
     return ListView.builder(
+      key: _infoListKey,
       itemCount: modelController.infos.length,
       controller: _infoScrollController,
       itemBuilder: (context, index) {
@@ -380,10 +400,15 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   void handleProductDismiss(int index) =>
       setState(() => modelController.removeObjectByIndex(index));
 
-  void setProductsEditing() =>
-      setState(() => modelController.setProductsEditing());
+  void setProductsEditing() => setState(() {
+        modelController.setProductsEditing();
+        _resetScrollControllers();
+      });
 
-  void setInfoEditing() => setState(() => modelController.setInfoEditing());
+  void setInfoEditing() => setState(() {
+        modelController.setInfoEditing();
+        _resetScrollControllers();
+      });
 
   void addEmptyObject() {
     setState(() => modelController.addEmptyObject());
