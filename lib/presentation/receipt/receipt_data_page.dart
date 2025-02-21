@@ -385,6 +385,10 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
 
   void addEmptyObject() {
     setState(() => modelController.addEmptyObject());
-    _scrollToBottom(_infoScrollController);
+    _scrollToBottom(
+      modelController.areProductsEdited
+          ? _productsScrollController
+          : _infoScrollController,
+    );
   }
 }
