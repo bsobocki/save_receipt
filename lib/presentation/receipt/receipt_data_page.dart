@@ -246,7 +246,8 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
           areProductsEdited: modelController.areProductsEdited,
           productsList: productsList,
           infoList: infosList,
-          onResized: setProductsEditing,
+          onProductsTabPressed: setProductsEditing,
+          onInfoTabPressed: setInfoEditing,
           onAddObject: addEmptyObject,
           selectMode: modelController.isSelectModeEnabled,
           selectModeOptions: [

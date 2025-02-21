@@ -12,8 +12,9 @@ class ReceiptDataEditor extends StatefulWidget {
   final bool selectMode;
   final Widget infoList;
   final Widget productsList;
-  final VoidCallback onResized;
   final VoidCallback onAddObject;
+  final VoidCallback onInfoTabPressed;
+  final VoidCallback onProductsTabPressed;
   final List<SelectModeEditorOption> selectModeOptions;
 
   const ReceiptDataEditor({
@@ -21,11 +22,12 @@ class ReceiptDataEditor extends StatefulWidget {
     required this.flex,
     required this.title,
     required this.areProductsEdited,
-    required this.infoList,
-    required this.productsList,
-    required this.onResized,
-    required this.onAddObject,
     required this.selectMode,
+    required this.infoList,
+    required this.onAddObject,
+    required this.productsList,
+    required this.onInfoTabPressed,
+    required this.onProductsTabPressed,
     required this.selectModeOptions,
   });
 
@@ -39,7 +41,7 @@ class _ReceiptDataEditorState extends State<ReceiptDataEditor> {
 
   Widget get topBar => DataEditorTopBar(
         isExpanded: widget.areProductsEdited,
-        onResized: widget.onResized,
+        onResized: widget.onProductsTabPressed,
         background: themeController.theme.mainColor,
         onAddObject: widget.onAddObject,
         selectModeOptions: widget.selectModeOptions,
@@ -52,6 +54,9 @@ class _ReceiptDataEditorState extends State<ReceiptDataEditor> {
     Color textColor = themeController.theme.mainColor;
     bool currentContentTab =
         (showProducts && productTab) || (!showProducts && !productTab);
+    VoidCallback onPressed = content == ReceiptDataContent.products
+        ? widget.onProductsTabPressed
+        : widget.onInfoTabPressed;
 
     if (currentContentTab) {
       background = themeController.theme.mainColor;
@@ -61,7 +66,10 @@ class _ReceiptDataEditorState extends State<ReceiptDataEditor> {
     return RotatedBox(
       quarterTurns: 3,
       child: GestureDetector(
-        onTap: () => setState(() => showProducts = productTab),
+        onTap: () => setState(() {
+          showProducts = productTab;
+          onPressed();
+        }),
         child: Container(
           decoration: BoxDecoration(
             color: background,
