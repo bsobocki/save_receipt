@@ -326,6 +326,8 @@ class ReceiptModelController {
 
   List<ReceiptObjectModel> get times => _time;
 
+  List<ReceiptObjectModel> get currentObjectList => _areProductsEdited ? _products : _infos;
+
   bool productIndexExists(int index) => index >= 0 && index < _products.length;
 
   bool infoIndexExists(int index) => index >= 0 && index < _infos.length;

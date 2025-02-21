@@ -37,10 +37,12 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
 
   void _scrollToBottom(ScrollController controller) {
     if (controller.hasClients) {
+      double distance = controller.position.maxScrollExtent - controller.offset;
+      print("distance: $distance");
       WidgetsBinding.instance.addPostFrameCallback((_) {
         controller.animateTo(
           controller.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
+          duration: Duration(milliseconds: ((distance + 1) * 2).toInt()),
           curve: Curves.easeOut,
         );
       });
