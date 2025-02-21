@@ -44,12 +44,15 @@ class ProductEntity extends StatelessWidget {
             children: [
               Text(
                 data.name,
-                style: const TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.black),
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: themeController.theme.mainColor),
                 overflow: TextOverflow.ellipsis,
               ),
-              Text(data.price.toString(),
-                  style: TextStyle(color: themeController.theme.mainColor)),
+              Text(
+                data.price.toString(),
+                style: TextStyle(color: Colors.grey[700]!, fontSize: 12),
+              ),
             ],
           ),
         ),
