@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
@@ -41,6 +42,46 @@ class ReceiptPageTopBar extends StatelessWidget {
     required this.onSelectModeToggled,
     required this.selectMode,
   });
+
+  Future<void> showAlertDialog({
+    required String title,
+    required String data,
+    required Barcode barcode,
+    required BuildContext context,
+  }) async {
+    List<Widget> actions = [
+      TextButton(
+        onPressed: () => Navigator.pop(context),
+        child: const Text("OK"),
+      ),
+    ];
+
+    print("--------format: $barcode");
+
+    await showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            title,
+            style: TextStyle(
+              color: themeController.theme.mainColor,
+            ),
+          ),
+          content: Container(
+            constraints: const BoxConstraints(maxHeight: 120),
+            child: BarcodeWidget(
+              data: data,
+              barcode: barcode,
+              drawText: true,
+              style: const TextStyle(color: Colors.black),
+            ),
+          ),
+          actions: actions,
+        );
+      },
+    );
+  }
 
   Widget expandedPlaceholder({int flex = 1}) =>
       Expanded(flex: flex, child: Container());
@@ -154,7 +195,7 @@ class ReceiptPageTopBar extends StatelessWidget {
   Widget get emptyVerticalSpace =>
       const SizedBox(height: ReceiptEditorSettings.topBarSpaceHeight);
 
-  Widget get panel => SizedBox(
+  Widget panel(BuildContext context) => SizedBox(
         height: ReceiptEditorSettings.topBarMainContentHeight,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -173,12 +214,18 @@ class ReceiptPageTopBar extends StatelessWidget {
                   Expanded(
                     flex: 1,
                     child: GestureDetector(
-                      onTap: () {
+                      onTap: () async {
                         if (receiptImgPath != null) {
                           GoogleBarcodeScanner scanner =
-                              GoogleBarcodeScanner(path: receiptImgPath!);
-                          scanner.scanImage();
-                          scanner.printBarCode();
+                              GoogleBarcodeScanner(receiptImgPath!);
+                          await scanner.scanImage();
+                          if (context.mounted) {
+                            await showAlertDialog(
+                                title: "Barcode",
+                                data: scanner.value,
+                                barcode: scanner.getBarcodeFormat(),
+                                context: context);
+                          }
                         }
                       },
                       child: receiptIcon(barcodeImgPaht, Icons.qr_code),
@@ -199,7 +246,7 @@ class ReceiptPageTopBar extends StatelessWidget {
       children: [
         navigationTopBar,
         emptyVerticalSpace,
-        panel,
+        panel(context),
       ],
     );
   }
