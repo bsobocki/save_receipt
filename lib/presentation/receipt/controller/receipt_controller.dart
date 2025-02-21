@@ -159,8 +159,12 @@ class ReceiptModelController {
 
   void changeProductToInfoDouble(int index) {
     if (productIndexExists(index)) {
-      _products[index].type = ReceiptObjectModelType.infoDouble;
-      _infos.add(_products[index]);
+      _infos.add(
+        ReceiptObjectModel.newObjectFrom(
+          _products[index],
+          type: ReceiptObjectModelType.infoDouble,
+        ),
+      );
       removeObjectByIndex(index);
     }
   }
@@ -170,8 +174,13 @@ class ReceiptModelController {
       if (_infos[index].value == null) {
         return false;
       }
-      _infos[index].type = ReceiptObjectModelType.product;
-      _products.add(_infos[index]);
+      var infoObj = _infos[index];
+      _products.add(
+        ReceiptObjectModel.newObjectFrom(
+          infoObj,
+          type: ReceiptObjectModelType.product,
+        ),
+      );
       removeObjectByIndex(index);
     }
     return true;
@@ -350,7 +359,7 @@ class ReceiptModelController {
 
   bool isProductInEditMode(int index) =>
       _areProductsEdited && isObjectInEditMode(index);
-      
+
   bool isInfoInEditMode(int index) =>
       !_areProductsEdited && isObjectInEditMode(index);
 
@@ -394,9 +403,13 @@ class ReceiptModelController {
     bool status = true;
     for (ReceiptObjectModel obj in selectedObjects) {
       if (obj.value != null && obj.type == ReceiptObjectModelType.infoDouble) {
-        obj.type = ReceiptObjectModelType.product;
-        _products.add(obj);
         removeObject(obj);
+        _products.add(
+          ReceiptObjectModel.newObjectFrom(
+            obj,
+            type: ReceiptObjectModelType.product,
+          ),
+        );
       } else {
         status = false;
       }
@@ -407,9 +420,13 @@ class ReceiptModelController {
 
   void changeSelectedProductsToInfo() {
     for (ReceiptObjectModel obj in selectedObjects) {
-      obj.type = ReceiptObjectModelType.infoDouble;
-      _infos.add(obj);
       removeObject(obj);
+      _infos.add(
+        ReceiptObjectModel.newObjectFrom(
+          obj,
+          type: ReceiptObjectModelType.infoDouble,
+        ),
+      );
     }
     toggleSelectMode();
   }

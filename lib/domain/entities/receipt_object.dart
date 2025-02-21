@@ -20,6 +20,12 @@ class ReceiptObjectModel {
     this.value,
   });
 
+  ReceiptObjectModel.newObjectFrom(ReceiptObjectModel object, {ReceiptObjectModelType? type})
+      : dataId = null,
+        type = type ?? object.type,
+        text = object.text,
+        value = object.value;
+
   @override
   String toString() => '{$text: $value[$type]}';
 }
