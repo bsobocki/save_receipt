@@ -16,13 +16,14 @@ class ReceiptBarcodeData {
 
 class GoogleBarcodeScanner {
   final String path;
-  late final BarcodeFormat format;
+  BarcodeFormat? format;
   Uint8List? imgBytes;
   String? value;
 
   GoogleBarcodeScanner(this.path);
 
   barcode_widget.Barcode get getBarcodeFormat {
+    if (format == null) return barcode_widget.Barcode.code128();
     switch (format) {
       case BarcodeFormat.code128:
         return barcode_widget.Barcode.code128();
@@ -44,7 +45,6 @@ class GoogleBarcodeScanner {
     Barcode? barcode = barcodes.firstOrNull;
     if (barcode != null) {
       format = barcode.format;
-
       value = barcode.rawValue;
       imgBytes = barcodeImgBytes(barcode.boundingBox);
     }

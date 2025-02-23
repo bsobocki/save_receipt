@@ -52,7 +52,7 @@ class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
 
   Future<void> showAlertDialog({
     required String title,
-    required String data,
+    required String? data,
     required Barcode barcode,
     required BuildContext context,
   }) async {
@@ -75,12 +75,14 @@ class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
           ),
           content: Container(
             constraints: const BoxConstraints(maxHeight: 120),
-            child: BarcodeWidget(
+            child: data != null ?
+            BarcodeWidget(
               data: data,
               barcode: barcode,
               drawText: true,
               style: const TextStyle(color: Colors.black),
-            ),
+            )
+            : Center(child: Text("Invalid Data", style: TextStyle(color: themeController.theme.mainColor),)),
           ),
           actions: actions,
         );
@@ -263,7 +265,7 @@ class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
                           if (context.mounted) {
                             await showAlertDialog(
                               title: "Barcode",
-                              data: barcodeData!.value ?? '',
+                              data: barcodeData!.value,
                               barcode: barcodeData!.format,
                               context: context,
                             );
