@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ String getMenuLabel(MenuOption option, {bool selectMode = false}) =>
       MenuOption.selectMode => selectMode ? 'cancel selection' : 'select items'
     };
 
-class ReceiptPageTopBar extends StatelessWidget {
+class ReceiptPageTopBar extends StatefulWidget {
   final Function() onSaveReceiptOptionPress;
   final Function() onDeleteReceiptOptionPress;
   final Function() onSelectModeToggled;
@@ -28,9 +29,7 @@ class ReceiptPageTopBar extends StatelessWidget {
   final Future<bool> Function() onReturnAfterChanges;
   final bool selectMode;
 
-  final ThemeController themeController = Get.find();
-
-  ReceiptPageTopBar({
+  const ReceiptPageTopBar({
     super.key,
     required this.onImageIconPress,
     this.receiptImgPath,
@@ -42,6 +41,14 @@ class ReceiptPageTopBar extends StatelessWidget {
     required this.onSelectModeToggled,
     required this.selectMode,
   });
+
+  @override
+  State<ReceiptPageTopBar> createState() => _ReceiptPageTopBarState();
+}
+
+class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
+  final ThemeController themeController = Get.find();
+  ReceiptBarcodeData? barcodeData;
 
   Future<void> showAlertDialog({
     required String title,
@@ -55,8 +62,6 @@ class ReceiptPageTopBar extends StatelessWidget {
         child: const Text("OK"),
       ),
     ];
-
-    print("--------format: $barcode");
 
     await showDialog<void>(
       context: context,
@@ -86,13 +91,43 @@ class ReceiptPageTopBar extends StatelessWidget {
   Widget expandedPlaceholder({int flex = 1}) =>
       Expanded(flex: flex, child: Container());
 
-  Widget receiptIcon(String? path, IconData iconData) {
+  Widget receiptIcon(
+      {String? path, Uint8List? bytes, required IconData iconData}) {
     Widget? icon;
     DecorationImage? image;
+    ImageProvider? imgProvider;
 
     if (path != null) {
+      imgProvider = FileImage(File(path));
+    }
+
+    if (bytes != null) {
+      try {
+        return Padding(
+          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.white, style: BorderStyle.solid),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Image.memory(
+                bytes,
+                fit: BoxFit.fitHeight,
+                alignment: Alignment.topCenter,
+              ),
+            ),
+          ),
+        );
+      } catch (e) {
+        print("Error displaying image from bytes: $e");
+      }
+    }
+
+    if (imgProvider != null) {
       image = DecorationImage(
-        image: FileImage(File(path)),
+        image: imgProvider,
         fit: BoxFit.fitWidth,
         alignment: Alignment.topCenter,
       );
@@ -134,7 +169,7 @@ class ReceiptPageTopBar extends StatelessWidget {
           children: [
             Icon(getIconByOption(option), color: Colors.white),
             const SizedBox(width: 8),
-            Text(getMenuLabel(option, selectMode: selectMode)),
+            Text(getMenuLabel(option, selectMode: widget.selectMode)),
           ],
         ));
   }
@@ -144,13 +179,13 @@ class ReceiptPageTopBar extends StatelessWidget {
         onSelected: (MenuOption value) {
           switch (value) {
             case MenuOption.save:
-              onSaveReceiptOptionPress();
+              widget.onSaveReceiptOptionPress();
               break;
             case MenuOption.delete:
-              onDeleteReceiptOptionPress();
+              widget.onDeleteReceiptOptionPress();
               break;
             case MenuOption.selectMode:
-              onSelectModeToggled();
+              widget.onSelectModeToggled();
               break;
             default:
               break;
@@ -163,13 +198,13 @@ class ReceiptPageTopBar extends StatelessWidget {
       );
 
   Widget get returnButton => ValueListenableBuilder(
-      valueListenable: dataChanged,
+      valueListenable: widget.dataChanged,
       builder: (context, dataChangedValue, child) {
         return IconButton(
           onPressed: () async {
             bool closePage = true;
             if (dataChangedValue) {
-              closePage = await onReturnAfterChanges();
+              closePage = await widget.onReturnAfterChanges();
             }
             if (closePage && context.mounted) Navigator.pop(context);
           },
@@ -207,28 +242,37 @@ class ReceiptPageTopBar extends StatelessWidget {
                   Expanded(
                     flex: 2,
                     child: GestureDetector(
-                      onTap: onImageIconPress,
-                      child: receiptIcon(receiptImgPath, Icons.image),
+                      onTap: widget.onImageIconPress,
+                      child: receiptIcon(
+                        path: widget.receiptImgPath,
+                        iconData: Icons.image,
+                      ),
                     ),
                   ),
                   Expanded(
                     flex: 1,
                     child: GestureDetector(
                       onTap: () async {
-                        if (receiptImgPath != null) {
-                          GoogleBarcodeScanner scanner =
-                              GoogleBarcodeScanner(receiptImgPath!);
-                          await scanner.scanImage();
+                        if (widget.receiptImgPath != null) {
+                          if (barcodeData == null) {
+                            GoogleBarcodeScanner scanner =
+                                GoogleBarcodeScanner(widget.receiptImgPath!);
+                            await scanner.scanImage();
+                            setState(() => barcodeData = scanner.data);
+                          }
                           if (context.mounted) {
                             await showAlertDialog(
-                                title: "Barcode",
-                                data: scanner.value,
-                                barcode: scanner.getBarcodeFormat(),
-                                context: context);
+                              title: "Barcode",
+                              data: barcodeData!.value ?? '',
+                              barcode: barcodeData!.format,
+                              context: context,
+                            );
                           }
                         }
                       },
-                      child: receiptIcon(barcodeImgPaht, Icons.qr_code),
+                      child: receiptIcon(
+                          bytes: barcodeData?.imgBytes,
+                          iconData: Icons.qr_code),
                     ),
                   ),
                 ],
