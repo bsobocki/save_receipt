@@ -8,13 +8,12 @@ import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/core/settings/receipt_data_page.dart';
 import 'package:save_receipt/services/document/scan/google_barcode_scan.dart';
 
-enum MenuOption { save, delete, removeItem, selectMode }
+enum MenuOption { save, delete, selectMode }
 
 String getMenuLabel(MenuOption option, {bool selectMode = false}) =>
     switch (option) {
       MenuOption.save => 'save receipt',
       MenuOption.delete => 'delete receipt',
-      MenuOption.removeItem => 'remove item',
       MenuOption.selectMode => selectMode ? 'cancel selection' : 'select items'
     };
 
@@ -85,7 +84,7 @@ class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
                   )
                 : Center(
                     child: Text(
-                    "Invalid Data",
+                    "No barcode found..",
                     style: TextStyle(color: themeController.theme.mainColor),
                   )),
           ),
@@ -177,8 +176,6 @@ class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
         return Icons.save;
       case MenuOption.delete:
         return Icons.delete_rounded;
-      case MenuOption.removeItem:
-        return Icons.playlist_remove_rounded;
       case MenuOption.selectMode:
         return Icons.select_all;
       default:

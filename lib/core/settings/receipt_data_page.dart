@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ReceiptEditorSettings {
   static const double backgroundGradientHeigth = 360;
-  static const double topBarNavigationBarHeight = 20.0;
+  static const double topBarNavigationBarHeight = 30.0;
   static const double topBarSpaceHeight = 20.0;
   static const double topBarMainContentHeight = 180.0;
   static const EdgeInsets mainContentScreenPadding = EdgeInsets.only(
