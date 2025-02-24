@@ -104,7 +104,7 @@ class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
     if (widget.receiptImgPath != null) {
       imageBackground = DecorationImage(
         image: FileImage(File(widget.receiptImgPath!)),
-        fit: BoxFit.fitWidth,
+        fit: BoxFit.cover,
         alignment: Alignment.topCenter,
       );
     } else {
@@ -112,7 +112,7 @@ class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+      padding: const EdgeInsets.only(bottom: 8.0),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(color: Colors.white, style: BorderStyle.solid),
@@ -270,13 +270,12 @@ class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
                   Expanded(
                     flex: 1,
                     child: GestureDetector(
-                      onTap: () =>
-                          showBarcodeDialog(
-                            title: "Barcode",
-                            data: widget.barcodeData?.value,
-                            barcode: widget.barcodeData?.format,
-                            context: context,
-                          ),
+                      onTap: () => showBarcodeDialog(
+                        title: "Barcode",
+                        data: widget.barcodeData?.value,
+                        barcode: widget.barcodeData?.format,
+                        context: context,
+                      ),
                       child: barcodeField(bytes: widget.barcodeData?.imgBytes),
                     ),
                   ),

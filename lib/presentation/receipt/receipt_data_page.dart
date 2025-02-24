@@ -54,7 +54,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
       void scroll(_) {
         controller.animateTo(
           controller.position.maxScrollExtent,
-          duration: Duration(milliseconds: ((distance + 1) * 2).toInt()),
+          duration: Duration(milliseconds: ((distance + 1) * 1.5).toInt()),
           curve: Curves.easeOut,
         );
       }
