@@ -7,13 +7,15 @@ import 'package:get/get.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/core/settings/receipt_data_page.dart';
 import 'package:save_receipt/services/document/scan/google_barcode_scan.dart';
+import 'package:save_receipt/services/images/edit_image.dart';
 
-enum MenuOption { save, delete, selectMode }
+enum MenuOption { save, delete, selectMode, documentFormat }
 
 String getMenuLabel(MenuOption option, {bool selectMode = false}) =>
     switch (option) {
       MenuOption.save => 'save receipt',
       MenuOption.delete => 'delete receipt',
+      MenuOption.documentFormat => 'documentFormat',
       MenuOption.selectMode => selectMode ? 'cancel selection' : 'select items'
     };
 
@@ -28,6 +30,8 @@ class ReceiptPageTopBar extends StatefulWidget {
   final Future<bool> Function() onReturnAfterChanges;
   final bool selectMode;
   final ReceiptBarcodeData? barcodeData;
+  final VoidCallback onDocumentFormattingOptionPress;
+  final bool documentFormat;
 
   const ReceiptPageTopBar({
     super.key,
@@ -41,6 +45,8 @@ class ReceiptPageTopBar extends StatefulWidget {
     required this.onSelectModeToggled,
     required this.selectMode,
     this.barcodeData,
+    required this.onDocumentFormattingOptionPress,
+    required this.documentFormat,
   });
 
   @override
@@ -102,31 +108,54 @@ class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
     DecorationImage? imageBackground;
 
     if (widget.receiptImgPath != null) {
-      imageBackground = DecorationImage(
-        image: FileImage(File(widget.receiptImgPath!)),
-        fit: BoxFit.cover,
-        alignment: Alignment.topCenter,
-      );
+      bool fromBytes = false;
+      if (widget.documentFormat) {
+        var bytes =
+            adjustDocumentBytes(File(widget.receiptImgPath!).readAsBytesSync());
+        if (bytes != null) {
+          child = Image.memory(
+            bytes,
+            fit: BoxFit.cover,
+            alignment: Alignment.topCenter,
+          );
+          fromBytes = true;
+        }
+      }
+      if (!fromBytes) {
+        child = Image.file(
+          File(widget.receiptImgPath!),
+          fit: BoxFit.cover,
+          alignment: Alignment.topCenter,
+        );
+      }
     } else {
       child = const Center(child: Icon(Icons.receipt_long_rounded));
     }
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.white, style: BorderStyle.solid),
-          borderRadius: BorderRadius.circular(15),
-          image: imageBackground,
+    return SizedBox(
+      width: double.infinity,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.white, style: BorderStyle.solid),
+            borderRadius: BorderRadius.circular(15),
+            image: imageBackground,
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: child,
+          ),
         ),
-        child: child,
       ),
     );
   }
 
   Widget barcodeField({Uint8List? bytes}) {
     Widget? child;
-
+    if (widget.documentFormat) {
+      bytes = adjustDocumentBytes(bytes);
+    }
     if (bytes != null) {
       try {
         child = Image.memory(
@@ -155,16 +184,19 @@ class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
       ),
     ));
 
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.white, style: BorderStyle.solid),
-          borderRadius: BorderRadius.circular(9),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(9),
-          child: child,
+    return SizedBox(
+      width: double.infinity,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.white, style: BorderStyle.solid),
+            borderRadius: BorderRadius.circular(9),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(9),
+            child: child,
+          ),
         ),
       ),
     );
@@ -178,6 +210,10 @@ class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
         return Icons.delete_rounded;
       case MenuOption.selectMode:
         return Icons.select_all;
+      case MenuOption.documentFormat:
+        return widget.documentFormat
+            ? Icons.check_box_outlined
+            : Icons.check_box_outline_blank_outlined;
       default:
         return Icons.keyboard_option_key;
     }
@@ -207,6 +243,9 @@ class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
               break;
             case MenuOption.selectMode:
               widget.onSelectModeToggled();
+              break;
+            case MenuOption.documentFormat:
+              widget.onDocumentFormattingOptionPress();
               break;
             default:
               break;

@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image/image.dart';
-import 'package:save_receipt/services/document/image/image_operations.dart';
+import 'package:save_receipt/services/images/image_operations.dart';
 
 Future<List<TextLine>> processImage(String imagePath) async {
   final image = decodeImage(File(imagePath).readAsBytesSync());

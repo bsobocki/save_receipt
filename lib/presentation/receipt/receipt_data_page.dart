@@ -39,6 +39,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   late ReceiptModelController modelController;
   final Key _productListKey = UniqueKey();
   final Key _infoListKey = UniqueKey();
+  bool documentFormat = false;
 
   void _resetScrollControllers() {
     _productsScrollController.dispose();
@@ -263,6 +264,10 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         onSelectModeToggled: toggleSelectMode,
         selectMode: modelController.isSelectModeEnabled,
         barcodeData: widget.barcodeData,
+        onDocumentFormattingOptionPress: () => setState(() {
+          documentFormat = !documentFormat;
+        }),
+        documentFormat: documentFormat,
       );
 
   get productsEditor => ReceiptDataEditor(
@@ -325,7 +330,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             setState(() {
               _showFullScreenReceiptImage = false;
             });
-          },
+          }, documentFormat: documentFormat,
         ),
       );
     }
