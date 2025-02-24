@@ -12,15 +12,18 @@ import 'package:save_receipt/presentation/receipt/data_field/info_data_field.dar
 import 'package:save_receipt/domain/entities/receipt.dart';
 import 'package:save_receipt/presentation/receipt/controller/receipt_controller.dart';
 import 'package:save_receipt/presentation/receipt/data_field/product_data_field.dart';
+import 'package:save_receipt/services/document/scan/google_barcode_scan.dart';
 
 class ReceiptDataPage extends StatefulWidget {
   final String title = 'Fill Receipt Data';
   final ReceiptModel initialReceipt;
   final AllValuesModel? allValuesModel;
+  final ReceiptBarcodeData? barcodeData;
 
   const ReceiptDataPage({
     required this.initialReceipt,
     this.allValuesModel,
+    this.barcodeData,
     super.key,
   });
 
@@ -55,6 +58,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
           curve: Curves.easeOut,
         );
       }
+
       WidgetsBinding.instance.addPostFrameCallback(scroll);
     }
   }
@@ -253,12 +257,12 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         dataChanged: modelController.dataChangedNotifier,
         onImageIconPress: openFullImageMode,
         receiptImgPath: modelController.imgPath,
-        //barcodeImgPaht: _receipt.barcodePath,
         onReturnAfterChanges: handleReturnAfterChanges,
         onSaveReceiptOptionPress: modelController.saveReceipt,
         onDeleteReceiptOptionPress: handleReceiptDeleted,
         onSelectModeToggled: toggleSelectMode,
         selectMode: modelController.isSelectModeEnabled,
+        barcodeData: widget.barcodeData,
       );
 
   get productsEditor => ReceiptDataEditor(

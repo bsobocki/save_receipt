@@ -28,6 +28,7 @@ class ReceiptPageTopBar extends StatefulWidget {
   final ValueNotifier<bool> dataChanged;
   final Future<bool> Function() onReturnAfterChanges;
   final bool selectMode;
+  final ReceiptBarcodeData? barcodeData;
 
   const ReceiptPageTopBar({
     super.key,
@@ -40,6 +41,7 @@ class ReceiptPageTopBar extends StatefulWidget {
     required this.onReturnAfterChanges,
     required this.onSelectModeToggled,
     required this.selectMode,
+    this.barcodeData,
   });
 
   @override
@@ -48,12 +50,11 @@ class ReceiptPageTopBar extends StatefulWidget {
 
 class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
   final ThemeController themeController = Get.find();
-  ReceiptBarcodeData? barcodeData;
 
-  Future<void> showAlertDialog({
+  Future<void> showBarcodeDialog({
     required String title,
     required String? data,
-    required Barcode barcode,
+    required Barcode? barcode,
     required BuildContext context,
   }) async {
     List<Widget> actions = [
@@ -75,14 +76,18 @@ class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
           ),
           content: Container(
             constraints: const BoxConstraints(maxHeight: 120),
-            child: data != null ?
-            BarcodeWidget(
-              data: data,
-              barcode: barcode,
-              drawText: true,
-              style: const TextStyle(color: Colors.black),
-            )
-            : Center(child: Text("Invalid Data", style: TextStyle(color: themeController.theme.mainColor),)),
+            child: data != null
+                ? BarcodeWidget(
+                    data: data,
+                    barcode: barcode ?? Barcode.code128(),
+                    drawText: true,
+                    style: const TextStyle(color: Colors.black),
+                  )
+                : Center(
+                    child: Text(
+                    "Invalid Data",
+                    style: TextStyle(color: themeController.theme.mainColor),
+                  )),
           ),
           actions: actions,
         );
@@ -93,58 +98,75 @@ class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
   Widget expandedPlaceholder({int flex = 1}) =>
       Expanded(flex: flex, child: Container());
 
-  Widget receiptIcon(
-      {String? path, Uint8List? bytes, required IconData iconData}) {
-    Widget? icon;
-    DecorationImage? image;
-    ImageProvider? imgProvider;
+  Widget get receiptField {
+    Widget? child;
+    DecorationImage? imageBackground;
 
-    if (path != null) {
-      imgProvider = FileImage(File(path));
-    }
-
-    if (bytes != null) {
-      try {
-        return Padding(
-          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.white, style: BorderStyle.solid),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: Image.memory(
-                bytes,
-                fit: BoxFit.fitHeight,
-                alignment: Alignment.topCenter,
-              ),
-            ),
-          ),
-        );
-      } catch (e) {
-        print("Error displaying image from bytes: $e");
-      }
-    }
-
-    if (imgProvider != null) {
-      image = DecorationImage(
-        image: imgProvider,
+    if (widget.receiptImgPath != null) {
+      imageBackground = DecorationImage(
+        image: FileImage(File(widget.receiptImgPath!)),
         fit: BoxFit.fitWidth,
         alignment: Alignment.topCenter,
       );
     } else {
-      icon = Center(child: Icon(iconData));
+      child = const Center(child: Icon(Icons.receipt_long_rounded));
     }
+
     return Padding(
       padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(color: Colors.white, style: BorderStyle.solid),
           borderRadius: BorderRadius.circular(15),
-          image: image,
+          image: imageBackground,
         ),
-        child: icon,
+        child: child,
+      ),
+    );
+  }
+
+  Widget barcodeField({Uint8List? bytes}) {
+    Widget? child;
+
+    if (bytes != null) {
+      try {
+        child = Image.memory(
+          bytes,
+          fit: BoxFit.cover,
+          alignment: Alignment.topCenter,
+        );
+      } catch (e) {
+        print("Error displaying image from bytes: $e");
+        child = null;
+      }
+    }
+
+    child ??= Center(
+        child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: //Icon(Icons.qr_code)
+          SizedBox(
+        width: 30,
+        child: BarcodeWidget(
+          data: '0050',
+          barcode: Barcode.itf(),
+          drawText: false,
+          color: Colors.white,
+        ),
+      ),
+    ));
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.white, style: BorderStyle.solid),
+          borderRadius: BorderRadius.circular(9),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(9),
+          child: child,
+        ),
       ),
     );
   }
@@ -242,39 +264,23 @@ class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
               child: Column(
                 children: [
                   Expanded(
-                    flex: 2,
+                    flex: 3,
                     child: GestureDetector(
                       onTap: widget.onImageIconPress,
-                      child: receiptIcon(
-                        path: widget.receiptImgPath,
-                        iconData: Icons.image,
-                      ),
+                      child: receiptField,
                     ),
                   ),
                   Expanded(
                     flex: 1,
                     child: GestureDetector(
-                      onTap: () async {
-                        if (widget.receiptImgPath != null) {
-                          if (barcodeData == null) {
-                            GoogleBarcodeScanner scanner =
-                                GoogleBarcodeScanner(widget.receiptImgPath!);
-                            await scanner.scanImage();
-                            setState(() => barcodeData = scanner.data);
-                          }
-                          if (context.mounted) {
-                            await showAlertDialog(
-                              title: "Barcode",
-                              data: barcodeData!.value,
-                              barcode: barcodeData!.format,
-                              context: context,
-                            );
-                          }
-                        }
-                      },
-                      child: receiptIcon(
-                          bytes: barcodeData?.imgBytes,
-                          iconData: Icons.qr_code),
+                      onTap: () =>
+                          showBarcodeDialog(
+                            title: "Barcode",
+                            data: widget.barcodeData?.value,
+                            barcode: widget.barcodeData?.format,
+                            context: context,
+                          ),
+                      child: barcodeField(bytes: widget.barcodeData?.imgBytes),
                     ),
                   ),
                 ],

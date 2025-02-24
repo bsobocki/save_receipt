@@ -18,6 +18,7 @@ import 'package:save_receipt/presentation/home/controller/home_page_controller.d
 import 'package:save_receipt/presentation/home/content/receipts/receipts.dart';
 import 'package:save_receipt/presentation/receipt/receipt_data_page.dart';
 import 'package:save_receipt/services/data_processing/parse_data.dart';
+import 'package:save_receipt/services/document/scan/google_barcode_scan.dart';
 
 enum ReceiptProcessingState {
   noAction,
@@ -64,21 +65,37 @@ class _MyHomePageState extends State<MyHomePage> {
   void setReceiptState(ReceiptProcessingState newState) =>
       setState(() => _processingState = newState);
 
-  void openReceiptPage(
-      {ReceiptModel? receiptModel, AllValuesModel? allValuesModel}) {
+  void openReceiptPage({
+    ReceiptModel? receiptModel,
+    AllValuesModel? allValuesModel,
+  }) async {
     if (receiptModel != null) {
-      Navigator.push(
-        context,
-        SlidePageRoute(
-          page: ReceiptDataPage(
-              initialReceipt: receiptModel, allValuesModel: allValuesModel),
-        ),
-      ).then(
-        (value) {
-          _processingState = ReceiptProcessingState.noAction;
-          refreshDocumentData();
-        },
-      );
+      ReceiptBarcodeData? barcodeData;
+      if (receiptModel.imgPath != null) {
+        GoogleBarcodeScanner scanner =
+            GoogleBarcodeScanner(receiptModel.imgPath!);
+        setReceiptState(ReceiptProcessingState.processing);
+        await scanner.scanImage();
+        setReceiptState(ReceiptProcessingState.ready);
+        barcodeData = scanner.data;
+      }
+      if (mounted) {
+        Navigator.push(
+          context,
+          SlidePageRoute(
+            page: ReceiptDataPage(
+              initialReceipt: receiptModel,
+              allValuesModel: allValuesModel,
+              barcodeData: barcodeData,
+            ),
+          ),
+        ).then(
+          (value) {
+            _processingState = ReceiptProcessingState.noAction;
+            refreshDocumentData();
+          },
+        );
+      }
     }
   }
 
@@ -107,7 +124,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget dataItemsListViewBuilder(
-      BuildContext context, AsyncSnapshot<List<ReceiptDocumentData>> snapshot) {
+    BuildContext context,
+    AsyncSnapshot<List<ReceiptDocumentData>> snapshot,
+  ) {
     if (snapshot.connectionState == ConnectionState.waiting) {
       return Center(
         child: LoadingAnimationWidget.newtonCradle(
@@ -192,7 +211,9 @@ class _MyHomePageState extends State<MyHomePage> {
       await Future.delayed(const Duration(milliseconds: 200));
       openReceiptPage(
         receiptModel: ReceiptModel(
-            imgPath: filePath, objects: processedDataModel.receiptObjectModels),
+          imgPath: filePath,
+          objects: processedDataModel.receiptObjectModels,
+        ),
         allValuesModel: processedDataModel.allValuesModel,
       );
     } else {
