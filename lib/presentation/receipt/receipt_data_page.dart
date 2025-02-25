@@ -283,9 +283,11 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         barcodeData: widget.barcodeData,
         onDocumentFormattingOptionPress: () async {
           if (!documentFormat && formatedDocumentBytes == null) {
+            documentFormat = !documentFormat;
             processDocumentFormatting();
+          } else {
+            setState(() => documentFormat = !documentFormat);
           }
-          documentFormat = !documentFormat;
         },
         documentFormat: documentFormat,
         mainColor: themeController.theme.mainColor,
