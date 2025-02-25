@@ -56,7 +56,7 @@ class LoadingAnimation extends StatelessWidget {
         children: [
           LoadingAnimationWidget.stretchedDots(
               color: themeController.theme.mainColor, size: 100.0),
-          Text('Barcode Extracting...',
+          Text('Trying to extract barcode...',
               style: TextStyle(color: themeController.theme.mainColor)),
         ],
       );

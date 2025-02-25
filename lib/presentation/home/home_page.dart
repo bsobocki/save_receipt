@@ -155,9 +155,9 @@ class _MyHomePageState extends State<MyHomePage> {
       case NavigationPages.receipts:
         return ReceiptsList(
           documentData: filteredData,
-          onItemSelected: (index) {
+          onItemSelected: (index) async {
             setSearchingText("");
-            openReceiptPage(
+            await openReceiptPage(
               receiptModel:
                   ReceiptDataConverter.toReceiptModel(filteredData[index]),
             );
@@ -174,13 +174,13 @@ class _MyHomePageState extends State<MyHomePage> {
       case NavigationPages.products:
         return ProductsList(
           productsData: filteredProducts,
-          onItemSelected: (index) {
+          onItemSelected: (index) async {
             int receiptId = filteredProducts[index].receiptId;
             ReceiptDocumentData? data = dataList
                 .firstWhereOrNull((element) => element.receipt.id == receiptId);
             if (data != null) {
               setSearchingText("");
-              openReceiptPage(
+              await openReceiptPage(
                 receiptModel: ReceiptDataConverter.toReceiptModel(data),
               );
             }
@@ -199,7 +199,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (processedDataModel != null) {
       setReceiptState(ReceiptProcessingState.ready);
       await Future.delayed(const Duration(milliseconds: 200));
-      openReceiptPage(
+      await openReceiptPage(
         receiptModel: ReceiptModel(
           imgPath: filePath,
           objects: processedDataModel.receiptObjectModels,
