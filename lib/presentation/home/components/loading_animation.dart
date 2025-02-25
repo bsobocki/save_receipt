@@ -25,7 +25,8 @@ class LoadingAnimation extends StatelessWidget {
         children: [
           Icon(Icons.check_circle_outlined,
               color: themeController.theme.mainColor, size: 100.0),
-          Text("Ready!", style: TextStyle(color: themeController.theme.mainColor))
+          Text("Ready!",
+              style: TextStyle(color: themeController.theme.mainColor))
         ],
       );
 
@@ -39,6 +40,26 @@ class LoadingAnimation extends StatelessWidget {
         ],
       );
 
+  get barcodeContent => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          LoadingAnimationWidget.stretchedDots(
+              color: themeController.theme.mainColor, size: 100.0),
+          Text('Barcode Extracting...',
+              style: TextStyle(color: themeController.theme.mainColor)),
+        ],
+      );
+
+  get formattingContent => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          LoadingAnimationWidget.beat(
+              color: themeController.theme.mainColor, size: 100.0),
+          Text('Document Formatting...',
+              style: TextStyle(color: themeController.theme.mainColor)),
+        ],
+      );
+
   @override
   Widget build(BuildContext context) {
     switch (processingState) {
@@ -48,6 +69,10 @@ class LoadingAnimation extends StatelessWidget {
         return choosingContent;
       case ReceiptProcessingState.ready:
         return readyContent;
+      case ReceiptProcessingState.barcodeExtracting:
+        return barcodeContent;
+      case ReceiptProcessingState.documentFormatting:
+        return formattingContent;
       default:
         return Container();
     }

@@ -47,6 +47,11 @@ Uint8List? adjustDocumentBytes(Uint8List? bytes) {
   return Uint8List.fromList(encodePng(adjustDocument(photo)));
 }
 
+Uint8List? adjustDocumentFile(String? path) {
+  if (path == null) return null;
+  return adjustDocumentBytes(File(path).readAsBytesSync());
+}
+
 Image adjustDocument(Image photo) {
   return convolution(
     contrast(

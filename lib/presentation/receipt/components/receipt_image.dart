@@ -2,18 +2,17 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:save_receipt/services/images/edit_image.dart';
 
 class ReceiptImageViewer extends StatefulWidget {
   final String imagePath;
   final VoidCallback onExit;
-  final bool documentFormat;
+  final Uint8List? formatedDocumentBytes;
 
   const ReceiptImageViewer({
     super.key,
     required this.imagePath,
     required this.onExit,
-    required this.documentFormat,
+    this.formatedDocumentBytes,
   });
 
   @override
@@ -23,6 +22,11 @@ class ReceiptImageViewer extends StatefulWidget {
 class _ReceiptImageViewerState extends State<ReceiptImageViewer> {
   final TransformationController _controller = TransformationController();
   late TapDownDetails _doubleTapDetails;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void _handleDoubleTapDown(TapDownDetails details) {
     _doubleTapDetails = details;
@@ -41,8 +45,6 @@ class _ReceiptImageViewerState extends State<ReceiptImageViewer> {
   }
 
   Widget get imageViewer {
-    Uint8List? bytes;
-    if (widget.documentFormat) bytes = changePhotoToDocumentAsBytes(widget.imagePath);
     return Stack(
       children: [
         InteractiveViewer(
@@ -52,9 +54,9 @@ class _ReceiptImageViewerState extends State<ReceiptImageViewer> {
           child: GestureDetector(
             onDoubleTapDown: _handleDoubleTapDown,
             onDoubleTap: _handleDoubleTap,
-            child: bytes != null
+            child: widget.formatedDocumentBytes != null
                 ? Image.memory(
-                    bytes,
+                    widget.formatedDocumentBytes!,
                     //File(widget.imagePath),
                     fit: BoxFit.contain,
                   )

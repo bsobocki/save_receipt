@@ -26,6 +26,8 @@ enum ReceiptProcessingState {
   opening,
   processing,
   imageChoosing,
+  barcodeExtracting,
+  documentFormatting,
   ready,
   error
 }
@@ -74,10 +76,10 @@ class _MyHomePageState extends State<MyHomePage> {
       if (receiptModel.imgPath != null) {
         GoogleBarcodeScanner scanner =
             GoogleBarcodeScanner(receiptModel.imgPath!);
-        setReceiptState(ReceiptProcessingState.processing);
+        setReceiptState(ReceiptProcessingState.barcodeExtracting);
         await scanner.scanImage();
-        setReceiptState(ReceiptProcessingState.ready);
         barcodeData = scanner.data;
+        setReceiptState(ReceiptProcessingState.ready);
       }
       if (mounted) {
         Navigator.push(

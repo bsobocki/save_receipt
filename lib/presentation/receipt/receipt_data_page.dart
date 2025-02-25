@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:save_receipt/core/settings/receipt_data_page.dart';
@@ -13,6 +15,7 @@ import 'package:save_receipt/domain/entities/receipt.dart';
 import 'package:save_receipt/presentation/receipt/controller/receipt_controller.dart';
 import 'package:save_receipt/presentation/receipt/data_field/product_data_field.dart';
 import 'package:save_receipt/services/document/scan/google_barcode_scan.dart';
+import 'package:save_receipt/services/images/edit_image.dart';
 
 class ReceiptDataPage extends StatefulWidget {
   final String title = 'Fill Receipt Data';
@@ -40,6 +43,8 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   final Key _productListKey = UniqueKey();
   final Key _infoListKey = UniqueKey();
   bool documentFormat = false;
+  Uint8List? formatedDocumentBytes;
+  Uint8List? formatedBarcodeBytes;
 
   void _resetScrollControllers() {
     _productsScrollController.dispose();
@@ -161,6 +166,10 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     if (widget.initialReceipt.receiptId == null) {
       modelController.trackChange();
     }
+    if (modelController.imgPath != null) {
+      formatedDocumentBytes = adjustDocumentFile(modelController.imgPath!);
+      formatedBarcodeBytes = adjustDocumentBytes(widget.barcodeData?.imgBytes);
+    }
   }
 
   @override
@@ -268,6 +277,11 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
           documentFormat = !documentFormat;
         }),
         documentFormat: documentFormat,
+        mainColor: themeController.theme.mainColor,
+        barcodeImgBytes: documentFormat
+            ? formatedBarcodeBytes
+            : widget.barcodeData?.imgBytes,
+        documentImgBytes: documentFormat ? formatedDocumentBytes : null,
       );
 
   get productsEditor => ReceiptDataEditor(
@@ -330,7 +344,8 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
             setState(() {
               _showFullScreenReceiptImage = false;
             });
-          }, documentFormat: documentFormat,
+          },
+          formatedDocumentBytes: documentFormat ? formatedDocumentBytes : null,
         ),
       );
     }

@@ -3,11 +3,9 @@ import 'dart:typed_data';
 
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/core/settings/receipt_data_page.dart';
+import 'package:save_receipt/core/themes/styles/color.dart';
 import 'package:save_receipt/services/document/scan/google_barcode_scan.dart';
-import 'package:save_receipt/services/images/edit_image.dart';
 
 enum MenuOption { save, delete, selectMode, documentFormat }
 
@@ -19,25 +17,26 @@ String getMenuLabel(MenuOption option, {bool selectMode = false}) =>
       MenuOption.selectMode => selectMode ? 'cancel selection' : 'select items'
     };
 
-class ReceiptPageTopBar extends StatefulWidget {
+class ReceiptPageTopBar extends StatelessWidget {
   final Function() onSaveReceiptOptionPress;
   final Function() onDeleteReceiptOptionPress;
   final Function() onSelectModeToggled;
   final VoidCallback onImageIconPress;
   final String? receiptImgPath;
-  final String? barcodeImgPaht;
   final ValueNotifier<bool> dataChanged;
   final Future<bool> Function() onReturnAfterChanges;
   final bool selectMode;
   final ReceiptBarcodeData? barcodeData;
   final VoidCallback onDocumentFormattingOptionPress;
   final bool documentFormat;
+  final Uint8List? documentImgBytes;
+  final Uint8List? barcodeImgBytes;
+  final Color mainColor;
 
   const ReceiptPageTopBar({
     super.key,
     required this.onImageIconPress,
     this.receiptImgPath,
-    this.barcodeImgPaht,
     required this.onSaveReceiptOptionPress,
     required this.onDeleteReceiptOptionPress,
     required this.dataChanged,
@@ -47,14 +46,10 @@ class ReceiptPageTopBar extends StatefulWidget {
     this.barcodeData,
     required this.onDocumentFormattingOptionPress,
     required this.documentFormat,
+    this.documentImgBytes,
+    this.barcodeImgBytes,
+    required this.mainColor,
   });
-
-  @override
-  State<ReceiptPageTopBar> createState() => _ReceiptPageTopBarState();
-}
-
-class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
-  final ThemeController themeController = Get.find();
 
   Future<void> showBarcodeDialog({
     required String title,
@@ -76,7 +71,7 @@ class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
           title: Text(
             title,
             style: TextStyle(
-              color: themeController.theme.mainColor,
+              color: mainColor,
             ),
           ),
           content: Container(
@@ -91,7 +86,7 @@ class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
                 : Center(
                     child: Text(
                     "No barcode found..",
-                    style: TextStyle(color: themeController.theme.mainColor),
+                    style: TextStyle(color: mainColor),
                   )),
           ),
           actions: actions,
@@ -107,30 +102,21 @@ class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
     Widget? child;
     DecorationImage? imageBackground;
 
-    if (widget.receiptImgPath != null) {
-      bool fromBytes = false;
-      if (widget.documentFormat) {
-        var bytes =
-            adjustDocumentBytes(File(widget.receiptImgPath!).readAsBytesSync());
-        if (bytes != null) {
-          child = Image.memory(
-            bytes,
-            fit: BoxFit.cover,
-            alignment: Alignment.topCenter,
-          );
-          fromBytes = true;
-        }
-      }
-      if (!fromBytes) {
-        child = Image.file(
-          File(widget.receiptImgPath!),
-          fit: BoxFit.cover,
-          alignment: Alignment.topCenter,
-        );
-      }
-    } else {
-      child = const Center(child: Icon(Icons.receipt_long_rounded));
+    if (documentImgBytes != null) {
+      child = Image.memory(
+        documentImgBytes!,
+        fit: BoxFit.cover,
+        alignment: Alignment.topCenter,
+      );
     }
+    else if (receiptImgPath != null) {
+      child = Image.file(
+        File(receiptImgPath!),
+        fit: BoxFit.cover,
+        alignment: Alignment.topCenter,
+      );
+    }
+    child ??= const Center(child: Icon(Icons.receipt_long_rounded));
 
     return SizedBox(
       width: double.infinity,
@@ -151,20 +137,17 @@ class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
     );
   }
 
-  Widget barcodeField({Uint8List? bytes}) {
+  Widget get barcodeField {
     Widget? child;
-    if (widget.documentFormat) {
-      bytes = adjustDocumentBytes(bytes);
-    }
-    if (bytes != null) {
+    if (barcodeImgBytes != null) {
       try {
         child = Image.memory(
-          bytes,
+          barcodeImgBytes!,
           fit: BoxFit.cover,
           alignment: Alignment.topCenter,
         );
       } catch (e) {
-        print("Error displaying image from bytes: $e");
+        print("::::::::::::::: Error displaying image from bytes: $e");
         child = null;
       }
     }
@@ -211,7 +194,7 @@ class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
       case MenuOption.selectMode:
         return Icons.select_all;
       case MenuOption.documentFormat:
-        return widget.documentFormat
+        return documentFormat
             ? Icons.check_box_outlined
             : Icons.check_box_outline_blank_outlined;
       default:
@@ -226,26 +209,26 @@ class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
           children: [
             Icon(getIconByOption(option), color: Colors.white),
             const SizedBox(width: 8),
-            Text(getMenuLabel(option, selectMode: widget.selectMode)),
+            Text(getMenuLabel(option, selectMode: selectMode)),
           ],
         ));
   }
 
   get popupMenu => PopupMenuButton<MenuOption>(
-        color: themeController.theme.mainColor,
+        color: mainColor,
         onSelected: (MenuOption value) {
           switch (value) {
             case MenuOption.save:
-              widget.onSaveReceiptOptionPress();
+              onSaveReceiptOptionPress();
               break;
             case MenuOption.delete:
-              widget.onDeleteReceiptOptionPress();
+              onDeleteReceiptOptionPress();
               break;
             case MenuOption.selectMode:
-              widget.onSelectModeToggled();
+              onSelectModeToggled();
               break;
             case MenuOption.documentFormat:
-              widget.onDocumentFormattingOptionPress();
+              onDocumentFormattingOptionPress();
               break;
             default:
               break;
@@ -258,19 +241,19 @@ class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
       );
 
   Widget get returnButton => ValueListenableBuilder(
-      valueListenable: widget.dataChanged,
+      valueListenable: dataChanged,
       builder: (context, dataChangedValue, child) {
         return IconButton(
           onPressed: () async {
             bool closePage = true;
             if (dataChangedValue) {
-              closePage = await widget.onReturnAfterChanges();
+              closePage = await onReturnAfterChanges();
             }
             if (closePage && context.mounted) Navigator.pop(context);
           },
           icon: Badge(
             isLabelVisible: dataChangedValue,
-            backgroundColor: themeController.theme.extraLightMainColor,
+            backgroundColor: mainColor.moved(80),
             child: const Icon(Icons.chevron_left_outlined),
           ),
         );
@@ -302,7 +285,7 @@ class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
                   Expanded(
                     flex: 3,
                     child: GestureDetector(
-                      onTap: widget.onImageIconPress,
+                      onTap: onImageIconPress,
                       child: receiptField,
                     ),
                   ),
@@ -311,11 +294,11 @@ class _ReceiptPageTopBarState extends State<ReceiptPageTopBar> {
                     child: GestureDetector(
                       onTap: () => showBarcodeDialog(
                         title: "Barcode",
-                        data: widget.barcodeData?.value,
-                        barcode: widget.barcodeData?.format,
+                        data: barcodeData?.value,
+                        barcode: barcodeData?.format,
                         context: context,
                       ),
-                      child: barcodeField(bytes: widget.barcodeData?.imgBytes),
+                      child: barcodeField,
                     ),
                   ),
                 ],
