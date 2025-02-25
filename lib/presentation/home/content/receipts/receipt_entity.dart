@@ -61,7 +61,7 @@ class ReceiptEntity extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String title = "Receipt from ${data.receipt.time}";
+    String title = data.receipt.title;
     String product1 = "";
     String product2 = "";
     if (data.products.isNotEmpty) {

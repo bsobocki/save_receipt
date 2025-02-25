@@ -36,7 +36,9 @@ void main() {
       info: testInfo.toSet(),
       time: testTime.toSet(),
     );
-    testReceiptModel = ReceiptModel(objects: [
+    testReceiptModel = ReceiptModel(
+      title: 'test receipt',
+      objects: [
       ...testPrices.map((price) => produtctModel('product', price)),
       ...testInfo.map((info) => infoTextModel('info', info)),
       ...testTime.map((time) => infoTimeModel('product', time)),

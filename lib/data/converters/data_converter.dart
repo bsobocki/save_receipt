@@ -13,6 +13,7 @@ class ReceiptDataConverter {
     }
     return ReceiptData(
         id: receipt.receiptId,
+        title: receipt.title,
         shopId: shopId,
         totalCost: 0.0,
         imgPath: receipt.imgPath,
@@ -48,6 +49,7 @@ class ReceiptDataConverter {
         model.infos.map((e) => toInfoData(e, receiptId)).toList();
     ReceiptData receipt = ReceiptData(
         id: model.receiptId,
+        title: model.title,
         shopId: -1,
         totalCost: 0.0,
         imgPath: model.imgPath,
@@ -96,6 +98,7 @@ class ReceiptDataConverter {
     objects +=
         data.infos.map((info) => infoToReceiptObjectModel(info)).toList();
     return ReceiptModel(
+        title: data.receipt.title,
         objects: objects,
         imgPath: data.receipt.imgPath,
         receiptId: data.receipt.id);

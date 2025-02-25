@@ -2,11 +2,17 @@ import 'package:save_receipt/domain/entities/receipt_object.dart';
 export 'package:save_receipt/domain/entities/receipt_object.dart';
 
 class ReceiptModel {
+  final String title;
   final String? imgPath;
   final List<ReceiptObjectModel> objects;
   final int? receiptId;
 
-  const ReceiptModel({this.receiptId, this.imgPath, required this.objects});
+  const ReceiptModel({
+    required this.title,
+    this.receiptId,
+    this.imgPath,
+    required this.objects,
+  });
 
   List<ReceiptObjectModel> getObjects(ReceiptObjectModelType type) {
     List<ReceiptObjectModel> objs = [];

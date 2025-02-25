@@ -198,9 +198,15 @@ class _MyHomePageState extends State<MyHomePage> {
         await pageController.processImg(filePath);
     if (processedDataModel != null) {
       setReceiptState(ReceiptProcessingState.ready);
+      String? time = processedDataModel.allValuesModel.time.firstOrNull;
+      String title = 'Receipt';
+      if (time != null) {
+        title += ' from $time';
+      }
       await Future.delayed(const Duration(milliseconds: 200));
       await openReceiptPage(
         receiptModel: ReceiptModel(
+          title: title,
           imgPath: filePath,
           objects: processedDataModel.receiptObjectModels,
         ),
@@ -244,7 +250,7 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         onNewReceiptAdding: () {
           openReceiptPage(
-            receiptModel: const ReceiptModel(objects: []),
+            receiptModel: const ReceiptModel(title: 'Receipt', objects: []),
           );
         },
       ),

@@ -7,10 +7,12 @@ class ReceiptDao extends Dao<ReceiptData> {
   final String timeColumn = 'time';
   final String totalCostColumn = 'total_cost';
   final String imgPathColumn = 'img_path';
+  final String titleColumn = 'title';
 
   @override
   Map<String, dynamic> toMap(ReceiptData object) {
     var map = {
+      titleColumn: object.title,
       shopIdColumnt: object.shopId,
       timeColumn: object.time,
       totalCostColumn: object.totalCost,
@@ -27,6 +29,7 @@ class ReceiptDao extends Dao<ReceiptData> {
       CREATE TABLE ${DatabaseTableNames.receipts}(
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         $shopIdColumnt INTEGER DEFAULT -1,
+        $titleColumn TEXT NOT NULL,
         $timeColumn TEXT NOT NULL,
         $totalCostColumn REAL NOT NULL,
         $imgPathColumn TEXT,
@@ -38,6 +41,7 @@ class ReceiptDao extends Dao<ReceiptData> {
   ReceiptData fromMap(Map<String, dynamic> query) {
     return ReceiptData(
       id: query['id'],
+      title: query[titleColumn],
       shopId: query[shopIdColumnt],
       time: query[timeColumn],
       totalCost: (query[totalCostColumn] ?? 0.0) as double,

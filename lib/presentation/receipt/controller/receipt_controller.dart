@@ -28,12 +28,14 @@ class ReceiptModelController {
   bool _areProductsEdited = true;
   bool _isSelectModeEnabled = false;
   int _editingObjectFieldIndex = -1;
+  late String receiptTitle;
   int? _receiptId;
 
   ReceiptModelController({
     required final ReceiptModel receipt,
     AllValuesModel? allValuesModel,
   }) {
+    receiptTitle = receipt.title;
     _receiptImagePath = receipt.imgPath;
     _allValues = allValuesModel != null
         ? AllReceiptValuesController(model: allValuesModel)
@@ -318,7 +320,11 @@ class ReceiptModelController {
       ];
 
   ReceiptModel get model => ReceiptModel(
-      receiptId: _receiptId, objects: objects, imgPath: _receiptImagePath);
+        title: receiptTitle,
+        receiptId: _receiptId,
+        objects: objects,
+        imgPath: _receiptImagePath,
+      );
 
   List<ReceiptObjectModel> get products => _products;
 
@@ -326,7 +332,8 @@ class ReceiptModelController {
 
   List<ReceiptObjectModel> get times => _time;
 
-  List<ReceiptObjectModel> get currentObjectList => _areProductsEdited ? _products : _infos;
+  List<ReceiptObjectModel> get currentObjectList =>
+      _areProductsEdited ? _products : _infos;
 
   bool productIndexExists(int index) => index >= 0 && index < _products.length;
 
