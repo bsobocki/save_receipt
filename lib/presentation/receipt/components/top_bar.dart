@@ -3,6 +3,8 @@ import 'dart:typed_data';
 
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:loading_animations/loading_animations.dart';
 import 'package:save_receipt/core/settings/receipt_data_page.dart';
 import 'package:save_receipt/core/themes/styles/color.dart';
 import 'package:save_receipt/services/document/scan/google_barcode_scan.dart';
@@ -32,6 +34,7 @@ class ReceiptPageTopBar extends StatelessWidget {
   final Uint8List? documentImgBytes;
   final Uint8List? barcodeImgBytes;
   final Color mainColor;
+  final bool isFormatting;
 
   const ReceiptPageTopBar({
     super.key,
@@ -49,6 +52,7 @@ class ReceiptPageTopBar extends StatelessWidget {
     this.documentImgBytes,
     this.barcodeImgBytes,
     required this.mainColor,
+    required this.isFormatting,
   });
 
   Future<void> showBarcodeDialog({
@@ -102,14 +106,18 @@ class ReceiptPageTopBar extends StatelessWidget {
     Widget? child;
     DecorationImage? imageBackground;
 
-    if (documentImgBytes != null) {
+    if (isFormatting) {
+      child = LoadingBouncingGrid.square(
+        size: 40,
+        backgroundColor: Colors.white,
+      );
+    } else if (documentImgBytes != null) {
       child = Image.memory(
         documentImgBytes!,
         fit: BoxFit.cover,
         alignment: Alignment.topCenter,
       );
-    }
-    else if (receiptImgPath != null) {
+    } else if (receiptImgPath != null) {
       child = Image.file(
         File(receiptImgPath!),
         fit: BoxFit.cover,
@@ -139,7 +147,12 @@ class ReceiptPageTopBar extends StatelessWidget {
 
   Widget get barcodeField {
     Widget? child;
-    if (barcodeImgBytes != null) {
+    if (isFormatting) {
+      child = Center(
+        child: LoadingAnimationWidget.progressiveDots(
+            color: Colors.white, size: 10.0),
+      );
+    } else if (barcodeImgBytes != null) {
       try {
         child = Image.memory(
           barcodeImgBytes!,

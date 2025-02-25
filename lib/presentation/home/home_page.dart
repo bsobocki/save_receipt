@@ -20,18 +20,6 @@ import 'package:save_receipt/presentation/receipt/receipt_data_page.dart';
 import 'package:save_receipt/services/data_processing/parse_data.dart';
 import 'package:save_receipt/services/document/scan/google_barcode_scan.dart';
 
-enum ReceiptProcessingState {
-  noAction,
-  browse,
-  opening,
-  processing,
-  imageChoosing,
-  barcodeExtracting,
-  documentFormatting,
-  ready,
-  error
-}
-
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
@@ -67,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void setReceiptState(ReceiptProcessingState newState) =>
       setState(() => _processingState = newState);
 
-  void openReceiptPage({
+  Future<void> openReceiptPage({
     ReceiptModel? receiptModel,
     AllValuesModel? allValuesModel,
   }) async {

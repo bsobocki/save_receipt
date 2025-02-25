@@ -1,5 +1,4 @@
-import 'dart:typed_data';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:save_receipt/core/settings/receipt_data_page.dart';
@@ -43,6 +42,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   final Key _productListKey = UniqueKey();
   final Key _infoListKey = UniqueKey();
   bool documentFormat = false;
+  bool isFormatting = false;
   Uint8List? formatedDocumentBytes;
   Uint8List? formatedBarcodeBytes;
 
@@ -166,10 +166,17 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     if (widget.initialReceipt.receiptId == null) {
       modelController.trackChange();
     }
+  }
+
+  void processDocumentFormatting() async {
+    setState(() => isFormatting = true);
     if (modelController.imgPath != null) {
-      formatedDocumentBytes = adjustDocumentFile(modelController.imgPath!);
-      formatedBarcodeBytes = adjustDocumentBytes(widget.barcodeData?.imgBytes);
+      formatedDocumentBytes =
+          await compute(adjustDocumentFile, modelController.imgPath!);
+      formatedBarcodeBytes =
+          await compute(adjustDocumentBytes, widget.barcodeData?.imgBytes);
     }
+    setState(() => isFormatting = false);
   }
 
   @override
@@ -264,6 +271,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   }
 
   Widget topBar(BuildContext context) => ReceiptPageTopBar(
+        key: UniqueKey(),
         dataChanged: modelController.dataChangedNotifier,
         onImageIconPress: openFullImageMode,
         receiptImgPath: modelController.imgPath,
@@ -273,15 +281,19 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         onSelectModeToggled: toggleSelectMode,
         selectMode: modelController.isSelectModeEnabled,
         barcodeData: widget.barcodeData,
-        onDocumentFormattingOptionPress: () => setState(() {
+        onDocumentFormattingOptionPress: () async {
+          if (!documentFormat && formatedDocumentBytes == null) {
+            processDocumentFormatting();
+          }
           documentFormat = !documentFormat;
-        }),
+        },
         documentFormat: documentFormat,
         mainColor: themeController.theme.mainColor,
         barcodeImgBytes: documentFormat
             ? formatedBarcodeBytes
             : widget.barcodeData?.imgBytes,
         documentImgBytes: documentFormat ? formatedDocumentBytes : null,
+        isFormatting: isFormatting,
       );
 
   get productsEditor => ReceiptDataEditor(
