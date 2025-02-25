@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:loading_animations/loading_animations.dart';
 import 'package:save_receipt/core/settings/receipt_data_page.dart';
 import 'package:save_receipt/core/themes/styles/color.dart';
 import 'package:save_receipt/services/document/scan/google_barcode_scan.dart';
@@ -107,10 +106,8 @@ class ReceiptPageTopBar extends StatelessWidget {
     DecorationImage? imageBackground;
 
     if (isFormatting) {
-      child = LoadingBouncingGrid.square(
-        size: 40,
-        backgroundColor: Colors.white,
-      );
+      child =
+          LoadingAnimationWidget.hexagonDots(color: Colors.white, size: 30.0);
     } else if (documentImgBytes != null) {
       child = Image.memory(
         documentImgBytes!,
@@ -150,7 +147,7 @@ class ReceiptPageTopBar extends StatelessWidget {
     if (isFormatting) {
       child = Center(
         child: LoadingAnimationWidget.progressiveDots(
-            color: Colors.white, size: 10.0),
+            color: Colors.white, size: 20.0),
       );
     } else if (barcodeImgBytes != null) {
       try {
