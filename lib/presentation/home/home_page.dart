@@ -67,8 +67,9 @@ class _MyHomePageState extends State<MyHomePage> {
         setReceiptState(ReceiptProcessingState.barcodeExtracting);
         await scanner.scanImage();
         barcodeData = scanner.data;
-        setReceiptState(ReceiptProcessingState.ready);
       }
+      setReceiptState(ReceiptProcessingState.ready);
+      await Future.delayed(const Duration(milliseconds: 500));
       if (mounted) {
         Navigator.push(
           context,
@@ -197,7 +198,6 @@ class _MyHomePageState extends State<MyHomePage> {
     ProcessedDataModel? processedDataModel =
         await pageController.processImg(filePath);
     if (processedDataModel != null) {
-      setReceiptState(ReceiptProcessingState.ready);
       String? time = processedDataModel.allValuesModel.time.firstOrNull;
       String title = 'Receipt';
       if (time != null) {
