@@ -67,12 +67,25 @@ class _ReceiptImageViewerState extends State<ReceiptImageViewer> {
           ),
         ),
         Positioned(
-          top: 0,
-          right: 0,
-          child: IconButton(
-            onPressed: widget.onExit,
-            icon: const Icon(
-              Icons.cancel,
+          top: 10,
+          right: 10,
+          child: GestureDetector(
+            onTap: widget.onExit,
+            child: Container(
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(1),
+                    spreadRadius: 0,
+                    blurRadius: 0,
+                    offset: const Offset(0, 0),
+                  ),
+                ],
+                shape: BoxShape.circle, // For circular shadow
+              ),
+              child: const Icon(
+                Icons.cancel,
+              ),
             ),
           ),
         ),
