@@ -18,6 +18,8 @@ class DataEditorTopBar extends StatelessWidget {
   final Color background;
   final List<SelectModeEditorOption> selectModeOptions;
   final bool selectMode;
+  final TextEditingController titleEditingController;
+  final Function(String) onTitleChanged;
 
   const DataEditorTopBar({
     super.key,
@@ -26,6 +28,8 @@ class DataEditorTopBar extends StatelessWidget {
     required this.onAddObject,
     required this.selectModeOptions,
     required this.selectMode,
+    required this.titleEditingController,
+    required this.onTitleChanged,
   });
 
   get popupMenu => PopupMenuButton<SelectModeEditorOption>(
@@ -59,7 +63,18 @@ class DataEditorTopBar extends StatelessWidget {
       height: 40.0,
       child: Row(
         children: [
-          Expanded(child: Container()),
+          Expanded(
+              child: Padding(
+            padding: const EdgeInsets.only(left: 16.0, top: 4.0, bottom: 4.0),
+            child: TextField(
+              controller: titleEditingController,
+              onChanged: onTitleChanged,
+              style: const TextStyle(color: Colors.white, fontSize: 14),
+              cursorColor: Colors.white,
+              decoration: const InputDecoration(
+                  isDense: true, border: InputBorder.none),
+            ),
+          )),
           if (selectMode)
             Padding(padding: const EdgeInsets.all(12.0), child: popupMenu)
           else

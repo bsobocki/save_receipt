@@ -15,6 +15,7 @@ class ReceiptDataEditor extends StatefulWidget {
   final VoidCallback onAddObject;
   final VoidCallback onInfoTabPressed;
   final VoidCallback onProductsTabPressed;
+  final Function(String) onTitleChanged;
   final List<SelectModeEditorOption> selectModeOptions;
 
   const ReceiptDataEditor({
@@ -28,6 +29,7 @@ class ReceiptDataEditor extends StatefulWidget {
     required this.productsList,
     required this.onInfoTabPressed,
     required this.onProductsTabPressed,
+    required this.onTitleChanged,
     required this.selectModeOptions,
   });
 
@@ -37,7 +39,14 @@ class ReceiptDataEditor extends StatefulWidget {
 
 class _ReceiptDataEditorState extends State<ReceiptDataEditor> {
   final ThemeController themeController = Get.find();
+  late final TextEditingController titleEditingController;
   bool showProducts = true;
+
+  @override
+  void initState() {
+    super.initState();
+    titleEditingController = TextEditingController(text: widget.title);
+  }
 
   Widget get topBar => DataEditorTopBar(
         onResized: widget.onProductsTabPressed,
@@ -45,6 +54,8 @@ class _ReceiptDataEditorState extends State<ReceiptDataEditor> {
         onAddObject: widget.onAddObject,
         selectModeOptions: widget.selectModeOptions,
         selectMode: widget.selectMode,
+        titleEditingController: titleEditingController,
+        onTitleChanged: widget.onTitleChanged,
       );
 
   Widget contentTab(ReceiptDataContent content) {

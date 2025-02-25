@@ -299,32 +299,37 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
       );
 
   get productsEditor => ReceiptDataEditor(
-          flex: modelController.areProductsEdited ? 3 : 1,
-          title: "Products",
-          areProductsEdited: modelController.areProductsEdited,
-          productsList: productsList,
-          infoList: infosList,
-          onProductsTabPressed: setProductsEditing,
-          onInfoTabPressed: setInfoEditing,
-          onAddObject: addEmptyObject,
-          selectMode: modelController.isSelectModeEnabled,
-          selectModeOptions: [
-            SelectModeEditorOption(
-              label: 'To Info',
-              icon: Icons.info_outline,
-              onSelected: changeSelectedProductsToInfo,
-            ),
-            SelectModeEditorOption(
-              label: 'To Value',
-              icon: Icons.transform,
-              onSelected: changeSelectedProductsToValue,
-            ),
-            SelectModeEditorOption(
-              label: 'Remove',
-              icon: Icons.delete,
-              onSelected: removeSelectedProducts,
-            ),
-          ]);
+        flex: modelController.areProductsEdited ? 3 : 1,
+        title: modelController.receiptTitle,
+        areProductsEdited: modelController.areProductsEdited,
+        productsList: productsList,
+        infoList: infosList,
+        onProductsTabPressed: setProductsEditing,
+        onInfoTabPressed: setInfoEditing,
+        onAddObject: addEmptyObject,
+        selectMode: modelController.isSelectModeEnabled,
+        selectModeOptions: [
+          SelectModeEditorOption(
+            label: 'To Info',
+            icon: Icons.info_outline,
+            onSelected: changeSelectedProductsToInfo,
+          ),
+          SelectModeEditorOption(
+            label: 'To Value',
+            icon: Icons.transform,
+            onSelected: changeSelectedProductsToValue,
+          ),
+          SelectModeEditorOption(
+            label: 'Remove',
+            icon: Icons.delete,
+            onSelected: removeSelectedProducts,
+          ),
+        ],
+        onTitleChanged: (String newTitle) => setState(() {
+          modelController.receiptTitle = newTitle;
+          modelController.trackChange();
+        }),
+      );
 
   Widget content(BuildContext context) => Center(
         child: Padding(
