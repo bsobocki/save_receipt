@@ -46,14 +46,6 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   Uint8List? formatedDocumentBytes;
   Uint8List? formatedBarcodeBytes;
 
-  void _resetScrollControllers() {
-    _productsScrollController.dispose();
-    _infoScrollController.dispose();
-
-    _productsScrollController = ScrollController();
-    _infoScrollController = ScrollController();
-  }
-
   void _scrollToBottom(ScrollController controller) {
     if (controller.hasClients) {
       double distance = controller.position.maxScrollExtent - controller.offset;
@@ -168,17 +160,6 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
     }
   }
 
-  void processDocumentFormatting() async {
-    setState(() => isFormatting = true);
-    if (modelController.imgPath != null) {
-      formatedDocumentBytes =
-          await compute(adjustDocumentFile, modelController.imgPath!);
-      formatedBarcodeBytes =
-          await compute(adjustDocumentBytes, widget.barcodeData?.imgBytes);
-    }
-    setState(() => isFormatting = false);
-  }
-
   @override
   void dispose() {
     _productsScrollController.dispose();
@@ -281,14 +262,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         onSelectModeToggled: toggleSelectMode,
         selectMode: modelController.isSelectModeEnabled,
         barcodeData: widget.barcodeData,
-        onDocumentFormattingOptionPress: () async {
-          if (!documentFormat && formatedDocumentBytes == null) {
-            documentFormat = !documentFormat;
-            processDocumentFormatting();
-          } else {
-            setState(() => documentFormat = !documentFormat);
-          }
-        },
+        onDocumentFormattingOptionPress: handleDocumentFormatting,
         documentFormat: documentFormat,
         mainColor: themeController.theme.mainColor,
         barcodeImgBytes: documentFormat
@@ -373,6 +347,34 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
         children: screenElements,
       ),
     );
+  }
+
+  void _resetScrollControllers() {
+    _productsScrollController.dispose();
+    _infoScrollController.dispose();
+
+    _productsScrollController = ScrollController();
+    _infoScrollController = ScrollController();
+  }
+
+  void handleDocumentFormatting() async {
+    if (!documentFormat && formatedDocumentBytes == null) {
+      documentFormat = !documentFormat;
+      processDocumentFormatting();
+    } else {
+      setState(() => documentFormat = !documentFormat);
+    }
+  }
+
+  void processDocumentFormatting() async {
+    setState(() => isFormatting = true);
+    if (modelController.imgPath != null) {
+      formatedDocumentBytes =
+          await compute(adjustDocumentFile, modelController.imgPath!);
+      formatedBarcodeBytes =
+          await compute(adjustDocumentBytes, widget.barcodeData?.imgBytes);
+    }
+    setState(() => isFormatting = false);
   }
 
   void toggleSelectMode() => setState(() => modelController.toggleSelectMode());

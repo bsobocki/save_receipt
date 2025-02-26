@@ -1,4 +1,3 @@
-import 'package:save_receipt/domain/entities/receipt_object.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
 
 ReceiptModel convertToReceiptModel(List<ReceiptObjectModel> data) {
