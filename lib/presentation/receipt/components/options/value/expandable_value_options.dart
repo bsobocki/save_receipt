@@ -101,7 +101,7 @@ class _ExpandableValueOptionsState extends State<ExpandableValueOptions> {
     return optionsList.length == 1
         ? Container(height: 32)
         : ExpandableOptionsPanel(
-            alignment: MainAxisAlignment.start,
+            alignment: MainAxisAlignment.end,
             options: options,
             onCollapse: widget.onCollapse,
             constraints: widget.constraints,

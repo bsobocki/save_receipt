@@ -56,19 +56,19 @@ class _DataFieldEditModeValueRowState extends State<DataFieldEditModeValueRow> {
   @override
   Widget build(BuildContext context) {
     return Row(children: [
-      Expanded(
-        child: LayoutBuilder(
-          builder: (context, constraints) =>
-              expandableOptionsButtons(constraints),
-        ),
-      ),
       Padding(
-        padding: const EdgeInsets.only(right: 16.0),
+        padding: const EdgeInsets.only(left: 16.0),
         child: DataFieldValueText(
             key: UniqueKey(),
             fontWeight: FontWeight.normal,
             text: widget.model.value ?? '',
             textColor: widget.textColor),
+      ),
+      Expanded(
+        child: LayoutBuilder(
+          builder: (context, constraints) =>
+              expandableOptionsButtons(constraints),
+        ),
       ),
     ]);
   }
