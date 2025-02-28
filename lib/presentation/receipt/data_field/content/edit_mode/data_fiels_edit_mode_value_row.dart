@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:save_receipt/presentation/receipt/components/options/value/expandable_value_options.dart';
-import 'package:save_receipt/presentation/receipt/data_field/content/edit_mode/text/value_text.dart';
+import 'package:save_receipt/presentation/receipt/data_field/content/edit_mode/text/data_field_text.dart';
 import 'package:save_receipt/domain/entities/receipt_object.dart';
 
 class DataFieldEditModeValueRow extends StatefulWidget {
@@ -58,11 +58,12 @@ class _DataFieldEditModeValueRowState extends State<DataFieldEditModeValueRow> {
     return Row(children: [
       Padding(
         padding: const EdgeInsets.only(left: 16.0),
-        child: DataFieldValueText(
-            key: UniqueKey(),
-            fontWeight: FontWeight.normal,
-            text: widget.model.value ?? '',
-            textColor: widget.textColor),
+        child: DataFieldEditModeText(
+          key: UniqueKey(),
+          fontWeight: FontWeight.normal,
+          text: widget.model.value ?? '',
+          textColor: widget.textColor,
+        ),
       ),
       Expanded(
         child: LayoutBuilder(
