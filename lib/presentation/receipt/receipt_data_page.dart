@@ -11,7 +11,7 @@ import 'package:save_receipt/presentation/receipt/components/top_bar.dart';
 import 'package:save_receipt/presentation/receipt/data_field/data_field.dart';
 import 'package:save_receipt/presentation/receipt/data_field/info_data_field.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
-import 'package:save_receipt/presentation/receipt/controller/receipt_controller.dart';
+import 'package:save_receipt/presentation/receipt/controller/receipt_model_controller.dart';
 import 'package:save_receipt/presentation/receipt/data_field/product_data_field.dart';
 import 'package:save_receipt/services/document/scan/google_barcode_scan.dart';
 import 'package:save_receipt/services/images/edit_image.dart';
@@ -179,8 +179,8 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
           model: modelController.productAt(index)!,
           allValuesData: modelController.allValuesModel,
           isDarker: (index % 2 == 0),
-          onItemDismissSwipe: () => handleProductDismiss(index),
-          onItemEditModeSwipe: () => setEditModeForProduct(index),
+          onItemDismissSwipe: () => removeObjectByIndex(index),
+          onItemEditModeSwipe: () => setEditModeForObject(index),
           onChangedToValue: () => changeProductToValue(index),
           onChangedToInfo: () => changeProductToInfo(index),
           mode: modelController.isSelectModeEnabled
@@ -215,8 +215,8 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
           model: modelController.infoAt(index)!,
           allValuesData: modelController.allValuesModel,
           isDarker: (index % 2 == 0),
-          onItemDismissSwipe: () => handleInfoDismiss(index),
-          onItemEditModeSwipe: () => setEditModeForInfo(index),
+          onItemDismissSwipe: () => removeObjectByIndex(index),
+          onItemEditModeSwipe: () => setEditModeForObject(index),
           onChangedToValue: () => changeInfoToValue(index),
           onValueToFieldChanged: () => changeValueToInfo(index),
           onValueTypeChanged: (ReceiptObjectModelType type) =>
@@ -367,17 +367,18 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   }
 
   void processDocumentFormatting() async {
-    setState(() => isFormatting = true);
+    if (mounted) setState(() => isFormatting = true);
     if (modelController.imgPath != null) {
       formatedDocumentBytes =
           await compute(adjustDocumentFile, modelController.imgPath!);
       formatedBarcodeBytes =
           await compute(adjustDocumentBytes, widget.barcodeData?.imgBytes);
     }
-    setState(() => isFormatting = false);
+    if (mounted) setState(() => isFormatting = false);
   }
 
-  void toggleSelectMode() => setState(() => modelController.toggleSelectMode());
+  void toggleSelectMode() =>
+      setState(() => modelController.toggleSelectionMode());
 
   void removeSelectedInfo() =>
       setState(() => modelController.removeSelectedObjects());
@@ -408,7 +409,7 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   }
 
   void changeSelectedInfoToProducts() async {
-    bool status = modelController.changeSelectedObjectsToProducts();
+    bool status = modelController.changeSelectedInfoToProducts();
     if (!status) {
       await showAlertDialog(
           title: "Changing Info to Product",
@@ -432,16 +433,10 @@ class _ReceiptDataPageState extends State<ReceiptDataPage> {
   void changeValueToInfo(int index) =>
       setState(() => modelController.changeValueToInfo(index));
 
-  void setEditModeForInfo(int index) =>
-      setState(() => modelController.setEditModeForInfo(index));
+  void setEditModeForObject(int index) =>
+      setState(() => modelController.setEditModeForObject(index));
 
-  void setEditModeForProduct(int index) =>
-      setState(() => modelController.setEditModeForProduct(index));
-
-  void handleInfoDismiss(int index) =>
-      setState(() => modelController.removeObjectByIndex(index));
-
-  void handleProductDismiss(int index) =>
+  void removeObjectByIndex(int index) =>
       setState(() => modelController.removeObjectByIndex(index));
 
   void setProductsEditing() => setState(() {

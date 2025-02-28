@@ -33,8 +33,6 @@ class DataField extends StatefulWidget {
     this.onItemSwipe,
   });
 
-  get text => null;
-
   @override
   State<DataField> createState() => _DataFieldState();
 }
@@ -77,39 +75,41 @@ class _DataFieldState extends State<DataField> {
     }
   }
 
+  Widget getBackground(
+    final IconData iconData,
+    final LinearGradient gradient,
+    Alignment alignment,
+  ) {
+    return Container(
+      decoration: BoxDecoration(gradient: gradient),
+      alignment: alignment,
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: 16.0,
+          right: 16.0,
+          top: widget.model.value != null ? 8.0 : 0.0,
+          bottom: widget.model.value != null ? 8.0 : 0.0,
+        ),
+        child: Icon(iconData),
+      ),
+    );
+  }
+
   get swipableDataFieldContent => Dismissible(
         key: UniqueKey(),
         onDismissed: (direction) => widget.onItemDismissSwipe(),
         confirmDismiss: handleSwipe,
-        background: getFieldSwipeBackground(
+        background: getBackground(
           Icons.close,
           redToTransparentGradient,
           Alignment.centerLeft,
         ),
-        secondaryBackground: getFieldSwipeBackground(
+        secondaryBackground: getBackground(
           widget.mode == DataFieldMode.edit ? Icons.edit_off : Icons.edit,
           transparentToGoldGradient,
           Alignment.centerRight,
         ),
         child: dataFieldContent,
-      );
-
-  Widget getFieldSwipeBackground(final IconData iconData,
-          final LinearGradient gradient, Alignment alignment) =>
-      Container(
-        decoration: BoxDecoration(
-          gradient: gradient,
-        ),
-        alignment: alignment,
-        child: Padding(
-          padding: EdgeInsets.only(
-            left: 16.0,
-            right: 16.0,
-            top: widget.model.value != null ? 8.0 : 0.0,
-            bottom: widget.model.value != null ? 8.0 : 0.0,
-          ),
-          child: Icon(iconData),
-        ),
       );
 
   @override

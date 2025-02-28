@@ -12,13 +12,15 @@ import 'package:save_receipt/domain/entities/receipt.dart';
 import 'package:save_receipt/data/controller/values_controller.dart';
 
 class ReceiptModelController {
+  int? _receiptId;
   String? _receiptImagePath;
+  late String receiptTitle;
   late AllReceiptValuesController _allValues;
   final SplayTreeSet<int> _selectedObjectsIndexes =
       SplayTreeSet((a, b) => b.compareTo(a));
-  List<ReceiptObjectModel> _infos = [];
-  List<ReceiptObjectModel> _products = [];
-  List<ReceiptObjectModel> _time = [];
+  final List<ReceiptObjectModel> _infos = [];
+  final List<ReceiptObjectModel> _products = [];
+  final List<ReceiptObjectModel> _time = [];
   final List<int> _deletedProductsIds = [];
   final List<int> _deletedInfoTextIds = [];
   final List<int> _deletedInfoTimeIds = [];
@@ -26,10 +28,8 @@ class ReceiptModelController {
   final List<int> _deletedInfoNumericIds = [];
   final ValueNotifier<bool> _dataChangedNotifier = ValueNotifier<bool>(false);
   bool _areProductsEdited = true;
-  bool _isSelectModeEnabled = false;
+  bool _isSelectionModeEnabled = false;
   int _editingObjectFieldIndex = -1;
-  late String receiptTitle;
-  int? _receiptId;
 
   ReceiptModelController({
     required final ReceiptModel receipt,
@@ -40,9 +40,9 @@ class ReceiptModelController {
     _allValues = allValuesModel != null
         ? AllReceiptValuesController(model: allValuesModel)
         : AllReceiptValuesController.fromReceipt(receipt);
-    _products = receipt.products;
-    _infos = receipt.infos;
-    _time = receipt.time;
+    _products.addAll(receipt.products);
+    _infos.addAll(receipt.infos);
+    _time.addAll(receipt.time);
     _receiptId = receipt.receiptId;
   }
 
@@ -107,87 +107,6 @@ class ReceiptModelController {
     }
   }
 
-  void changeObjectToValue(int index) {
-    if (objectIndexExists(index)) {
-      ReceiptObjectModel obj = objectAt(index);
-      _allValues.insertValue(obj.text);
-      removeObject(obj);
-    }
-  }
-
-  void changeValueToInfo(int index) {
-    if (infoIndexExists(index) && infoHasValue(index)) {
-      _allValues.removeValue(_infos[index].value!);
-      String newTextFromValue = _infos[index].value!;
-      _infos[index].value = null;
-      _infos.add(
-        ReceiptObjectModel(
-          type: ReceiptObjectModelType.infoText,
-          text: newTextFromValue,
-          value: null,
-        ),
-      );
-      trackChange();
-    }
-  }
-
-  void changeInfoValueType(ReceiptObjectModelType newType, int index) {
-    if (infoIndexExists(index)) {
-      ReceiptObjectModelType oldType = _infos[index].type;
-      _infos[index].type = newType;
-      int? id = _infos[index].dataId;
-
-      if (id != null) {
-        switch (oldType) {
-          case ReceiptObjectModelType.infoText:
-            _deletedInfoTextIds.add(id);
-            break;
-          case ReceiptObjectModelType.infoDouble:
-            _deletedInfoDoubleIds.add(id);
-            break;
-          case ReceiptObjectModelType.infoNumeric:
-            _deletedInfoNumericIds.add(id);
-            break;
-          case ReceiptObjectModelType.infoTime:
-            _deletedInfoTimeIds.add(id);
-            break;
-          default:
-            break;
-        }
-      }
-      trackChange();
-    }
-  }
-
-  void changeProductToInfoDouble(int index) {
-    if (productIndexExists(index)) {
-      _infos.add(
-        ReceiptObjectModel.newObjectFrom(
-          _products[index],
-          type: ReceiptObjectModelType.infoDouble,
-        ),
-      );
-      removeObjectByIndex(index);
-    }
-  }
-
-  bool changeInfoDoubleToProduct(int index) {
-    if (infoIndexExists(index)) {
-      if (_infos[index].value == null) {
-        return false;
-      }
-      var infoObj = _infos[index];
-      _products.add(
-        ReceiptObjectModel.newObjectFrom(
-          infoObj,
-          type: ReceiptObjectModelType.product,
-        ),
-      );
-      removeObjectByIndex(index);
-    }
-    return true;
-  }
-
   void addEmptyObject() {
     if (_areProductsEdited) {
       _products.add(
@@ -247,32 +166,18 @@ class ReceiptModelController {
     trackChange();
   }
 
-  void setProductsEditing() {
-    _areProductsEdited = true;
-    resetEditModeIndex();
-    _selectedObjectsIndexes.clear();
-  }
-
-  void setInfoEditing() {
-    _areProductsEdited = false;
-    resetEditModeIndex();
-    _selectedObjectsIndexes.clear();
-  }
-
   void resetEditModeIndex() => _editingObjectFieldIndex = -1;
 
-  void setEditModeForInfo(int index) {
-    if (!_areProductsEdited && infoIndexExists(index)) {
-      if (_editingObjectFieldIndex != index) {
-        _editingObjectFieldIndex = index;
-      } else {
-        resetEditModeIndex();
-      }
-    }
+  void setProductsEditing() => setEditing(true);
+  void setInfoEditing() => setEditing(false);
+  void setEditing(bool editingForProducts) {
+    _areProductsEdited = editingForProducts;
+    resetEditModeIndex();
+    _selectedObjectsIndexes.clear();
   }
 
-  void setEditModeForProduct(int index) {
-    if (_areProductsEdited && productIndexExists(index)) {
+  void setEditModeForObject(int index) {
+    if (objectIndexExists(index)) {
       if (_editingObjectFieldIndex != index) {
         _editingObjectFieldIndex = index;
       } else {
@@ -282,11 +187,11 @@ class ReceiptModelController {
   }
 
   void setSelectionMode() {
-    _isSelectModeEnabled = true;
+    _isSelectionModeEnabled = true;
   }
 
-  void toggleSelectMode() {
-    _isSelectModeEnabled = !_isSelectModeEnabled;
+  void toggleSelectionMode() {
+    _isSelectionModeEnabled = !_isSelectionModeEnabled;
     _selectedObjectsIndexes.clear();
   }
 
@@ -310,94 +215,55 @@ class ReceiptModelController {
     }
   }
 
-  AllValuesModel get allValuesModel => _allValues.model;
-
-  String? get imgPath => _receiptImagePath;
-
-  List<ReceiptObjectModel> get objects => [
-        ..._products,
-        ..._infos,
-      ];
-
-  ReceiptModel get model => ReceiptModel(
-        title: receiptTitle,
-        receiptId: _receiptId,
-        objects: objects,
-        imgPath: _receiptImagePath,
-      );
-
-  List<ReceiptObjectModel> get products => _products;
-
-  List<ReceiptObjectModel> get infos => _infos;
-
-  List<ReceiptObjectModel> get times => _time;
-
-  List<ReceiptObjectModel> get currentObjectList =>
-      _areProductsEdited ? _products : _infos;
-
-  bool productIndexExists(int index) => index >= 0 && index < _products.length;
-
-  bool infoIndexExists(int index) => index >= 0 && index < _infos.length;
-
-  bool objectIndexExists(int index) =>
-      _areProductsEdited ? productIndexExists(index) : infoIndexExists(index);
-
-  bool infoHasValue(int index) => _infos[index].value != null;
-
-  ReceiptObjectModel? infoAt(int index) =>
-      infoIndexExists(index) ? _infos[index] : null;
-
-  ReceiptObjectModel? productAt(int index) =>
-      productIndexExists(index) ? _products[index] : null;
-
-  bool get imgPathExists => imgPath != null;
-
-  bool get areProductsEdited => _areProductsEdited;
-
-  bool get dataChanged => _dataChangedNotifier.value;
-
-  ValueNotifier<bool> get dataChangedNotifier => _dataChangedNotifier;
-
-  bool get isSelectModeEnabled => _isSelectModeEnabled;
-
-  ReceiptObjectModel objectAt(int index) =>
-      _areProductsEdited ? _products[index] : _infos[index];
-
-  bool isObjectInEditMode(int index) =>
-      objectIndexExists(index) && index == _editingObjectFieldIndex;
-
-  bool isProductInEditMode(int index) =>
-      _areProductsEdited && isObjectInEditMode(index);
-
-  bool isInfoInEditMode(int index) =>
-      !_areProductsEdited && isObjectInEditMode(index);
-
-  bool isObjectSelected(int index) =>
-      objectIndexExists(index) && _selectedObjectsIndexes.contains(index);
-
-  bool isProductSelected(int index) =>
-      _areProductsEdited && isObjectSelected(index);
-
-  bool isInfoSelected(int index) =>
-      !_areProductsEdited && isObjectSelected(index);
-
-  List<ReceiptObjectModel> get selectedObjects => _selectedObjectsIndexes
-      .where((index) => objectIndexExists(index))
-      .map((index) => objectAt(index))
-      .toList();
-
   void removeSelectedObjects() {
     for (int index in _selectedObjectsIndexes) {
       removeObjectByIndex(index);
     }
-    toggleSelectMode();
+    toggleSelectionMode();
+  }
+
+  void changeInfoValueType(ReceiptObjectModelType newType, int index) {
+    if (infoIndexExists(index)) {
+      ReceiptObjectModelType oldType = _infos[index].type;
+      _infos[index].type = newType;
+      int? id = _infos[index].dataId;
+
+      if (id != null) {
+        switch (oldType) {
+          case ReceiptObjectModelType.infoText:
+            _deletedInfoTextIds.add(id);
+            break;
+          case ReceiptObjectModelType.infoDouble:
+            _deletedInfoDoubleIds.add(id);
+            break;
+          case ReceiptObjectModelType.infoNumeric:
+            _deletedInfoNumericIds.add(id);
+            break;
+          case ReceiptObjectModelType.infoTime:
+            _deletedInfoTimeIds.add(id);
+            break;
+          default:
+            break;
+        }
+      }
+      trackChange();
+    }
   }
 
   void changeSelectedInfoValueType(ReceiptObjectModelType type) {
     for (int index in _selectedObjectsIndexes) {
       changeInfoValueType(type, index);
     }
-    toggleSelectMode();
+    toggleSelectionMode();
+  }
+
+  void changeObjectToValue(int index) {
+    if (objectIndexExists(index)) {
+      ReceiptObjectModel obj = objectAt(index);
+      _allValues.insertValue(obj.text);
+      removeObject(obj);
+      resetEditModeIndex();
+    }
   }
 
   void changeSelectedObjectsToValue() {
@@ -405,10 +271,45 @@ class ReceiptModelController {
       _allValues.insertValue(obj.text);
       removeObject(obj);
     }
-    toggleSelectMode();
+    toggleSelectionMode();
   }
 
-  bool changeSelectedObjectsToProducts() {
+  void changeValueToInfo(int index) {
+    if (infoIndexExists(index) && infoHasValue(index)) {
+      _allValues.removeValue(_infos[index].value!);
+      String newTextFromValue = _infos[index].value!;
+      _infos[index].value = null;
+      _infos.add(
+        ReceiptObjectModel(
+          type: ReceiptObjectModelType.infoText,
+          text: newTextFromValue,
+          value: null,
+        ),
+      );
+      trackChange();
+      resetEditModeIndex();
+    }
+  }
+
+  bool changeInfoDoubleToProduct(int index) {
+    if (infoIndexExists(index)) {
+      if (_infos[index].value == null) {
+        return false;
+      }
+      var infoObj = _infos[index];
+      _products.add(
+        ReceiptObjectModel.newObjectFrom(
+          infoObj,
+          type: ReceiptObjectModelType.product,
+        ),
+      );
+      removeObjectByIndex(index);
+      resetEditModeIndex();
+    }
+    return true;
+  }
+
+  bool changeSelectedInfoToProducts() {
     bool status = true;
     for (ReceiptObjectModel obj in selectedObjects) {
       if (obj.value != null && obj.type == ReceiptObjectModelType.infoDouble) {
@@ -423,8 +324,21 @@ class ReceiptModelController {
         status = false;
       }
     }
-    toggleSelectMode();
+    toggleSelectionMode();
     return status;
+  }
+
+  void changeProductToInfoDouble(int index) {
+    if (productIndexExists(index)) {
+      _infos.add(
+        ReceiptObjectModel.newObjectFrom(
+          _products[index],
+          type: ReceiptObjectModelType.infoDouble,
+        ),
+      );
+      removeObjectByIndex(index);
+      resetEditModeIndex();
+    }
   }
 
   void changeSelectedProductsToInfo() {
@@ -437,6 +351,63 @@ class ReceiptModelController {
         ),
       );
     }
-    toggleSelectMode();
+    toggleSelectionMode();
   }
+
+  String? get imgPath => _receiptImagePath;
+
+  AllValuesModel get allValuesModel => _allValues.model;
+  ReceiptModel get model => ReceiptModel(
+        title: receiptTitle,
+        receiptId: _receiptId,
+        objects: objects,
+        imgPath: _receiptImagePath,
+      );
+  List<ReceiptObjectModel> get objects => [
+        ..._products,
+        ..._infos,
+      ];
+
+  List<ReceiptObjectModel> get products => _products;
+  List<ReceiptObjectModel> get infos => _infos;
+  List<ReceiptObjectModel> get times => _time;
+  List<ReceiptObjectModel> get currentObjectList =>
+      _areProductsEdited ? _products : _infos;
+
+  ReceiptObjectModel? infoAt(int index) =>
+      infoIndexExists(index) ? _infos[index] : null;
+  ReceiptObjectModel? productAt(int index) =>
+      productIndexExists(index) ? _products[index] : null;
+  ReceiptObjectModel objectAt(int index) =>
+      _areProductsEdited ? _products[index] : _infos[index];
+
+  List<ReceiptObjectModel> get selectedObjects => _selectedObjectsIndexes
+      .where((index) => objectIndexExists(index))
+      .map((index) => objectAt(index))
+      .toList();
+
+  ValueNotifier<bool> get dataChangedNotifier => _dataChangedNotifier;
+  bool productIndexExists(int index) => index >= 0 && index < _products.length;
+  bool infoIndexExists(int index) => index >= 0 && index < _infos.length;
+  bool objectIndexExists(int index) =>
+      _areProductsEdited ? productIndexExists(index) : infoIndexExists(index);
+  bool infoHasValue(int index) => _infos[index].value != null;
+
+  bool get imgPathExists => imgPath != null;
+  bool get areProductsEdited => _areProductsEdited;
+  bool get dataChanged => _dataChangedNotifier.value;
+  bool get isSelectModeEnabled => _isSelectionModeEnabled;
+
+  bool isObjectInEditMode(int index) =>
+      objectIndexExists(index) && index == _editingObjectFieldIndex;
+  bool isProductInEditMode(int index) =>
+      _areProductsEdited && isObjectInEditMode(index);
+  bool isInfoInEditMode(int index) =>
+      !_areProductsEdited && isObjectInEditMode(index);
+  bool isObjectSelected(int index) =>
+      objectIndexExists(index) && _selectedObjectsIndexes.contains(index);
+  bool isProductSelected(int index) =>
+      _areProductsEdited && isObjectSelected(index);
+  bool isInfoSelected(int index) =>
+      !_areProductsEdited && isObjectSelected(index);
 }

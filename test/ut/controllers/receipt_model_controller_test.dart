@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
-import 'package:save_receipt/presentation/receipt/controller/receipt_controller.dart';
+import 'package:save_receipt/presentation/receipt/controller/receipt_model_controller.dart';
 
 import '../../helpers/comparison.dart';
 
