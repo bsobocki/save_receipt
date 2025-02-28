@@ -41,7 +41,7 @@ class ColorTheme {
       end: Alignment.bottomRight,
       colors: _lighterColors);
 
-  ColorScheme get colorScheme => ColorScheme(
+  ColorScheme get colorScheme => const ColorScheme.dark().copyWith(
       brightness: Brightness.dark,
       primary: mainColor,
       onPrimary: Colors.white,
@@ -50,7 +50,7 @@ class ColorTheme {
       error: Colors.red,
       onError: Colors.white,
       surface: Colors.white,
-      onSurface: Colors.white,
+      onSurface: mainColor,
       onPrimaryContainer: Colors.white,
       onTertiaryFixed: Colors.white);
 }

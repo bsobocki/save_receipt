@@ -31,7 +31,7 @@ class Menu extends StatelessWidget {
           children: [
             Icon(getIconByOption(text), color: Colors.white),
             const SizedBox(width: 8),
-            Text(text),
+            Text(text, style: const TextStyle(color: Colors.white)),
           ],
         ));
   }

@@ -15,11 +15,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-  final ThemeController themeController = Get.find();
+    final ThemeController themeController = Get.find();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: themeController.theme.colorScheme, // ColorScheme.highContrastDark(),
+        colorScheme: themeController.theme.colorScheme,
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Receipt Save'),

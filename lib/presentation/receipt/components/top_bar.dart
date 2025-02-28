@@ -219,7 +219,10 @@ class ReceiptPageTopBar extends StatelessWidget {
           children: [
             Icon(getIconByOption(option), color: Colors.white),
             const SizedBox(width: 8),
-            Text(getMenuLabel(option, selectMode: selectMode)),
+            Text(
+              getMenuLabel(option, selectMode: selectMode),
+              style: const TextStyle(color: Colors.white),
+            ),
           ],
         ));
   }

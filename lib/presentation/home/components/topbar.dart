@@ -36,7 +36,19 @@ class HomepageTopbar extends PreferredSize {
           children: [
             AppBar(
               backgroundColor: Colors.transparent,
-              title: Text(title),
+              title: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Icon(Icons.receipt_long_rounded,
+                        color: Colors.white.withOpacity(0.6)),
+                  ),
+                  Text(
+                    title,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ],
+              ),
               actions: [
                 Padding(
                   padding: const EdgeInsets.only(right: 16.0),

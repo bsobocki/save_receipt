@@ -98,7 +98,10 @@ class _ValueFieldState extends State<ValueField> {
 
   get uniqueMenuEntries => values.map<DropdownMenuEntry<dynamic>>((value) {
         return DropdownMenuEntry<dynamic>(
-            value: value, label: value.toString());
+          value: value,
+          label: value.toString(),
+          labelWidget: Text(value.toString(), style: const TextStyle(color: Colors.white)),
+        );
       }).toList();
 
   @override
