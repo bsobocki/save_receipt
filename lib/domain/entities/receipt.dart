@@ -24,7 +24,7 @@ class ReceiptModel {
     return objs;
   }
 
-  getValuesAsStr(ReceiptObjectModelType type) {
+  List<String> getValuesAsStr(ReceiptObjectModelType type) {
     List<String> objs = [];
     for (ReceiptObjectModel obj in objects) {
       if (obj.type == type && obj.value != null) {
@@ -43,9 +43,13 @@ class ReceiptModel {
         ...getObjects(ReceiptObjectModelType.infoNumeric),
         ...getObjects(ReceiptObjectModelType.infoTime)
       ];
-  get time => getObjects(ReceiptObjectModelType.infoTime);
+  List<ReceiptObjectModel> get time =>
+      getObjects(ReceiptObjectModelType.infoTime);
 
-  get prices => products.map((e) => e.value!).toList();
+  get prices => [
+        ...getValuesAsStr(ReceiptObjectModelType.product),
+        ...getValuesAsStr(ReceiptObjectModelType.infoDouble),
+      ];
   get infoStr => getValuesAsStr(ReceiptObjectModelType.infoText);
   get timeStr => getValuesAsStr(ReceiptObjectModelType.infoTime);
 
