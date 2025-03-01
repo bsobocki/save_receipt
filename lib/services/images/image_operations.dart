@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:image/image.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
 Image resizeImageWithPadding(Image image) {
@@ -28,4 +29,10 @@ Future<void> deleteTemporaryImage(String filePath) async {
   } else {
     print('Temporary file does not exist');
   }
+}
+
+Future<String?> pickImage() async {
+  final XFile? file =
+      await ImagePicker().pickImage(source: ImageSource.gallery);
+  return file?.path;
 }

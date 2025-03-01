@@ -16,13 +16,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeController themeController = Get.find();
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: themeController.theme.colorScheme,
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Receipt Save'),
+      home: MyHomePage(title: 'Receipt Save'),
     );
   }
 }

@@ -12,6 +12,7 @@ enum ReceiptProcessingState {
   barcodeExtracting,
   documentFormatting,
   ready,
+  fetchingData,
   error
 }
 
@@ -71,8 +72,17 @@ class LoadingAnimation extends StatelessWidget {
         ],
       );
 
-  @override
-  Widget build(BuildContext context) {
+  get fetchingContent => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          LoadingAnimationWidget.newtonCradle(
+              color: themeController.theme.mainColor, size: 100.0),
+          Text('Document Formatting...',
+              style: TextStyle(color: themeController.theme.mainColor)),
+        ],
+      );
+
+  get content {
     switch (processingState) {
       case ReceiptProcessingState.processing:
         return processingContent;
@@ -84,8 +94,15 @@ class LoadingAnimation extends StatelessWidget {
         return barcodeContent;
       case ReceiptProcessingState.documentFormatting:
         return formattingContent;
+      case ReceiptProcessingState.fetchingData:
+        return fetchingContent;
       default:
         return Container();
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: content);
   }
 }

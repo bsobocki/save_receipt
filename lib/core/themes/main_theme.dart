@@ -22,6 +22,6 @@ static const Color _defaultColor = Color.fromARGB(255, 107, 7, 7);
   ColorTheme get theme => _theme.value;
 
   void changeMainColor(Color newColor) {
-    _theme = ColorTheme(newColor).obs;
+    _theme.value = ColorTheme(newColor);
   }
 }

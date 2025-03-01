@@ -1,6 +1,6 @@
 import 'package:google_mlkit_document_scanner/google_mlkit_document_scanner.dart';
 
-Future<String?> scanRecipe() async {
+Future<String?> googleScanAndExtractRecipe() async {
   final documentScanner = DocumentScanner(
     options: DocumentScannerOptions(
         documentFormat: DocumentFormat.jpeg,
