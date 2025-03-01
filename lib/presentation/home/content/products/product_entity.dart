@@ -14,10 +14,6 @@ class ProductEntity extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // product images are not supported yet
-    // Image img = data.receipt.imgPath != null
-    //     ? Image.file(File(data.receipt.imgPath!))
-    //     : Image.asset('assets/no_image.jpg');
     final ThemeController themeController = Get.find();
     return GestureDetector(
       onTap: onPressed,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:save_receipt/data/models/database_entities.dart';
 import 'package:save_receipt/presentation/home/content/products/product_entity.dart';
 
-class ProductsList extends StatefulWidget {
+class ProductsList extends StatelessWidget {
   final List<ProductData> productsData;
   final Function(int) onItemSelected;
 
@@ -13,21 +13,16 @@ class ProductsList extends StatefulWidget {
   });
 
   @override
-  State<ProductsList> createState() => _ProductsListState();
-}
-
-class _ProductsListState extends State<ProductsList> {
-  @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: widget.productsData.length,
+      itemCount: productsData.length,
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.only(top: 6.0, bottom: 6.0),
           child: ProductEntity(
-            data: widget.productsData[index],
+            data: productsData[index],
             onPressed: () {
-              widget.onItemSelected(index);
+              onItemSelected(index);
             },
           ),
         );
