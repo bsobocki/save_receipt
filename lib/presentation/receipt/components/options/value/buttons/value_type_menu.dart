@@ -37,7 +37,7 @@ class _DataFieldValueTypeMenuState extends State<DataFieldValueTypeMenu> {
           children: [
             Icon(getTypeIcon(type), color: Colors.white),
             const SizedBox(width: 8),
-            Text(text),
+            Text(text, style: const TextStyle(color: Colors.white)),
           ],
         ));
   }
