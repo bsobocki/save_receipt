@@ -43,7 +43,10 @@ class DataEditorTopBar extends StatelessWidget {
                   children: [
                     Icon(option.icon),
                     const SizedBox(width: 8),
-                    Text(option.label),
+                    Text(
+                      option.label,
+                      style: const TextStyle(color: Colors.white),
+                    ),
                   ],
                 ),
               ),
