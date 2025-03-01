@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
         colorScheme: themeController.theme.colorScheme,
         useMaterial3: true,
       ),
+      debugShowCheckedModeBanner: false,
       home: MyHomePage(title: 'Receipt Save'),
     );
   }
