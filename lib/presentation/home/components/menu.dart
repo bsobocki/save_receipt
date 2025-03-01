@@ -154,9 +154,7 @@ class Menu extends StatelessWidget {
         }
       },
       itemBuilder: (context) => [
-        'delete database',
         'refresh',
-        'print database',
         'change theme'
       ].map((text) => getPopupMenuItem(text)).toList(),
       child: const Icon(Icons.menu),
