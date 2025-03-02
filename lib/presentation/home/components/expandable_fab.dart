@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 export 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 
-class ExpandableFloatingActionButton extends StatelessWidget {
-  ExpandableFloatingActionButton({
+class ExpandableFloatingActionButton extends StatefulWidget {
+  const ExpandableFloatingActionButton({
     super.key,
     required this.onNewReceiptAdding,
     required this.onImageProcessing,
@@ -16,6 +16,11 @@ class ExpandableFloatingActionButton extends StatelessWidget {
   final Future<void> Function() onImageProcessing;
   final Future<void> Function() onDocumentScanning;
 
+  @override
+  State<ExpandableFloatingActionButton> createState() => _ExpandableFloatingActionButtonState();
+}
+
+class _ExpandableFloatingActionButtonState extends State<ExpandableFloatingActionButton> {
   final _expandableFabKey = GlobalKey<ExpandableFabState>();
 
   final ThemeController themeController = Get.find();
@@ -62,7 +67,7 @@ class ExpandableFloatingActionButton extends StatelessWidget {
               backgroundColor: themeController.theme.mainColor,
               onPressed: () async {
                 toggleFloatingActionButton();
-                await onDocumentScanning();
+                await widget.onDocumentScanning();
               },
               shape: const CircleBorder(),
               child: Image.asset(
@@ -84,7 +89,7 @@ class ExpandableFloatingActionButton extends StatelessWidget {
               heroTag: null,
               onPressed: () async {
                 toggleFloatingActionButton();
-                await onImageProcessing();
+                await widget.onImageProcessing();
               },
               shape: const CircleBorder(),
               child: const Icon(
@@ -104,7 +109,7 @@ class ExpandableFloatingActionButton extends StatelessWidget {
               backgroundColor: themeController.theme.mainColor,
               onPressed: () async {
                 toggleFloatingActionButton();
-                onNewReceiptAdding();
+                widget.onNewReceiptAdding();
               },
               shape: const CircleBorder(),
               child: const Icon(Icons.add),
