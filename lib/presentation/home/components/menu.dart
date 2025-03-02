@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
-import 'package:save_receipt/data/repositories/database_repository.dart';
 
 class Menu extends StatelessWidget {
   final ThemeController themeController = Get.find();
@@ -36,50 +35,7 @@ class Menu extends StatelessWidget {
         ));
   }
 
-  Future<void> deleteDatabaseDialogBuilder(BuildContext context) async {
-    return await showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Delete Database Confirmation'),
-          backgroundColor: themeController.theme.mainColor,
-          shadowColor: Colors.black,
-          content: const Text(
-            'Do you want to delete database?\n',
-            style: TextStyle(fontSize: 18.0),
-          ),
-          actions: <Widget>[
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-                textStyle: const TextStyle(fontSize: 18.0),
-              ),
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white,
-                textStyle: const TextStyle(fontSize: 18.0),
-              ),
-              child: const Text('Delete'),
-              onPressed: () async {
-                await ReceiptDatabaseRepository.get.deleteDb();
-                onRefreshData();
-                if (context.mounted) {
-                  Navigator.of(context).pop();
-                }
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> changeThemeDialogBuilder(BuildContext context) async {
+  Future<void> showChangeThemeDialog(BuildContext context) async {
     return await showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -139,17 +95,11 @@ class Menu extends StatelessWidget {
       color: themeController.theme.mainColor,
       onSelected: (String value) async {
         switch (value) {
-          case 'delete database':
-            await deleteDatabaseDialogBuilder(context);
-            break;
           case 'refresh':
             onRefreshData();
             break;
-          case 'print database':
-            await ReceiptDatabaseRepository.get.printDatabase();
-            break;
           case 'change theme':
-            await changeThemeDialogBuilder(context);
+            await showChangeThemeDialog(context);
             break;
         }
       },

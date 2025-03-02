@@ -9,33 +9,28 @@ extension NavigationPagesExtension on NavigationPages {
   String get label => enumLabel(this);
 }
 
-class HomePageNavigationBar extends StatefulWidget {
+class HomePageNavigationBar extends StatelessWidget {
   final Function(NavigationPages) onPageSelect;
+  final NavigationPages selectedPage;
 
-  const HomePageNavigationBar({super.key, required this.onPageSelect});
+  HomePageNavigationBar(
+      {super.key, required this.onPageSelect, required this.selectedPage});
 
-  @override
-  State<HomePageNavigationBar> createState() => _HomePageNavigationBarState();
-}
-
-class _HomePageNavigationBarState extends State<HomePageNavigationBar> {
-  int _currentIndex = 0;
-  final ThemeController themeController = Get.find();
+  final themeController = Get.find<ThemeController>();
 
   final Map<NavigationPages, IconData> itemsDatas = {
     NavigationPages.receipts: Icons.receipt_long,
     NavigationPages.products: Icons.inventory
   };
 
-  void onTap(int index) => setState(() {
-        _currentIndex = index;
-        widget.onPageSelect(NavigationPages.values[index]);
-      });
+  void onTap(int index) => onPageSelect(NavigationPages.values[index]);
+
+  int indexOf(NavigationPages page) => NavigationPages.values.indexOf(page);
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      currentIndex: _currentIndex,
+      currentIndex: indexOf(selectedPage),
       onTap: onTap,
       items: itemsDatas.entries
           .map(

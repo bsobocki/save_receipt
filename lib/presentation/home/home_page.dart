@@ -124,6 +124,7 @@ class MyHomePage extends StatelessWidget {
         ),
         body: _buildBody(),
         bottomNavigationBar: HomePageNavigationBar(
+          selectedPage: pageController.selectedPage.value,
           onPageSelect: (page) => pageController.selectedPage.value = page,
         ),
         floatingActionButtonLocation: ExpandableFab.location,
