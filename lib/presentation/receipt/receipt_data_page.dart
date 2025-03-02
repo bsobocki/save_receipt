@@ -7,7 +7,7 @@ import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/presentation/receipt/components/receipt_image_viewer.dart';
 import 'package:save_receipt/presentation/receipt/components/data_editor/data_editor.dart';
 import 'package:save_receipt/presentation/receipt/components/data_editor/data_editor_top_bar.dart';
-import 'package:save_receipt/presentation/receipt/components/top_bar.dart';
+import 'package:save_receipt/presentation/receipt/components/topbar/top_bar.dart';
 import 'package:save_receipt/presentation/receipt/data_field/data_field.dart';
 import 'package:save_receipt/presentation/receipt/data_field/info_data_field.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
