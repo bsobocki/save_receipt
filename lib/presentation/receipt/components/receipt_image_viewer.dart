@@ -44,29 +44,7 @@ class _ReceiptImageViewerState extends State<ReceiptImageViewer> {
     }
   }
 
-  Widget get imageViewer {
-    return Stack(
-      children: [
-        InteractiveViewer(
-          minScale: 0.5,
-          maxScale: 4.0,
-          transformationController: _controller,
-          child: GestureDetector(
-            onDoubleTapDown: _handleDoubleTapDown,
-            onDoubleTap: _handleDoubleTap,
-            child: widget.formatedDocumentBytes != null
-                ? Image.memory(
-                    widget.formatedDocumentBytes!,
-                    //File(widget.imagePath),
-                    fit: BoxFit.contain,
-                  )
-                : Image.file(
-                    File(widget.imagePath),
-                    fit: BoxFit.contain,
-                  ),
-          ),
-        ),
-        Positioned(
+  Widget get closeButton => Positioned(
           top: 10,
           right: 10,
           child: GestureDetector(
@@ -88,7 +66,30 @@ class _ReceiptImageViewerState extends State<ReceiptImageViewer> {
               ),
             ),
           ),
+        );
+
+  Widget get imageViewer {
+    return Stack(
+      children: [
+        InteractiveViewer(
+          minScale: 0.5,
+          maxScale: 4.0,
+          transformationController: _controller,
+          child: GestureDetector(
+            onDoubleTapDown: _handleDoubleTapDown,
+            onDoubleTap: _handleDoubleTap,
+            child: widget.formatedDocumentBytes != null
+                ? Image.memory(
+                    widget.formatedDocumentBytes!,
+                    fit: BoxFit.contain,
+                  )
+                : Image.file(
+                    File(widget.imagePath),
+                    fit: BoxFit.contain,
+                  ),
+          ),
         ),
+        closeButton,
       ],
     );
   }
@@ -106,7 +107,7 @@ class _ReceiptImageViewerState extends State<ReceiptImageViewer> {
             filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
             child: Center(
               child: GestureDetector(
-                onTap: () {},
+                onTap: () {}, // remove onExit action for imageViewer
                 child: SizedBox(
                   width: double.infinity,
                   child: imageViewer,
