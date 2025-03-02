@@ -32,27 +32,50 @@ class DataEditorTopBar extends StatelessWidget {
     required this.onTitleChanged,
   });
 
-  get popupMenu => PopupMenuButton<SelectModeEditorOption>(
-        color: background,
-        onSelected: (SelectModeEditorOption value) => value.onSelected(),
-        itemBuilder: (context) => selectModeOptions
-            .map(
-              (option) => PopupMenuItem<SelectModeEditorOption>(
-                value: option,
-                child: Row(
-                  children: [
-                    Icon(option.icon),
-                    const SizedBox(width: 8),
-                    Text(
-                      option.label,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ],
+  get popupMenu => Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: PopupMenuButton<SelectModeEditorOption>(
+          color: background,
+          onSelected: (SelectModeEditorOption value) => value.onSelected(),
+          itemBuilder: (context) => selectModeOptions
+              .map(
+                (option) => PopupMenuItem<SelectModeEditorOption>(
+                  value: option,
+                  child: Row(
+                    children: [
+                      Icon(option.icon),
+                      const SizedBox(width: 8),
+                      Text(
+                        option.label,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            )
-            .toList(),
-        child: const Icon(Icons.menu),
+              )
+              .toList(),
+          child: const Icon(Icons.menu),
+        ),
+      );
+
+  Widget get titleEditor => Expanded(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 16.0, top: 4.0, bottom: 4.0),
+          child: TextField(
+            controller: titleEditingController,
+            onChanged: onTitleChanged,
+            style: const TextStyle(color: Colors.white, fontSize: 14),
+            cursorColor: Colors.white,
+            decoration:
+                const InputDecoration(isDense: true, border: InputBorder.none),
+          ),
+        ),
+      );
+
+  Widget get addObjectButton => IconButton(
+        iconSize: 20,
+        onPressed: onAddObject,
+        icon: const Icon(Icons.add),
       );
 
   @override
@@ -66,26 +89,8 @@ class DataEditorTopBar extends StatelessWidget {
       height: 40.0,
       child: Row(
         children: [
-          Expanded(
-              child: Padding(
-            padding: const EdgeInsets.only(left: 16.0, top: 4.0, bottom: 4.0),
-            child: TextField(
-              controller: titleEditingController,
-              onChanged: onTitleChanged,
-              style: const TextStyle(color: Colors.white, fontSize: 14),
-              cursorColor: Colors.white,
-              decoration: const InputDecoration(
-                  isDense: true, border: InputBorder.none),
-            ),
-          )),
-          if (selectMode)
-            Padding(padding: const EdgeInsets.all(12.0), child: popupMenu)
-          else
-            IconButton(
-              iconSize: 20,
-              onPressed: onAddObject,
-              icon: const Icon(Icons.add),
-            ),
+          titleEditor,
+          if (selectMode) popupMenu else addObjectButton,
         ],
       ),
     );

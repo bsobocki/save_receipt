@@ -48,7 +48,20 @@ class _ReceiptDataEditorState extends State<ReceiptDataEditor> {
     titleEditingController = TextEditingController(text: widget.title);
   }
 
-  Widget get topBar => DataEditorTopBar(
+  get decoration => BoxDecoration(
+        borderRadius: const BorderRadius.all(Radius.circular(15.0)),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.5),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: const Offset(0, 3), // changes position of shadow
+          ),
+        ],
+      );
+
+  Widget _buildTopBar() => DataEditorTopBar(
         onResized: widget.onProductsTabPressed,
         background: themeController.theme.mainColor,
         onAddObject: widget.onAddObject,
@@ -58,17 +71,17 @@ class _ReceiptDataEditorState extends State<ReceiptDataEditor> {
         onTitleChanged: widget.onTitleChanged,
       );
 
-  Widget contentTab(ReceiptDataContent content) {
-    bool productTab = content == ReceiptDataContent.products;
+  Widget _buildContentTab({
+    required ReceiptDataContent content,
+    required VoidCallback onPressed,
+  }) {
+    bool isProductTab = content == ReceiptDataContent.products;
+    bool isSelected =
+        (showProducts && isProductTab) || (!showProducts && !isProductTab);
+
     Color background = Colors.white;
     Color textColor = themeController.theme.mainColor;
-    bool currentContentTab =
-        (showProducts && productTab) || (!showProducts && !productTab);
-    VoidCallback onPressed = content == ReceiptDataContent.products
-        ? widget.onProductsTabPressed
-        : widget.onInfoTabPressed;
-
-    if (currentContentTab) {
+    if (isSelected) {
       background = themeController.theme.mainColor;
       textColor = Colors.white;
     }
@@ -77,7 +90,7 @@ class _ReceiptDataEditorState extends State<ReceiptDataEditor> {
       quarterTurns: 3,
       child: GestureDetector(
         onTap: () => setState(() {
-          showProducts = productTab;
+          showProducts = isProductTab;
           onPressed();
         }),
         child: Container(
@@ -96,7 +109,7 @@ class _ReceiptDataEditorState extends State<ReceiptDataEditor> {
           height: 30,
           child: Center(
             child: Text(
-              productTab ? 'Products' : 'Info',
+              isProductTab ? 'Products' : 'Info',
               style: TextStyle(
                 color: textColor,
               ),
@@ -107,7 +120,7 @@ class _ReceiptDataEditorState extends State<ReceiptDataEditor> {
     );
   }
 
-  Widget get navigationVerticalBar => Container(
+  Widget _buildNavigationVerticalBar() => Container(
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15.0)),
           color: Colors.transparent,
@@ -115,20 +128,43 @@ class _ReceiptDataEditorState extends State<ReceiptDataEditor> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const SizedBox(
-              height: 32,
-            ),
+            const SizedBox(height: 32),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    contentTab(ReceiptDataContent.products),
-                    contentTab(ReceiptDataContent.info),
+                    _buildContentTab(
+                        content: ReceiptDataContent.products,
+                        onPressed: widget.onProductsTabPressed),
+                    _buildContentTab(
+                        content: ReceiptDataContent.info,
+                        onPressed: widget.onInfoTabPressed),
                   ],
                 ),
               ),
             ),
           ],
+        ),
+      );
+
+  Widget _buildDataEditorList() => Expanded(
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: const BorderRadius.only(
+              //bottomLeft: Radius.circular(15.0),
+              bottomRight: Radius.circular(15.0),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: const Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+          child: showProducts ? widget.productsList : widget.infoList,
         ),
       );
 
@@ -139,48 +175,15 @@ class _ReceiptDataEditorState extends State<ReceiptDataEditor> {
       child: Padding(
         padding: const EdgeInsets.only(top: 8.0),
         child: Container(
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(15.0)),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 5,
-                blurRadius: 7,
-                offset: const Offset(0, 3), // changes position of shadow
-              ),
-            ],
-          ),
+          decoration: decoration,
           child: Column(
             children: [
-              topBar,
+              _buildTopBar(),
               Expanded(
                 child: Row(
                   children: [
-                    navigationVerticalBar,
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: const BorderRadius.only(
-                            //bottomLeft: Radius.circular(15.0),
-                            bottomRight: Radius.circular(15.0),
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 5,
-                              blurRadius: 7,
-                              offset: const Offset(
-                                  0, 3), // changes position of shadow
-                            ),
-                          ],
-                        ),
-                        child: showProducts
-                            ? widget.productsList
-                            : widget.infoList,
-                      ),
-                    ),
+                    _buildNavigationVerticalBar(),
+                    _buildDataEditorList(),
                   ],
                 ),
               ),
