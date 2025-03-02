@@ -18,14 +18,18 @@ import 'package:save_receipt/services/document/scan/google_barcode_scan.dart';
 import 'package:save_receipt/services/document/scan/google_read_text_from_image.dart';
 
 class HomePageController extends GetxController {
-  final documentData = <ReceiptDocumentData>[].obs;
-  final processingState = ReceiptProcessingState.noAction.obs;
   final searchQuery = ''.obs;
+  final documentData = <ReceiptDocumentData>[].obs;
   final selectedPage = NavigationPages.receipts.obs;
+  final searchTextController = TextEditingController();
+  final processingState = ReceiptProcessingState.noAction.obs;
 
   @override
   void onInit() {
     fetchData();
+    searchTextController.addListener(() {
+      searchQuery.value = searchTextController.text;
+    });
     super.onInit();
   }
 

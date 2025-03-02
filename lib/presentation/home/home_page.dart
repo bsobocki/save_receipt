@@ -9,7 +9,7 @@ import 'package:save_receipt/domain/entities/receipt.dart';
 import 'package:save_receipt/presentation/home/components/expandable_fab.dart';
 import 'package:save_receipt/presentation/home/components/loading_animation.dart';
 import 'package:save_receipt/presentation/home/components/home_page_navigation_bar.dart';
-import 'package:save_receipt/presentation/home/components/topbar.dart';
+import 'package:save_receipt/presentation/home/components/topbar/topbar.dart';
 import 'package:save_receipt/presentation/home/content/products/products.dart';
 import 'package:save_receipt/presentation/home/controller/home_page_controller.dart';
 import 'package:save_receipt/presentation/home/content/receipts/receipts.dart';
@@ -21,11 +21,12 @@ const String tipText =
     "Select an image from gallery or scan a new one\nto start processing.";
 
 class MyHomePage extends StatelessWidget {
+  final String title;
+
   MyHomePage({super.key, required this.title});
 
-  final String title;
-  final ThemeController themeController = Get.find();
-  final HomePageController pageController = Get.put(HomePageController());
+  final themeController = Get.find<ThemeController>();
+  final pageController = Get.put(HomePageController());
 
   Widget noContentTextInfo(bool dbExists) => Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -118,9 +119,8 @@ class MyHomePage extends StatelessWidget {
       () => Scaffold(
         appBar: HomepageTopbar(
           title: title,
+          searchTextController: pageController.searchTextController,
           onRefreshData: pageController.fetchData,
-          onSearchTextChanged: (String filter) =>
-              pageController.searchQuery.value = filter,
         ),
         body: _buildBody(),
         bottomNavigationBar: HomePageNavigationBar(
