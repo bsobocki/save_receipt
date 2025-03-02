@@ -17,10 +17,12 @@ class ExpandableFloatingActionButton extends StatefulWidget {
   final Future<void> Function() onDocumentScanning;
 
   @override
-  State<ExpandableFloatingActionButton> createState() => _ExpandableFloatingActionButtonState();
+  State<ExpandableFloatingActionButton> createState() =>
+      _ExpandableFloatingActionButtonState();
 }
 
-class _ExpandableFloatingActionButtonState extends State<ExpandableFloatingActionButton> {
+class _ExpandableFloatingActionButtonState
+    extends State<ExpandableFloatingActionButton> {
   final _expandableFabKey = GlobalKey<ExpandableFabState>();
 
   final ThemeController themeController = Get.find();
@@ -31,13 +33,37 @@ class _ExpandableFloatingActionButtonState extends State<ExpandableFloatingActio
     }
   }
 
+  Widget _buildOptionButton({
+    required String label,
+    required Function() onPressed,
+    required Widget icon,
+  }) =>
+      Column(
+        children: [
+          FloatingActionButton.small(
+            heroTag: null,
+            backgroundColor: themeController.theme.mainColor,
+            onPressed: () async {
+              toggleFloatingActionButton();
+              await onPressed();
+            },
+            shape: const CircleBorder(),
+            child: icon,
+          ),
+          Text(
+            label,
+            style: TextStyle(
+              color: themeController.theme.mainColor,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ],
+      );
+
   @override
   Widget build(BuildContext context) {
-    TextStyle buttonLabelsTextStyle = TextStyle(
-        color: themeController.theme.mainColor, fontWeight: FontWeight.w800);
     return ExpandableFab(
       key: _expandableFabKey,
-      // type: ExpandableFabType.fan,
       pos: ExpandableFabPos.right,
       distance: 120,
       fanAngle: 90,
@@ -60,65 +86,24 @@ class _ExpandableFloatingActionButtonState extends State<ExpandableFloatingActio
         shape: const CircleBorder(),
       ),
       children: [
-        Column(
-          children: [
-            FloatingActionButton.small(
-              heroTag: null,
-              backgroundColor: themeController.theme.mainColor,
-              onPressed: () async {
-                toggleFloatingActionButton();
-                await widget.onDocumentScanning();
-              },
-              shape: const CircleBorder(),
-              child: Image.asset(
-                'assets/googleScannerIcon.png',
-                height: 24,
-                width: 24,
-              ),
-            ),
-            Text(
-              "scan",
-              style: buttonLabelsTextStyle,
-            ),
-          ],
+        _buildOptionButton(
+          label: 'scan',
+          onPressed: widget.onDocumentScanning,
+          icon: Image.asset(
+            'assets/googleScannerIcon.png',
+            height: 24,
+            width: 24,
+          ),
         ),
-        Column(
-          children: [
-            FloatingActionButton.small(
-              backgroundColor: themeController.theme.mainColor,
-              heroTag: null,
-              onPressed: () async {
-                toggleFloatingActionButton();
-                await widget.onImageProcessing();
-              },
-              shape: const CircleBorder(),
-              child: const Icon(
-                Icons.drive_folder_upload,
-              ),
-            ),
-            Text(
-              "import",
-              style: buttonLabelsTextStyle,
-            ),
-          ],
+        _buildOptionButton(
+          label: 'import',
+          onPressed: widget.onImageProcessing,
+          icon: const Icon(Icons.drive_folder_upload),
         ),
-        Column(
-          children: [
-            FloatingActionButton.small(
-              heroTag: null,
-              backgroundColor: themeController.theme.mainColor,
-              onPressed: () async {
-                toggleFloatingActionButton();
-                widget.onNewReceiptAdding();
-              },
-              shape: const CircleBorder(),
-              child: const Icon(Icons.add),
-            ),
-            Text(
-              "create",
-              style: buttonLabelsTextStyle,
-            ),
-          ],
+        _buildOptionButton(
+          label: 'create',
+          onPressed: widget.onNewReceiptAdding,
+          icon: const Icon(Icons.add),
         ),
       ],
     );
