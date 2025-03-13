@@ -57,8 +57,7 @@ class ReceiptDataPage extends StatelessWidget {
                     ? DataFieldMode.edit
                     : DataFieldMode.normal,
             selected: controller.modelController.isProductSelected(index),
-            onSelected: () =>
-                controller.toggleObjectSelection(index),
+            onSelected: () => controller.toggleObjectSelection(index),
             onLongPress: controller.toggleSelectionMode,
           );
         },
@@ -99,8 +98,7 @@ class ReceiptDataPage extends StatelessWidget {
                     ? DataFieldMode.edit
                     : DataFieldMode.normal,
             selected: controller.modelController.isInfoSelected(index),
-            onSelected: () =>
-                controller.toggleObjectSelection(index),
+            onSelected: () => controller.toggleObjectSelection(index),
             onLongPress: controller.toggleSelectionMode,
           );
         },
@@ -122,7 +120,7 @@ class ReceiptDataPage extends StatelessWidget {
     );
   }
 
-  Widget topBar(BuildContext context) => ReceiptPageTopBar(
+  Widget _buildTopBar(BuildContext context) => ReceiptPageTopBar(
         key: UniqueKey(),
         dataChanged: controller.modelController.dataChanged,
         onImageIconPress: controller.openFullImageMode,
@@ -145,38 +143,48 @@ class ReceiptDataPage extends StatelessWidget {
         isFormatting: controller.isFormatting.value,
       );
 
-  get productsEditor => ReceiptDataEditor(
-        flex: controller.modelController.areProductsEdited.value ? 3 : 1,
-        title: controller.modelController.receiptTitle,
-        areProductsEdited: controller.modelController.areProductsEdited.value,
-        productsList: productsList,
-        infoList: infosList,
-        onProductsTabPressed: controller.setProductsEditing,
-        onInfoTabPressed: controller.setInfoEditing,
-        onAddObject: controller.addEmptyObject,
-        selectMode: controller.modelController.isSelectionModeEnabled.value,
-        selectModeOptions: [
-          SelectModeEditorOption(
-            label: 'To Info',
-            icon: Icons.info_outline,
-            onSelected: controller.changeSelectedProductsToInfo,
-          ),
-          SelectModeEditorOption(
-            label: 'To Value',
-            icon: Icons.transform,
-            onSelected: controller.changeSelectedProductsToValue,
-          ),
-          SelectModeEditorOption(
-            label: 'Remove',
-            icon: Icons.delete,
-            onSelected: controller.removeSelectedProducts,
-          ),
-        ],
-        onTitleChanged: (String newTitle) {
-          controller.modelController.receiptTitle = newTitle;
-          controller.modelController.trackChange();
-        },
-      );
+  Widget _buildObjectsEditor() {
+    SelectModeEditorOption changeObjectOption =
+        controller.modelController.areProductsEdited.value
+            ? SelectModeEditorOption(
+                label: 'To Info',
+                icon: Icons.info_outline,
+                onSelected: controller.changeSelectedProductsToInfo,
+              )
+            : SelectModeEditorOption(
+                label: 'To Products',
+                icon: Icons.price_change_outlined,
+                onSelected: controller.changeSelectedInfoToProducts,
+              );
+    return ReceiptDataEditor(
+      flex: controller.modelController.areProductsEdited.value ? 3 : 1,
+      title: controller.modelController.receiptTitle,
+      areProductsEdited: controller.modelController.areProductsEdited.value,
+      productsList: productsList,
+      infoList: infosList,
+      onProductsTabPressed: controller.setProductsEditing,
+      onInfoTabPressed: controller.setInfoEditing,
+      onAddObject: controller.addEmptyObject,
+      selectMode: controller.modelController.isSelectionModeEnabled.value,
+      selectModeOptions: [
+        changeObjectOption,
+        SelectModeEditorOption(
+          label: 'To Value',
+          icon: Icons.transform,
+          onSelected: controller.changeSelectedProductsToValue,
+        ),
+        SelectModeEditorOption(
+          label: 'Remove',
+          icon: Icons.delete,
+          onSelected: controller.removeSelectedProducts,
+        ),
+      ],
+      onTitleChanged: (String newTitle) {
+        controller.modelController.receiptTitle = newTitle;
+        controller.modelController.trackChange();
+      },
+    );
+  }
 
   Widget content(BuildContext context) => Center(
         child: Padding(
@@ -188,8 +196,8 @@ class ReceiptDataPage extends StatelessWidget {
           ),
           child: Column(
             children: [
-              topBar(context),
-              productsEditor,
+              _buildTopBar(context),
+              _buildObjectsEditor(),
             ],
           ),
         ),
