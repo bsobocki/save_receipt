@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:save_receipt/data/converters/data_converter.dart';
 import 'package:save_receipt/data/models/document.dart';
 import 'package:save_receipt/data/models/entities/info.dart';
@@ -11,25 +11,28 @@ import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
 import 'package:save_receipt/data/controller/values_controller.dart';
 
-class ReceiptModelController {
+class ReceiptModelController extends GetxController {
   int? _receiptId;
   String? _receiptImagePath;
-  late String receiptTitle;
   late AllReceiptValuesController _allValues;
-  final SplayTreeSet<int> _selectedObjectsIndexes =
-      SplayTreeSet((a, b) => b.compareTo(a));
-  final List<ReceiptObjectModel> _infos = [];
-  final List<ReceiptObjectModel> _products = [];
-  final List<ReceiptObjectModel> _time = [];
+
+  late String receiptTitle;
+  final dataChanged = false.obs;
+
+  final _selectedObjectsIndexes = SplayTreeSet<int>((a, b) => b.compareTo(a));
+  final _time = <ReceiptObjectModel>[];
+  final _infos = <ReceiptObjectModel>[];
+  final _products = <ReceiptObjectModel>[];
+
   final List<int> _deletedProductsIds = [];
   final List<int> _deletedInfoTextIds = [];
   final List<int> _deletedInfoTimeIds = [];
   final List<int> _deletedInfoDoubleIds = [];
   final List<int> _deletedInfoNumericIds = [];
-  final ValueNotifier<bool> _dataChangedNotifier = ValueNotifier<bool>(false);
-  bool _areProductsEdited = true;
-  bool _isSelectionModeEnabled = false;
-  int _editingObjectFieldIndex = -1;
+
+  RxBool areProductsEdited = true.obs;
+  RxBool isSelectionModeEnabled = false.obs;
+  RxInt editingObjectFieldIndex = (-1).obs;
 
   ReceiptModelController({
     required final ReceiptModel receipt,
@@ -47,11 +50,11 @@ class ReceiptModelController {
   }
 
   void trackChange() {
-    _dataChangedNotifier.value = true;
+    dataChanged.value = true;
   }
 
   void resetChangesTracking() {
-    _dataChangedNotifier.value = false;
+    dataChanged.value = false;
   }
 
   Future<void> saveReceipt() async {
@@ -108,7 +111,7 @@ class ReceiptModelController {
   }
 
   void addEmptyObject() {
-    if (_areProductsEdited) {
+    if (areProductsEdited.value) {
       _products.add(
         ReceiptObjectModel(
           type: ReceiptObjectModelType.product,
@@ -129,7 +132,7 @@ class ReceiptModelController {
 
   void removeObjectByIndex(int index) {
     if (objectIndexExists(index)) {
-      if (_editingObjectFieldIndex == index) {
+      if (editingObjectFieldIndex.value == index) {
         resetEditModeIndex();
       }
       removeObject(objectAt(index));
@@ -158,7 +161,7 @@ class ReceiptModelController {
           break;
       }
     }
-    if (_areProductsEdited) {
+    if (areProductsEdited.value) {
       _products.remove(object);
     } else {
       _infos.remove(object);
@@ -166,32 +169,33 @@ class ReceiptModelController {
     trackChange();
   }
 
-  void resetEditModeIndex() => _editingObjectFieldIndex = -1;
+  void resetEditModeIndex() => editingObjectFieldIndex.value = -1;
 
   void setProductsEditing() => setEditing(true);
   void setInfoEditing() => setEditing(false);
   void setEditing(bool editingForProducts) {
-    _areProductsEdited = editingForProducts;
+    areProductsEdited.value = editingForProducts;
     resetEditModeIndex();
     _selectedObjectsIndexes.clear();
   }
 
   void setEditModeForObject(int index) {
     if (objectIndexExists(index)) {
-      if (_editingObjectFieldIndex != index) {
-        _editingObjectFieldIndex = index;
+      if (editingObjectFieldIndex.value != index) {
+        editingObjectFieldIndex.value = index;
       } else {
         resetEditModeIndex();
       }
+      update();
     }
   }
 
   void setSelectionMode() {
-    _isSelectionModeEnabled = true;
+    isSelectionModeEnabled.value = true;
   }
 
   void toggleSelectionMode() {
-    _isSelectionModeEnabled = !_isSelectionModeEnabled;
+    isSelectionModeEnabled.value = !isSelectionModeEnabled.value;
     _selectedObjectsIndexes.clear();
   }
 
@@ -372,42 +376,39 @@ class ReceiptModelController {
   List<ReceiptObjectModel> get infos => _infos;
   List<ReceiptObjectModel> get times => _time;
   List<ReceiptObjectModel> get currentObjectList =>
-      _areProductsEdited ? _products : _infos;
+      areProductsEdited.value ? _products : _infos;
 
   ReceiptObjectModel? infoAt(int index) =>
       infoIndexExists(index) ? _infos[index] : null;
   ReceiptObjectModel? productAt(int index) =>
       productIndexExists(index) ? _products[index] : null;
   ReceiptObjectModel objectAt(int index) =>
-      _areProductsEdited ? _products[index] : _infos[index];
+      areProductsEdited.value ? _products[index] : _infos[index];
 
   List<ReceiptObjectModel> get selectedObjects => _selectedObjectsIndexes
       .where((index) => objectIndexExists(index))
       .map((index) => objectAt(index))
       .toList();
 
-  ValueNotifier<bool> get dataChangedNotifier => _dataChangedNotifier;
   bool productIndexExists(int index) => index >= 0 && index < _products.length;
   bool infoIndexExists(int index) => index >= 0 && index < _infos.length;
-  bool objectIndexExists(int index) =>
-      _areProductsEdited ? productIndexExists(index) : infoIndexExists(index);
+  bool objectIndexExists(int index) => areProductsEdited.value
+      ? productIndexExists(index)
+      : infoIndexExists(index);
   bool infoHasValue(int index) => _infos[index].value != null;
 
   bool get imgPathExists => imgPath != null;
-  bool get areProductsEdited => _areProductsEdited;
-  bool get dataChanged => _dataChangedNotifier.value;
-  bool get isSelectModeEnabled => _isSelectionModeEnabled;
 
   bool isObjectInEditMode(int index) =>
-      objectIndexExists(index) && index == _editingObjectFieldIndex;
+      objectIndexExists(index) && index == editingObjectFieldIndex.value;
   bool isProductInEditMode(int index) =>
-      _areProductsEdited && isObjectInEditMode(index);
+      areProductsEdited.value && isObjectInEditMode(index);
   bool isInfoInEditMode(int index) =>
-      !_areProductsEdited && isObjectInEditMode(index);
+      !areProductsEdited.value && isObjectInEditMode(index);
   bool isObjectSelected(int index) =>
       objectIndexExists(index) && _selectedObjectsIndexes.contains(index);
   bool isProductSelected(int index) =>
-      _areProductsEdited && isObjectSelected(index);
+      areProductsEdited.value && isObjectSelected(index);
   bool isInfoSelected(int index) =>
-      !_areProductsEdited && isObjectSelected(index);
+      !areProductsEdited.value && isObjectSelected(index);
 }

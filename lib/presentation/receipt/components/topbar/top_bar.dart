@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:save_receipt/core/settings/receipt_data_page.dart';
 import 'package:save_receipt/presentation/receipt/components/topbar/navigation_topbar.dart';
 import 'package:save_receipt/presentation/receipt/components/topbar/receipt_img_view.dart';
@@ -12,7 +13,7 @@ class ReceiptPageTopBar extends StatelessWidget {
   final Function() onSelectModeToggled;
   final VoidCallback onImageIconPress;
   final String? receiptImgPath;
-  final ValueNotifier<bool> dataChanged;
+  final RxBool dataChanged;
   final Future<bool> Function() onReturnAfterChanges;
   final bool selectMode;
   final ReceiptBarcodeData? barcodeData;

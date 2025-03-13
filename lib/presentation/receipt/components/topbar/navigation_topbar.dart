@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:save_receipt/core/settings/receipt_data_page.dart';
 import 'package:save_receipt/core/themes/styles/color.dart';
 
@@ -8,7 +10,7 @@ class NavigationTopbar extends StatelessWidget {
   final bool selectMode;
   final bool documentFormat;
   final Color mainColor;
-  final ValueNotifier<bool> dataChanged;
+  final RxBool dataChanged;
   final Future<bool> Function() onReturnAfterChanges;
   final Function() onSaveReceiptOptionPress;
   final Function() onDeleteReceiptOptionPress;
@@ -95,19 +97,17 @@ class NavigationTopbar extends StatelessWidget {
         child: const Icon(Icons.menu),
       );
 
-  Widget get returnButton => ValueListenableBuilder(
-      valueListenable: dataChanged,
-      builder: (context, dataChangedValue, child) {
+  Widget get returnButton => Obx(() {
         return IconButton(
           onPressed: () async {
             bool closePage = true;
-            if (dataChangedValue) {
+            if (dataChanged.value) {
               closePage = await onReturnAfterChanges();
             }
-            if (closePage && context.mounted) Navigator.pop(context);
+            if (closePage) Get.back();
           },
           icon: Badge(
-            isLabelVisible: dataChangedValue,
+            isLabelVisible: dataChanged.value,
             backgroundColor: mainColor.moved(80),
             child: const Icon(Icons.chevron_left_outlined),
           ),
