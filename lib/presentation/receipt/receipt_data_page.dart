@@ -7,6 +7,8 @@ import 'package:save_receipt/presentation/receipt/components/receipt_image_viewe
 import 'package:save_receipt/presentation/receipt/components/data_editor/data_editor.dart';
 import 'package:save_receipt/presentation/receipt/components/data_editor/data_editor_top_bar.dart';
 import 'package:save_receipt/presentation/receipt/components/topbar/top_bar.dart';
+import 'package:save_receipt/presentation/receipt/controller/adapters/products_list_controller_adapter.dart';
+import 'package:save_receipt/presentation/receipt/controller/interface/products_lists_controller_interface.dart';
 import 'package:save_receipt/presentation/receipt/controller/receipt_editor_page_controller.dart';
 import 'package:save_receipt/presentation/receipt/data_field/data_field.dart';
 import 'package:save_receipt/presentation/receipt/data_field/info_data_field.dart';
@@ -19,7 +21,8 @@ class ReceiptDataPage extends StatelessWidget {
   final ReceiptModel initialReceipt;
   final AllValuesModel? allValuesModel;
   final ReceiptBarcodeData? barcodeData;
-  final ReceiptEditorPageController controller;
+  late final ReceiptEditorPageController controller;
+  late final ProductsListController productsListController;
 
   final themeController = Get.find<ThemeController>();
   final _productListKey = UniqueKey();
@@ -30,35 +33,34 @@ class ReceiptDataPage extends StatelessWidget {
     this.allValuesModel,
     this.barcodeData,
     super.key,
-  }) : controller = Get.put(ReceiptEditorPageController(
-            receipt: initialReceipt, allValuesModel: allValuesModel));
+  }) {
+    controller = Get.put(ReceiptEditorPageController(
+        receipt: initialReceipt, allValuesModel: allValuesModel));
+    productsListController =
+        ProductsListControllerAdapter(controller: controller);
+  }
 
   Widget get productsList {
     return GetBuilder<ReceiptEditorPageController>(
       builder: (controller) => ListView.builder(
         key: _productListKey,
-        itemCount: controller.modelController.products.length,
+        itemCount: productsListController.products.length,
         controller: controller.productsScrollController,
         itemBuilder: (context, index) {
-          controller.modelController.editingObjectFieldIndex.value;
           return ProductDataField(
             key: UniqueKey(),
-            onChangedData: controller.modelController.trackChange,
-            model: controller.modelController.productAt(index)!,
-            allValuesData: controller.modelController.allValuesModel,
+            onChangedData: productsListController.trackChange,
+            model: productsListController.products[index],
+            allValuesData: productsListController.allValuesData,
             isDarker: (index % 2 == 0),
-            onItemDismissSwipe: () => controller.removeObjectByIndex(index),
-            onItemEditModeSwipe: () => controller.setEditModeForObject(index),
-            onChangedToValue: () => controller.changeProductToValue(index),
-            onChangedToInfo: () => controller.changeProductToInfo(index),
-            mode: controller.modelController.isSelectionModeEnabled.value
-                ? DataFieldMode.select
-                : controller.modelController.isProductInEditMode(index)
-                    ? DataFieldMode.edit
-                    : DataFieldMode.normal,
-            selected: controller.modelController.isProductSelected(index),
-            onSelected: () => controller.toggleObjectSelection(index),
-            onLongPress: controller.toggleSelectionMode,
+            onItemDismissSwipe: () => productsListController.remove(index),
+            onItemEditModeSwipe: () => productsListController.setEditModeOf(index),
+            onChangedToValue: () => productsListController.changeToValue(index),
+            onChangedToInfo: () => productsListController.changeToInfo(index),
+            mode: productsListController.dataFieldModeOf(index),
+            selected: productsListController.isSelected(index),
+            onSelected: () => productsListController.toggleSelectionOf(index),
+            onLongPress: productsListController.toggleSelectionMode,
           );
         },
       ),
