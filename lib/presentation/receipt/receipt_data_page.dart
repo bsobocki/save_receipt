@@ -7,7 +7,7 @@ import 'package:save_receipt/presentation/receipt/components/data_editor/compone
 import 'package:save_receipt/presentation/receipt/components/data_editor/components/products_editor_list.dart';
 import 'package:save_receipt/presentation/receipt/components/receipt_image_viewer.dart';
 import 'package:save_receipt/presentation/receipt/components/data_editor/data_editor.dart';
-import 'package:save_receipt/presentation/receipt/components/data_editor/data_editor_top_bar.dart';
+import 'package:save_receipt/presentation/receipt/components/data_editor/components/data_editor_top_bar.dart';
 import 'package:save_receipt/presentation/receipt/components/topbar/top_bar.dart';
 import 'package:save_receipt/presentation/receipt/controller/adapters/info_editor_list_controller_adapter.dart';
 import 'package:save_receipt/presentation/receipt/controller/adapters/products_editor_list_controller_adapter.dart';
