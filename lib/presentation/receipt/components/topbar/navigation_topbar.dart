@@ -1,42 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:save_receipt/core/settings/receipt_data_page.dart';
 import 'package:save_receipt/core/themes/styles/color.dart';
 
-enum MenuOption { save, delete, selectMode, documentFormat }
+enum MenuOption { save, delete, selectionMode, documentFormat }
 
 class NavigationTopbar extends StatelessWidget {
-  final bool selectMode;
+  final bool selectionMode;
   final bool documentFormat;
   final Color mainColor;
   final RxBool dataChanged;
   final Future<bool> Function() onReturnAfterChanges;
   final Function() onSaveReceiptOptionPress;
   final Function() onDeleteReceiptOptionPress;
-  final Function() onSelectModeToggled;
+  final Function() onSelectionModeToggled;
   final Function() onDocumentFormattingOptionPress;
 
   const NavigationTopbar({
     super.key,
-    required this.selectMode,
+    required this.selectionMode,
     required this.documentFormat,
     required this.mainColor,
     required this.dataChanged,
     required this.onReturnAfterChanges,
     required this.onSaveReceiptOptionPress,
     required this.onDeleteReceiptOptionPress,
-    required this.onSelectModeToggled,
+    required this.onSelectionModeToggled,
     required this.onDocumentFormattingOptionPress,
   });
 
-  String getMenuLabel(MenuOption option, {bool selectMode = false}) =>
+  String getMenuLabel(MenuOption option, {bool selectionMode = false}) =>
       switch (option) {
         MenuOption.save => 'save receipt',
         MenuOption.delete => 'delete receipt',
         MenuOption.documentFormat => 'documentFormat',
-        MenuOption.selectMode =>
-          selectMode ? 'cancel selection' : 'select items'
+        MenuOption.selectionMode =>
+          selectionMode ? 'cancel selection' : 'select items'
       };
 
   IconData getIconByOption(MenuOption text) {
@@ -45,7 +44,7 @@ class NavigationTopbar extends StatelessWidget {
         return Icons.save;
       case MenuOption.delete:
         return Icons.delete_rounded;
-      case MenuOption.selectMode:
+      case MenuOption.selectionMode:
         return Icons.select_all;
       case MenuOption.documentFormat:
         return documentFormat
@@ -64,7 +63,7 @@ class NavigationTopbar extends StatelessWidget {
             Icon(getIconByOption(option), color: Colors.white),
             const SizedBox(width: 8),
             Text(
-              getMenuLabel(option, selectMode: selectMode),
+              getMenuLabel(option, selectionMode: selectionMode),
               style: const TextStyle(color: Colors.white),
             ),
           ],
@@ -81,8 +80,8 @@ class NavigationTopbar extends StatelessWidget {
             case MenuOption.delete:
               onDeleteReceiptOptionPress();
               break;
-            case MenuOption.selectMode:
-              onSelectModeToggled();
+            case MenuOption.selectionMode:
+              onSelectionModeToggled();
               break;
             case MenuOption.documentFormat:
               onDocumentFormattingOptionPress();

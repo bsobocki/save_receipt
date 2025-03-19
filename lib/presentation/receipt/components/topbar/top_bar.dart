@@ -10,12 +10,12 @@ import 'package:save_receipt/services/document/scan/google_barcode_scan.dart';
 class ReceiptPageTopBar extends StatelessWidget {
   final Function() onSaveReceiptOptionPress;
   final Function() onDeleteReceiptOptionPress;
-  final Function() onSelectModeToggled;
+  final Function() onSelectionModeToggled;
   final VoidCallback onImageIconPress;
   final String? receiptImgPath;
   final RxBool dataChanged;
   final Future<bool> Function() onReturnAfterChanges;
-  final bool selectMode;
+  final bool selectionMode;
   final ReceiptBarcodeData? barcodeData;
   final VoidCallback onDocumentFormattingOptionPress;
   final bool documentFormat;
@@ -32,8 +32,8 @@ class ReceiptPageTopBar extends StatelessWidget {
     required this.onDeleteReceiptOptionPress,
     required this.dataChanged,
     required this.onReturnAfterChanges,
-    required this.onSelectModeToggled,
-    required this.selectMode,
+    required this.onSelectionModeToggled,
+    required this.selectionMode,
     this.barcodeData,
     required this.onDocumentFormattingOptionPress,
     required this.documentFormat,
@@ -42,9 +42,6 @@ class ReceiptPageTopBar extends StatelessWidget {
     required this.mainColor,
     required this.isFormatting,
   });
-
-  Widget expandedPlaceholder({int flex = 1}) =>
-      Expanded(flex: flex, child: Container());
 
   Widget get emptyVerticalSpace =>
       const SizedBox(height: ReceiptEditorSettings.topBarSpaceHeight);
@@ -55,15 +52,16 @@ class ReceiptPageTopBar extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         NavigationTopbar(
-            selectMode: selectMode,
-            documentFormat: documentFormat,
-            mainColor: mainColor,
-            dataChanged: dataChanged,
-            onReturnAfterChanges: onReturnAfterChanges,
-            onSaveReceiptOptionPress: onSaveReceiptOptionPress,
-            onDeleteReceiptOptionPress: onDeleteReceiptOptionPress,
-            onSelectModeToggled: onSelectModeToggled,
-            onDocumentFormattingOptionPress: onDocumentFormattingOptionPress),
+          selectionMode: selectionMode,
+          documentFormat: documentFormat,
+          mainColor: mainColor,
+          dataChanged: dataChanged,
+          onReturnAfterChanges: onReturnAfterChanges,
+          onSaveReceiptOptionPress: onSaveReceiptOptionPress,
+          onDeleteReceiptOptionPress: onDeleteReceiptOptionPress,
+          onSelectionModeToggled: onSelectionModeToggled,
+          onDocumentFormattingOptionPress: onDocumentFormattingOptionPress,
+        ),
         emptyVerticalSpace,
         ReceiptImageView(
           mainColor: mainColor,

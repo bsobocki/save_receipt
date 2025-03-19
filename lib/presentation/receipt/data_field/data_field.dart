@@ -12,7 +12,7 @@ class DataField extends StatefulWidget {
   final DataFieldMode mode;
   final Widget editModeContent;
   final Widget normalModeContent;
-  final Widget selectModeContent;
+  final Widget selectionModeContent;
   final ReceiptObjectModel model;
   final AllValuesModel allValuesData;
   final Function() onItemDismissSwipe;
@@ -29,7 +29,7 @@ class DataField extends StatefulWidget {
     required this.onItemEditModeSwipe,
     required this.editModeContent,
     required this.normalModeContent,
-    required this.selectModeContent,
+    required this.selectionModeContent,
     this.onItemSwipe,
   });
 
@@ -69,7 +69,7 @@ class _DataFieldState extends State<DataField> {
       case DataFieldMode.edit:
         return widget.editModeContent;
       case DataFieldMode.select:
-        return widget.selectModeContent;
+        return widget.selectionModeContent;
       default:
         return widget.normalModeContent;
     }

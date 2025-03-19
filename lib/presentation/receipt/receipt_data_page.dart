@@ -76,8 +76,8 @@ class ReceiptDataPage extends StatelessWidget {
         onReturnAfterChanges: controller.handleReturnAfterChanges,
         onSaveReceiptOptionPress: controller.modelController.saveReceipt,
         onDeleteReceiptOptionPress: controller.deleteReceipt,
-        onSelectModeToggled: controller.toggleSelectionMode,
-        selectMode: controller.modelController.isSelectionModeEnabled.value,
+        onSelectionModeToggled: controller.toggleSelectionMode,
+        selectionMode: controller.modelController.isSelectionModeEnabled.value,
         barcodeData: barcodeData,
         onDocumentFormattingOptionPress: controller.handleDocumentFormatting,
         documentFormat: controller.documentFormat.value,
@@ -92,14 +92,14 @@ class ReceiptDataPage extends StatelessWidget {
       );
 
   Widget _buildObjectsEditor() {
-    SelectModeEditorOption changeObjectOption =
+    SelectionModeEditorOption changeObjectOption =
         controller.modelController.areProductsEdited.value
-            ? SelectModeEditorOption(
+            ? SelectionModeEditorOption(
                 label: 'To Info',
                 icon: Icons.info_outline,
                 onSelected: controller.changeSelectedProductsToInfo,
               )
-            : SelectModeEditorOption(
+            : SelectionModeEditorOption(
                 label: 'To Products',
                 icon: Icons.price_change_outlined,
                 onSelected: controller.changeSelectedInfoToProducts,
@@ -113,15 +113,15 @@ class ReceiptDataPage extends StatelessWidget {
       onProductsTabPressed: controller.setProductsEditing,
       onInfoTabPressed: controller.setInfoEditing,
       onAddObject: controller.addEmptyObject,
-      selectMode: controller.modelController.isSelectionModeEnabled.value,
-      selectModeOptions: [
+      selectionMode: controller.modelController.isSelectionModeEnabled.value,
+      selectionModeOptions: [
         changeObjectOption,
-        SelectModeEditorOption(
+        SelectionModeEditorOption(
           label: 'To Value',
           icon: Icons.transform,
           onSelected: controller.changeSelectedProductsToValue,
         ),
-        SelectModeEditorOption(
+        SelectionModeEditorOption(
           label: 'Remove',
           icon: Icons.delete,
           onSelected: controller.removeSelectedProducts,

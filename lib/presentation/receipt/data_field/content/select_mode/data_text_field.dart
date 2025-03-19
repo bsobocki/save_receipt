@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class SelectModeDataTextField extends StatelessWidget {
+class SelectionModeDataTextField extends StatelessWidget {
   final String text;
   final Color? textColor;
   final TextAlign? textAlign;
   final FontWeight? fontWeight;
   final double? fontSize;
 
-  const SelectModeDataTextField({
+  const SelectionModeDataTextField({
     super.key,
     required this.text,
     this.textAlign,

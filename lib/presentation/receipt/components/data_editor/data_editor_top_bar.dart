@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class SelectModeEditorOption {
+class SelectionModeEditorOption {
   final String label;
   final IconData icon;
   final VoidCallback onSelected;
 
-  SelectModeEditorOption({
+  SelectionModeEditorOption({
     required this.label,
     required this.icon,
     required this.onSelected,
@@ -16,8 +16,8 @@ class DataEditorTopBar extends StatelessWidget {
   final VoidCallback onResized;
   final VoidCallback onAddObject;
   final Color background;
-  final List<SelectModeEditorOption> selectModeOptions;
-  final bool selectMode;
+  final List<SelectionModeEditorOption> selectionModeOptions;
+  final bool selectionMode;
   final TextEditingController titleEditingController;
   final Function(String) onTitleChanged;
 
@@ -26,20 +26,20 @@ class DataEditorTopBar extends StatelessWidget {
     required this.onResized,
     required this.background,
     required this.onAddObject,
-    required this.selectModeOptions,
-    required this.selectMode,
+    required this.selectionModeOptions,
+    required this.selectionMode,
     required this.titleEditingController,
     required this.onTitleChanged,
   });
 
   get popupMenu => Padding(
         padding: const EdgeInsets.all(12.0),
-        child: PopupMenuButton<SelectModeEditorOption>(
+        child: PopupMenuButton<SelectionModeEditorOption>(
           color: background,
-          onSelected: (SelectModeEditorOption value) => value.onSelected(),
-          itemBuilder: (context) => selectModeOptions
+          onSelected: (SelectionModeEditorOption value) => value.onSelected(),
+          itemBuilder: (context) => selectionModeOptions
               .map(
-                (option) => PopupMenuItem<SelectModeEditorOption>(
+                (option) => PopupMenuItem<SelectionModeEditorOption>(
                   value: option,
                   child: Row(
                     children: [
@@ -90,7 +90,7 @@ class DataEditorTopBar extends StatelessWidget {
       child: Row(
         children: [
           titleEditor,
-          if (selectMode) popupMenu else addObjectButton,
+          if (selectionMode) popupMenu else addObjectButton,
         ],
       ),
     );

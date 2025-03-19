@@ -83,7 +83,7 @@ class _InfoDataFieldState extends State<InfoDataField> {
     super.dispose();
   }
 
-  Widget get selectModeContent {
+  Widget get selectionModeContent {
     double opacity = widget.isDarker ? 0.06 : 0.0;
     Color foregroundColor = Colors.black;
     if (widget.selected) {
@@ -98,13 +98,13 @@ class _InfoDataFieldState extends State<InfoDataField> {
         color: themeController.theme.mainColor.withOpacity(opacity),
         child: Column(
           children: [
-            SelectModeDataTextField(
+            SelectionModeDataTextField(
               text: widget.model.text,
               textColor: foregroundColor,
               fontWeight: FontWeight.w600,
             ),
             if (widget.model.value != null)
-              SelectModeDataTextField(
+              SelectionModeDataTextField(
                 text: widget.model.value!,
                 textAlign: TextAlign.right,
                 textColor: foregroundColor,
@@ -180,7 +180,7 @@ class _InfoDataFieldState extends State<InfoDataField> {
       onItemEditModeSwipe: widget.onItemEditModeSwipe,
       editModeContent: editModeContent,
       normalModeContent: normalModeContent,
-      selectModeContent: selectModeContent,
+      selectionModeContent: selectionModeContent,
     );
   }
 }

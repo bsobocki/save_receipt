@@ -9,28 +9,28 @@ class ReceiptDataEditor extends StatefulWidget {
   final int flex;
   final String title;
   final bool areProductsEdited;
-  final bool selectMode;
+  final bool selectionMode;
   final Widget infoList;
   final Widget productsList;
   final VoidCallback onAddObject;
   final VoidCallback onInfoTabPressed;
   final VoidCallback onProductsTabPressed;
   final Function(String) onTitleChanged;
-  final List<SelectModeEditorOption> selectModeOptions;
+  final List<SelectionModeEditorOption> selectionModeOptions;
 
   const ReceiptDataEditor({
     super.key,
     required this.flex,
     required this.title,
     required this.areProductsEdited,
-    required this.selectMode,
+    required this.selectionMode,
     required this.infoList,
     required this.onAddObject,
     required this.productsList,
     required this.onInfoTabPressed,
     required this.onProductsTabPressed,
     required this.onTitleChanged,
-    required this.selectModeOptions,
+    required this.selectionModeOptions,
   });
 
   @override
@@ -65,8 +65,8 @@ class _ReceiptDataEditorState extends State<ReceiptDataEditor> {
         onResized: widget.onProductsTabPressed,
         background: themeController.theme.mainColor,
         onAddObject: widget.onAddObject,
-        selectModeOptions: widget.selectModeOptions,
-        selectMode: widget.selectMode,
+        selectionModeOptions: widget.selectionModeOptions,
+        selectionMode: widget.selectionMode,
         titleEditingController: titleEditingController,
         onTitleChanged: widget.onTitleChanged,
       );
