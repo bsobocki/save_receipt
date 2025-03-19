@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:save_receipt/core/settings/receipt_data_page.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/domain/entities/all_values.dart';
+import 'package:save_receipt/presentation/receipt/components/data_editor/components/products_list.dart';
 import 'package:save_receipt/presentation/receipt/components/receipt_image_viewer.dart';
 import 'package:save_receipt/presentation/receipt/components/data_editor/data_editor.dart';
 import 'package:save_receipt/presentation/receipt/components/data_editor/data_editor_top_bar.dart';
@@ -13,7 +14,6 @@ import 'package:save_receipt/presentation/receipt/controller/receipt_editor_page
 import 'package:save_receipt/presentation/receipt/data_field/data_field.dart';
 import 'package:save_receipt/presentation/receipt/data_field/info_data_field.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
-import 'package:save_receipt/presentation/receipt/data_field/product_data_field.dart';
 import 'package:save_receipt/services/document/scan/google_barcode_scan.dart';
 
 class ReceiptDataPage extends StatelessWidget {
@@ -40,34 +40,12 @@ class ReceiptDataPage extends StatelessWidget {
         ProductsListControllerAdapter(controller: controller);
   }
 
-  Widget get productsList {
-    return GetBuilder<ReceiptEditorPageController>(
-      builder: (controller) => ListView.builder(
+  Widget get productsList => ProductsListWidget(
         key: _productListKey,
-        itemCount: productsListController.products.length,
-        controller: controller.productsScrollController,
-        itemBuilder: (context, index) {
-          return ProductDataField(
-            key: UniqueKey(),
-            onChangedData: productsListController.trackChange,
-            model: productsListController.products[index],
-            allValuesData: productsListController.allValuesData,
-            isDarker: (index % 2 == 0),
-            onItemDismissSwipe: () => productsListController.remove(index),
-            onItemEditModeSwipe: () => productsListController.setEditModeOf(index),
-            onChangedToValue: () => productsListController.changeToValue(index),
-            onChangedToInfo: () => productsListController.changeToInfo(index),
-            mode: productsListController.dataFieldModeOf(index),
-            selected: productsListController.isSelected(index),
-            onSelected: () => productsListController.toggleSelectionOf(index),
-            onLongPress: productsListController.toggleSelectionMode,
-          );
-        },
-      ),
-    );
-  }
+        controller: productsListController,
+      );
 
-  get infosList {
+  Widget get infosList {
     return GetBuilder<ReceiptEditorPageController>(
       builder: (controller) => ListView.builder(
         key: _infoListKey,

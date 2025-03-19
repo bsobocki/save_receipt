@@ -1,3 +1,4 @@
+import 'package:flutter/src/widgets/scroll_controller.dart';
 import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/domain/entities/receipt_object.dart';
 import 'package:save_receipt/presentation/receipt/controller/interface/products_lists_controller_interface.dart';
@@ -47,4 +48,7 @@ class ProductsListControllerAdapter implements ProductsListController {
 
   @override
   void trackChange() => controller.modelController.trackChange();
+
+  @override
+  ScrollController get scrollController => controller.productsScrollController;
 }
