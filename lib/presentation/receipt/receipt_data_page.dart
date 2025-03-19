@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:save_receipt/core/settings/receipt_data_page.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/domain/entities/all_values.dart';
-import 'package:save_receipt/presentation/receipt/components/data_editor/components/products_list.dart';
+import 'package:save_receipt/presentation/receipt/components/data_editor/components/products_editor_list.dart';
 import 'package:save_receipt/presentation/receipt/components/receipt_image_viewer.dart';
 import 'package:save_receipt/presentation/receipt/components/data_editor/data_editor.dart';
 import 'package:save_receipt/presentation/receipt/components/data_editor/data_editor_top_bar.dart';
