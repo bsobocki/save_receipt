@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
-import 'package:save_receipt/presentation/receipt/controller/interface/products_editor_lists_controller_interface.dart';
+import 'package:save_receipt/presentation/receipt/controller/interface/products_editor_list_controller.dart';
 import 'package:save_receipt/presentation/receipt/controller/receipt_editor_page_controller.dart';
 import 'package:save_receipt/presentation/receipt/data_field/product_data_field.dart';
 
@@ -16,13 +16,13 @@ class ProductsEditorList extends StatelessWidget {
     return GetBuilder<ReceiptEditorPageController>(
       builder: (_) => ListView.builder(
         key: key,
-        itemCount: controller.products.length,
+        itemCount: controller.objects.length,
         controller: controller.scrollController,
         itemBuilder: (context, index) {
           return ProductDataField(
             key: UniqueKey(),
             onChangedData: controller.trackChange,
-            model: controller.products[index],
+            model: controller.objects[index],
             allValuesData: controller.allValuesData,
             isDarker: (index % 2 == 0),
             onItemDismissSwipe: () => controller.remove(index),

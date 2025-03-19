@@ -8,10 +8,11 @@ import 'package:save_receipt/presentation/receipt/components/receipt_image_viewe
 import 'package:save_receipt/presentation/receipt/components/data_editor/data_editor.dart';
 import 'package:save_receipt/presentation/receipt/components/data_editor/data_editor_top_bar.dart';
 import 'package:save_receipt/presentation/receipt/components/topbar/top_bar.dart';
-import 'package:save_receipt/presentation/receipt/controller/adapters/products_list_controller_adapter.dart';
-import 'package:save_receipt/presentation/receipt/controller/interface/products_editor_lists_controller_interface.dart';
+import 'package:save_receipt/presentation/receipt/controller/adapters/info_editor_list_controller_adapter.dart';
+import 'package:save_receipt/presentation/receipt/controller/adapters/products_editor_list_controller_adapter.dart';
+import 'package:save_receipt/presentation/receipt/controller/interface/info_editor_list_controller.dart';
+import 'package:save_receipt/presentation/receipt/controller/interface/products_editor_list_controller.dart';
 import 'package:save_receipt/presentation/receipt/controller/receipt_editor_page_controller.dart';
-import 'package:save_receipt/presentation/receipt/data_field/data_field.dart';
 import 'package:save_receipt/presentation/receipt/data_field/info_data_field.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
 import 'package:save_receipt/services/document/scan/google_barcode_scan.dart';
@@ -23,6 +24,7 @@ class ReceiptDataPage extends StatelessWidget {
   final ReceiptBarcodeData? barcodeData;
   late final ReceiptEditorPageController controller;
   late final ProductsEditorListController productsListController;
+  late final InfoEditorListController infoListController;
 
   final themeController = Get.find<ThemeController>();
   final _productListKey = UniqueKey();
@@ -38,6 +40,8 @@ class ReceiptDataPage extends StatelessWidget {
         receipt: initialReceipt, allValuesModel: allValuesModel));
     productsListController =
         ProductsEditorListControllerAdapter(controller: controller);
+    infoListController =
+        InfoEditorListControllerAdapter(controller: controller);
   }
 
   Widget get productsList => ProductsEditorList(
@@ -49,37 +53,31 @@ class ReceiptDataPage extends StatelessWidget {
     return GetBuilder<ReceiptEditorPageController>(
       builder: (controller) => ListView.builder(
         key: _infoListKey,
-        itemCount: controller.modelController.infos.length,
-        controller: controller.infoScrollController,
+        itemCount: infoListController.objects.length,
+        controller: infoListController.scrollController,
         itemBuilder: (context, index) {
-          ReceiptObjectModelType type =
-              controller.modelController.infoAt(index)!.type;
           VoidCallback? onChangedToProduct;
-          if (type == ReceiptObjectModelType.infoDouble) {
+          if (infoListController.isInfoDouble(index)) {
             onChangedToProduct =
                 () => controller.changeInfoDoubleToProduct(index);
           }
           return InfoDataField(
             key: UniqueKey(),
-            onChangedData: controller.modelController.trackChange,
-            model: controller.modelController.infoAt(index)!,
-            allValuesData: controller.modelController.allValuesModel,
+            onChangedData: infoListController.trackChange,
+            model: infoListController.objects[index],
+            allValuesData: infoListController.allValuesData,
             isDarker: (index % 2 == 0),
-            onItemDismissSwipe: () => controller.removeObjectByIndex(index),
-            onItemEditModeSwipe: () => controller.setEditModeForObject(index),
-            onChangedToValue: () => controller.changeInfoToValue(index),
-            onValueToFieldChanged: () => controller.changeValueToInfo(index),
+            onItemDismissSwipe: () => infoListController.remove(index),
+            onItemEditModeSwipe: () => infoListController.setEditModeOf(index),
+            onChangedToValue: () => infoListController.changeToValue(index),
+            onValueToFieldChanged: () => infoListController.createFromValueOf(index),
             onValueTypeChanged: (ReceiptObjectModelType type) =>
-                controller.changeInfoValueType(type, index),
+                infoListController.changeValueType(index, type),
             onChangedToProduct: onChangedToProduct,
-            mode: controller.modelController.isSelectionModeEnabled.value
-                ? DataFieldMode.select
-                : controller.modelController.isInfoInEditMode(index)
-                    ? DataFieldMode.edit
-                    : DataFieldMode.normal,
-            selected: controller.modelController.isInfoSelected(index),
-            onSelected: () => controller.toggleObjectSelection(index),
-            onLongPress: controller.toggleSelectionMode,
+            mode: infoListController.dataFieldModeOf(index),
+            selected: infoListController.isSelected(index),
+            onSelected: () => infoListController.toggleSelectionOf(index),
+            onLongPress: infoListController.toggleSelectionMode,
           );
         },
       ),
