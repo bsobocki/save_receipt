@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:save_receipt/core/settings/receipt_data_page.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/domain/entities/all_values.dart';
+import 'package:save_receipt/presentation/receipt/components/data_editor/components/info_editor_list.dart';
 import 'package:save_receipt/presentation/receipt/components/data_editor/components/products_editor_list.dart';
 import 'package:save_receipt/presentation/receipt/components/receipt_image_viewer.dart';
 import 'package:save_receipt/presentation/receipt/components/data_editor/data_editor.dart';
@@ -13,7 +14,6 @@ import 'package:save_receipt/presentation/receipt/controller/adapters/products_e
 import 'package:save_receipt/presentation/receipt/controller/interface/info_editor_list_controller.dart';
 import 'package:save_receipt/presentation/receipt/controller/interface/products_editor_list_controller.dart';
 import 'package:save_receipt/presentation/receipt/controller/receipt_editor_page_controller.dart';
-import 'package:save_receipt/presentation/receipt/data_field/info_data_field.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
 import 'package:save_receipt/services/document/scan/google_barcode_scan.dart';
 
@@ -49,40 +49,10 @@ class ReceiptDataPage extends StatelessWidget {
         controller: productsListController,
       );
 
-  Widget get infosList {
-    return GetBuilder<ReceiptEditorPageController>(
-      builder: (controller) => ListView.builder(
+  Widget get infosList => InfoEditorList(
         key: _infoListKey,
-        itemCount: infoListController.objects.length,
-        controller: infoListController.scrollController,
-        itemBuilder: (context, index) {
-          VoidCallback? onChangedToProduct;
-          if (infoListController.isInfoDouble(index)) {
-            onChangedToProduct =
-                () => controller.changeInfoDoubleToProduct(index);
-          }
-          return InfoDataField(
-            key: UniqueKey(),
-            onChangedData: infoListController.trackChange,
-            model: infoListController.objects[index],
-            allValuesData: infoListController.allValuesData,
-            isDarker: (index % 2 == 0),
-            onItemDismissSwipe: () => infoListController.remove(index),
-            onItemEditModeSwipe: () => infoListController.setEditModeOf(index),
-            onChangedToValue: () => infoListController.changeToValue(index),
-            onValueToFieldChanged: () => infoListController.createFromValueOf(index),
-            onValueTypeChanged: (ReceiptObjectModelType type) =>
-                infoListController.changeValueType(index, type),
-            onChangedToProduct: onChangedToProduct,
-            mode: infoListController.dataFieldModeOf(index),
-            selected: infoListController.isSelected(index),
-            onSelected: () => infoListController.toggleSelectionOf(index),
-            onLongPress: infoListController.toggleSelectionMode,
-          );
-        },
-      ),
-    );
-  }
+        controller: infoListController,
+      );
 
   get background {
     return Column(
