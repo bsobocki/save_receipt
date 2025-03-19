@@ -9,7 +9,7 @@ import 'package:save_receipt/presentation/receipt/components/data_editor/data_ed
 import 'package:save_receipt/presentation/receipt/components/data_editor/data_editor_top_bar.dart';
 import 'package:save_receipt/presentation/receipt/components/topbar/top_bar.dart';
 import 'package:save_receipt/presentation/receipt/controller/adapters/products_list_controller_adapter.dart';
-import 'package:save_receipt/presentation/receipt/controller/interface/products_lists_controller_interface.dart';
+import 'package:save_receipt/presentation/receipt/controller/interface/products_editor_lists_controller_interface.dart';
 import 'package:save_receipt/presentation/receipt/controller/receipt_editor_page_controller.dart';
 import 'package:save_receipt/presentation/receipt/data_field/data_field.dart';
 import 'package:save_receipt/presentation/receipt/data_field/info_data_field.dart';
@@ -22,7 +22,7 @@ class ReceiptDataPage extends StatelessWidget {
   final AllValuesModel? allValuesModel;
   final ReceiptBarcodeData? barcodeData;
   late final ReceiptEditorPageController controller;
-  late final ProductsListController productsListController;
+  late final ProductsEditorListController productsListController;
 
   final themeController = Get.find<ThemeController>();
   final _productListKey = UniqueKey();
@@ -37,10 +37,10 @@ class ReceiptDataPage extends StatelessWidget {
     controller = Get.put(ReceiptEditorPageController(
         receipt: initialReceipt, allValuesModel: allValuesModel));
     productsListController =
-        ProductsListControllerAdapter(controller: controller);
+        ProductsEditorListControllerAdapter(controller: controller);
   }
 
-  Widget get productsList => ProductsListWidget(
+  Widget get productsList => ProductsEditorList(
         key: _productListKey,
         controller: productsListController,
       );

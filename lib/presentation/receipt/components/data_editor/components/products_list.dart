@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
-import 'package:save_receipt/presentation/receipt/controller/interface/products_lists_controller_interface.dart';
+import 'package:save_receipt/presentation/receipt/controller/interface/products_editor_lists_controller_interface.dart';
 import 'package:save_receipt/presentation/receipt/controller/receipt_editor_page_controller.dart';
 import 'package:save_receipt/presentation/receipt/data_field/product_data_field.dart';
 
-class ProductsListWidget extends StatelessWidget {
-  final ProductsListController controller;
-  const ProductsListWidget({
+class ProductsEditorList extends StatelessWidget {
+  final ProductsEditorListController controller;
+  const ProductsEditorList({
     required super.key,
     required this.controller,
   });

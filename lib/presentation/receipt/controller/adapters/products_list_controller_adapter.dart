@@ -1,14 +1,15 @@
-import 'package:flutter/src/widgets/scroll_controller.dart';
+import 'package:flutter/material.dart';
 import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/domain/entities/receipt_object.dart';
-import 'package:save_receipt/presentation/receipt/controller/interface/products_lists_controller_interface.dart';
+import 'package:save_receipt/presentation/receipt/controller/interface/products_editor_lists_controller_interface.dart';
 import 'package:save_receipt/presentation/receipt/controller/receipt_editor_page_controller.dart';
 import 'package:save_receipt/presentation/receipt/data_field/data_field.dart';
 
-class ProductsListControllerAdapter implements ProductsListController {
+class ProductsEditorListControllerAdapter
+    implements ProductsEditorListController {
   final ReceiptEditorPageController controller;
 
-  ProductsListControllerAdapter({required this.controller});
+  ProductsEditorListControllerAdapter({required this.controller});
 
   @override
   List<ReceiptObjectModel> get products => controller.modelController.products;
