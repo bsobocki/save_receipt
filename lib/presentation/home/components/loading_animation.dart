@@ -2,19 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
-
-enum ReceiptProcessingState {
-  noAction,
-  browse,
-  opening,
-  processing,
-  imageChoosing,
-  barcodeExtracting,
-  documentFormatting,
-  ready,
-  fetchingData,
-  error
-}
+import 'package:save_receipt/presentation/home/shared/enum.dart';
 
 class LoadingAnimation extends StatelessWidget {
   final ReceiptProcessingState processingState;

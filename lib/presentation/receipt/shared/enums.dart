@@ -1,0 +1,1 @@
+enum DataFieldMode { normal, edit, select }

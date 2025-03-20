@@ -3,7 +3,7 @@ import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/domain/entities/receipt_object.dart';
 import 'package:save_receipt/presentation/receipt/controller/interface/objects_editor_list_controller.dart';
 import 'package:save_receipt/presentation/receipt/controller/receipt_editor_page_controller.dart';
-import 'package:save_receipt/presentation/receipt/data_field/data_field.dart';
+import 'package:save_receipt/presentation/receipt/shared/enums.dart';
 
 abstract class ObjectsEditorListControllerAdapter
     implements ObjectsEditorListController {

@@ -1,16 +1,5 @@
 import 'package:flutter/material.dart';
-
-class SelectionModeEditorOption {
-  final String label;
-  final IconData icon;
-  final VoidCallback onSelected;
-
-  SelectionModeEditorOption({
-    required this.label,
-    required this.icon,
-    required this.onSelected,
-  });
-}
+import 'package:save_receipt/presentation/receipt/shared/structures.dart';
 
 class DataEditorTopBar extends StatelessWidget {
   final VoidCallback onResized;

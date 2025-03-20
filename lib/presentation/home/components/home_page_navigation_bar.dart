@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
-import 'package:save_receipt/core/utils/enums.dart';
-
-enum NavigationPages { receipts, products }
-
-extension NavigationPagesExtension on NavigationPages {
-  String get label => enumLabel(this);
-}
+import 'package:save_receipt/presentation/home/shared/enum.dart';
 
 class HomePageNavigationBar extends StatefulWidget {
   final Function(NavigationPages) onPageSelect;

@@ -13,6 +13,7 @@ import 'package:save_receipt/presentation/home/components/topbar/topbar.dart';
 import 'package:save_receipt/presentation/home/content/products/products.dart';
 import 'package:save_receipt/presentation/home/controller/home_page_controller.dart';
 import 'package:save_receipt/presentation/home/content/receipts/receipts.dart';
+import 'package:save_receipt/presentation/home/shared/enum.dart';
 import 'package:save_receipt/services/document/scan/google_scan.dart';
 import 'package:save_receipt/services/images/image_operations.dart';
 
@@ -93,7 +94,7 @@ class MyHomePage extends StatelessWidget {
     switch (pageController.selectedPage.value) {
       case NavigationPages.receipts:
         return receiptsList(filteredReceiptsDocuments);
-      case NavigationPages.products:
+      default:
         return productsList(filteredProducts);
     }
   }

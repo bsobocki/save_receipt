@@ -9,6 +9,7 @@ import 'package:save_receipt/presentation/receipt/data_field/content/edit_mode/d
 import 'package:save_receipt/presentation/receipt/data_field/content/main_view/label_field.dart';
 import 'package:save_receipt/presentation/receipt/data_field/content/main_view/value_field.dart';
 import 'package:save_receipt/domain/entities/receipt_object.dart';
+import 'package:save_receipt/presentation/receipt/shared/enums.dart';
 
 class InfoDataField extends StatefulWidget {
   final ReceiptObjectModel model;

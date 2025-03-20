@@ -6,8 +6,7 @@ import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart
 import 'package:save_receipt/data/models/entities/product.dart';
 import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
-import 'package:save_receipt/presentation/home/components/home_page_navigation_bar.dart';
-import 'package:save_receipt/presentation/home/components/loading_animation.dart';
+import 'package:save_receipt/presentation/home/shared/enum.dart';
 import 'package:save_receipt/presentation/receipt/receipt_data_page.dart';
 import 'package:save_receipt/services/data_processing/connect_data.dart';
 import 'package:save_receipt/data/models/document.dart';

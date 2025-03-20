@@ -4,8 +4,7 @@ import 'package:save_receipt/core/themes/gradients/main_gradients.dart';
 import 'package:save_receipt/core/themes/main_theme.dart';
 import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/domain/entities/receipt_object.dart';
-
-enum DataFieldMode { normal, edit, select }
+import 'package:save_receipt/presentation/receipt/shared/enums.dart';
 
 class DataField extends StatefulWidget {
   final bool isDarker;
