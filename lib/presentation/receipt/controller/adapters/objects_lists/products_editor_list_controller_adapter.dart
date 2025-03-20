@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:save_receipt/domain/entities/all_values.dart';
 import 'package:save_receipt/domain/entities/receipt_object.dart';
-import 'package:save_receipt/presentation/receipt/controller/adapters/objects_editor_list_controller_adapter.dart';
-import 'package:save_receipt/presentation/receipt/controller/interface/products_editor_list_controller.dart';
+import 'package:save_receipt/presentation/receipt/controller/adapters/objects_lists/objects_editor_list_controller_adapter.dart';
+import 'package:save_receipt/presentation/receipt/controller/interface/objects_lists/products_editor_list_controller.dart';
 
 class ProductsEditorListControllerAdapter
     extends ObjectsEditorListControllerAdapter

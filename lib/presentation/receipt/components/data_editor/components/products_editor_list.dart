@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
-import 'package:save_receipt/presentation/receipt/controller/interface/products_editor_list_controller.dart';
+import 'package:save_receipt/presentation/receipt/controller/interface/objects_lists/products_editor_list_controller.dart';
 import 'package:save_receipt/presentation/receipt/controller/receipt_editor_page_controller.dart';
 import 'package:save_receipt/presentation/receipt/data_field/product_data_field.dart';
 

@@ -8,10 +8,12 @@ import 'package:save_receipt/presentation/receipt/components/data_editor/compone
 import 'package:save_receipt/presentation/receipt/components/receipt_image_viewer.dart';
 import 'package:save_receipt/presentation/receipt/components/data_editor/data_editor.dart';
 import 'package:save_receipt/presentation/receipt/components/topbar/top_bar.dart';
-import 'package:save_receipt/presentation/receipt/controller/adapters/info_editor_list_controller_adapter.dart';
-import 'package:save_receipt/presentation/receipt/controller/adapters/products_editor_list_controller_adapter.dart';
-import 'package:save_receipt/presentation/receipt/controller/interface/info_editor_list_controller.dart';
-import 'package:save_receipt/presentation/receipt/controller/interface/products_editor_list_controller.dart';
+import 'package:save_receipt/presentation/receipt/controller/adapters/objects_lists/info_editor_list_controller_adapter.dart';
+import 'package:save_receipt/presentation/receipt/controller/adapters/objects_lists/products_editor_list_controller_adapter.dart';
+import 'package:save_receipt/presentation/receipt/controller/adapters/receipt_editor_topbar_controller_adapter.dart';
+import 'package:save_receipt/presentation/receipt/controller/interface/objects_lists/info_editor_list_controller.dart';
+import 'package:save_receipt/presentation/receipt/controller/interface/objects_lists/products_editor_list_controller.dart';
+import 'package:save_receipt/presentation/receipt/controller/interface/receipt_editor_topbar_controller.dart';
 import 'package:save_receipt/presentation/receipt/controller/receipt_editor_page_controller.dart';
 import 'package:save_receipt/domain/entities/receipt.dart';
 import 'package:save_receipt/presentation/receipt/shared/structures.dart';
@@ -25,6 +27,7 @@ class ReceiptDataPage extends StatelessWidget {
   late final ReceiptEditorPageController controller;
   late final ProductsEditorListController productsListController;
   late final InfoEditorListController infoListController;
+  late final ReceiptEditorTopbarController topbarController;
 
   final themeController = Get.find<ThemeController>();
   final _productListKey = UniqueKey();
@@ -42,6 +45,10 @@ class ReceiptDataPage extends StatelessWidget {
         ProductsEditorListControllerAdapter(controller: controller);
     infoListController =
         InfoEditorListControllerAdapter(controller: controller);
+    topbarController = ReceiptEditorTopbarControllerAdapter(
+      controller: controller,
+      receiptBarcodeData: barcodeData,
+    );
   }
 
   Widget get productsList => ProductsEditorList(
@@ -70,25 +77,8 @@ class ReceiptDataPage extends StatelessWidget {
 
   Widget _buildTopBar(BuildContext context) => ReceiptPageTopBar(
         key: UniqueKey(),
-        dataChanged: controller.modelController.dataChanged,
-        onImageIconPress: controller.openFullImageMode,
-        receiptImgPath: controller.modelController.imgPath,
-        onReturnAfterChanges: controller.handleReturnAfterChanges,
-        onSaveReceiptOptionPress: controller.modelController.saveReceipt,
-        onDeleteReceiptOptionPress: controller.deleteReceipt,
-        onSelectionModeToggled: controller.toggleSelectionMode,
-        selectionMode: controller.modelController.isSelectionModeEnabled.value,
-        barcodeData: barcodeData,
-        onDocumentFormattingOptionPress: controller.handleDocumentFormatting,
-        documentFormat: controller.documentFormat.value,
         mainColor: themeController.theme.mainColor,
-        barcodeImgBytes: controller.documentFormat.value
-            ? controller.formatedBarcodeBytes
-            : barcodeData?.imgBytes,
-        documentImgBytes: controller.documentFormat.value
-            ? controller.formatedDocumentBytes
-            : null,
-        isFormatting: controller.isFormatting.value,
+        controller: topbarController,
       );
 
   Widget _buildObjectsEditor() {

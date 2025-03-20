@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:save_receipt/domain/entities/receipt_object.dart';
-import 'package:save_receipt/presentation/receipt/controller/adapters/objects_editor_list_controller_adapter.dart';
-import 'package:save_receipt/presentation/receipt/controller/interface/info_editor_list_controller.dart';
+import 'package:save_receipt/presentation/receipt/controller/adapters/objects_lists/objects_editor_list_controller_adapter.dart';
+import 'package:save_receipt/presentation/receipt/controller/interface/objects_lists/info_editor_list_controller.dart';
 
 class InfoEditorListControllerAdapter extends ObjectsEditorListControllerAdapter
     implements InfoEditorListController {
