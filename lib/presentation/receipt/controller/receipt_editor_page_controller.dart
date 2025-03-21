@@ -64,8 +64,23 @@ class ReceiptEditorPageController extends GetxController {
 
   Future<void> deleteReceipt() async {
     try {
-      await modelController.deleteReceipt();
-      Get.back();
+      await showAlertDialog(
+          title: 'Delete Receipt',
+          content: "Do you want to delete this receipt?",
+          actions: [
+            TextButton(
+              onPressed: () async {
+                await modelController.deleteReceipt();
+                Get.back();
+                Get.back();
+              },
+              child: const Text("Yes"),
+            ),
+            TextButton(
+              onPressed: () => Get.back(),
+              child: const Text('No'),
+            ),
+          ]);
     } catch (e) {
       _showAlert(
           title: 'Failed to delete receipt',
