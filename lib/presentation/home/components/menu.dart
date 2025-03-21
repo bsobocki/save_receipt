@@ -40,7 +40,10 @@ class Menu extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Choose theme you want to change'),
+          title: const Text(
+            'Choose Theme',
+            style: TextStyle(color: Colors.white),
+          ),
           backgroundColor: themeController.theme.mainColor,
           shadowColor: Colors.black,
           content: SizedBox(
@@ -103,10 +106,9 @@ class Menu extends StatelessWidget {
             break;
         }
       },
-      itemBuilder: (context) => [
-        'refresh',
-        'change theme'
-      ].map((text) => getPopupMenuItem(text)).toList(),
+      itemBuilder: (context) => ['refresh', 'change theme']
+          .map((text) => getPopupMenuItem(text))
+          .toList(),
       child: const Icon(Icons.menu),
     );
   }
