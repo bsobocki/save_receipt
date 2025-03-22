@@ -65,7 +65,7 @@ class LoadingAnimation extends StatelessWidget {
         children: [
           LoadingAnimationWidget.newtonCradle(
               color: themeController.theme.mainColor, size: 100.0),
-          Text('Document Formatting...',
+          Text('Fetching Data...',
               style: TextStyle(color: themeController.theme.mainColor)),
         ],
       );
