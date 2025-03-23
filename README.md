@@ -10,21 +10,19 @@ You can store all of your your receipts and products in one place.
 
 ####
 <p align="center">
-<img src="https://github.com/bsobocki/save_receipt/blob/main/assets/docs_img/homepage_open_receipt.gif" height=800 />
+<img src="https://github.com/bsobocki/save_receipt/blob/main/assets/docs_img/homepage_open_receipt.gif" height=600 />
 </p>
 
 # Create new receipts 
 
 ### You can create new receipts by google document scanner, from uploaded photo or manually.
 
-####
-<p align="center">
-<img src=https://github.com/bsobocki/save_receipt/blob/main/assets/docs_img/create_receipt_options.gif height=800 />
-</p>
+ &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; all options: &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; from uploaded photo:
 
-### An example of creating a new receipt from uploaded photo:
 
 ####
 <p align="center">
-<img src=https://github.com/bsobocki/save_receipt/blob/main/assets/docs_img/create_from_image.gif height=800 />
+<img src=https://github.com/bsobocki/save_receipt/blob/main/assets/docs_img/create_receipt_options.gif height=600 />
+   &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+<img src=https://github.com/bsobocki/save_receipt/blob/main/assets/docs_img/create_from_image.gif height=600 />
 </p>
