@@ -25,7 +25,7 @@ class ReceiptEditorTopbarControllerAdapter
   String? get imgPath => controller.modelController.imgPath;
 
   @override
-  bool get isFormatting => controller.isFormatting.value;
+  RxBool get isFormatting => controller.isFormatting;
   
   @override
   bool get isSelectionModeEnabled => controller.modelController.isSelectionModeEnabled.value;
