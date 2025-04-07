@@ -48,4 +48,4 @@ If you have a poor resolution in your receipt photo you can change image to docu
 
 <p align="center">
 <img align="center" src="https://github.com/bsobocki/save_receipt/blob/main/assets/docs_img/document_format.gif" height="600"/>
-</p>p>
+</p>
