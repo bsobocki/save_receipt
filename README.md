@@ -1,4 +1,6 @@
-# ![](https://github.com/bsobocki/save_receipt/blob/main/assets/docs_img/saveReceipt.png)
+<p align="center">
+ <img src="https://github.com/bsobocki/save_receipt/blob/main/assets/docs_img/saveReceipt.png" />
+</p>
 
 # Save your receipts for later!
 
